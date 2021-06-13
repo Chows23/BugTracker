@@ -14,6 +14,7 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private UserService userService = new UserService();
+
         public ActionResult Index()
         {
             ApplicationUser user;
@@ -23,6 +24,30 @@ namespace Bug_Tracker.Controllers
                 return new HttpUnauthorizedResult();
             
             return View(user.ProjectUsers.Select(p => p.Project));
+        }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Name")] Project project)
+        {
+            ApplicationUser user;
+            if (User.Identity.IsAuthenticated)
+                user = (ApplicationUser)User.Identity;
+            else
+                return new HttpUnauthorizedResult();
+
+            if (ModelState.IsValid)
+            {
+                projectService.Create(project);
+                return RedirectToAction("Edit", "Projects", new { id = project.Id });
+            }
+
+            return View(project);
         }
     }
 }

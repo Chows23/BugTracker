@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\ProjectRepo.cs" />
+    <Compile Include="DAL\ProjectUserRepo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -1,7 +1,14 @@
 ﻿@model IEnumerable<Bug_Tracker.Models.Project>
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Projects</h2>
 
+<ul class="list-group">
+    @foreach (var project in Model)
+    {
+        <li class="list-group-item">@project.Name</li>
+    }
+</ul>

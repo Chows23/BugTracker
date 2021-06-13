@@ -9,7 +9,7 @@ namespace Bug_Tracker.BL
 {
     public class TicketTypeService
     {
-        public TicketTypeRepo repo;
+        private TicketTypeRepo repo { get; set; }
         public void Create(TicketType ticketType)
         {
             repo.Add(ticketType);

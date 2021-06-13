@@ -8,7 +8,7 @@ namespace Bug_Tracker.DAL
 {
     public class TicketTypeRepo : IRepository<TicketType>
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
         public void Add(TicketType entity)
         {
             db.TicketTypes.Add(entity);

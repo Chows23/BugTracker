@@ -11,12 +11,8 @@ namespace Bug_Tracker.DAL
         ApplicationDbContext db = new ApplicationDbContext();
         public void Add(Project entity)
         {
-            
-        }
-
-        public void Delete(Project entity)
-        {
-            throw new NotImplementedException();
+            db.Projects.Add(entity);
+            db.SaveChanges();
         }
 
         public IEnumerable<Project> GetCollection(Func<Project, bool> condition)

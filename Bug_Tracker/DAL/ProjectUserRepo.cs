@@ -11,22 +11,23 @@ namespace Bug_Tracker.DAL
         public ApplicationDbContext db = new ApplicationDbContext();
         public void Add(ProjectUser entity)
         {
-            throw new NotImplementedException();
+            db.ProjectUsers.Add(entity);
+            db.SaveChanges();
         }
 
         public IEnumerable<ProjectUser> GetCollection(Func<ProjectUser, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.ProjectUsers.Where(condition);
         }
 
         public ProjectUser GetEntity(int id)
         {
-            throw new NotImplementedException();
+            return db.ProjectUsers.Find(id);
         }
 
         public ProjectUser GetEntity(Func<ProjectUser, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.ProjectUsers.FirstOrDefault(condition);
         }
 
         public void Update(ProjectUser entity)

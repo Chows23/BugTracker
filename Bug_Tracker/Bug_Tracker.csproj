@@ -175,6 +175,7 @@
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\ProjectRepo.cs" />
     <Compile Include="DAL\ProjectUserRepo.cs" />
+    <Compile Include="DAL\TicketStatusRepo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

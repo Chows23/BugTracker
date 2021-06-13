@@ -169,6 +169,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="BL\ProjectService.cs" />
     <Compile Include="BL\ProjectUserService.cs" />
+    <Compile Include="BL\TicketStatusService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

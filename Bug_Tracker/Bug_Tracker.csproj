@@ -168,11 +168,26 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="BL\ProjectService.cs" />
+    <Compile Include="BL\TicketAttachmentService.cs" />
+    <Compile Include="BL\TicketCommentService.cs" />
+    <Compile Include="BL\TicketHistoryService.cs" />
+    <Compile Include="BL\TicketNotificationService.cs" />
+    <Compile Include="BL\TicketService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TicketAttachmentController.cs" />
+    <Compile Include="Controllers\TicketCommentController.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
+    <Compile Include="Controllers\TicketHistoryController.cs" />
+    <Compile Include="Controllers\TicketNotificationController.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\ProjectRepo.cs" />
+    <Compile Include="DAL\TicketAttachmentRepo.cs" />
+    <Compile Include="DAL\TicketCommentRepo.cs" />
+    <Compile Include="DAL\TicketHistoryRepo.cs" />
+    <Compile Include="DAL\TicketNotificationRepo.cs" />
+    <Compile Include="DAL\TicketRepo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -190,9 +205,9 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectUser.cs" />
-    <Compile Include="Models\TicketAttachments.cs" />
+    <Compile Include="Models\TicketAttachment.cs" />
     <Compile Include="Models\Ticket.cs" />
-    <Compile Include="Models\TicketComments.cs" />
+    <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketHistory.cs" />
     <Compile Include="Models\TicketNotification.cs" />
     <Compile Include="Models\TicketPriority.cs" />
@@ -260,6 +275,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\TicketAttachment\" />
+    <Folder Include="Views\TicketComment\" />
+    <Folder Include="Views\TicketHistory\" />
+    <Folder Include="Views\TicketNotification\" />
+    <Folder Include="Views\Ticket\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

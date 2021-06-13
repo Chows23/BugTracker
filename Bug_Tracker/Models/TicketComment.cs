@@ -5,9 +5,9 @@ using System.Web;
 
 namespace Bug_Tracker.Models
 {
-    public class TicketComments
+    public class TicketComment
     {
-        public TicketComments()
+        public TicketComment()
         {
             this.Created = DateTime.Now;
         }

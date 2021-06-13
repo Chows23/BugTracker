@@ -17,17 +17,17 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<Project> GetCollection(Func<Project, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.Projects.Where(condition);
         }
 
         public Project GetEntity(int id)
         {
-            throw new NotImplementedException();
+            return db.Projects.Find(id);
         }
 
         public Project GetEntity(Func<Project, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.Projects.FirstOrDefault(condition);
         }
 
         public void Update(Project entity)

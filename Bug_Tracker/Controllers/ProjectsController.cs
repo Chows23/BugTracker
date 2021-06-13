@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Bug_Tracker.BL;
 using Bug_Tracker.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Bug_Tracker.Controllers
 {
@@ -14,12 +15,14 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private UserService userService = new UserService();
+        public static ApplicationDbContext db = new ApplicationDbContext();
+        private UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
         public ActionResult Index()
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = (ApplicationUser)User.Identity;
+                user = userManager.FindById(User.Identity.GetUserId());
             else
                 return new HttpUnauthorizedResult();
             
@@ -37,7 +40,7 @@ namespace Bug_Tracker.Controllers
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = (ApplicationUser)User.Identity;
+                user = userManager.FindById(User.Identity.GetUserId());
             else
                 return new HttpUnauthorizedResult();
 

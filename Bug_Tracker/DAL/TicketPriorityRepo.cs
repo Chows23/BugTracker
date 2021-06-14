@@ -9,6 +9,7 @@ namespace Bug_Tracker.DAL
     public class TicketPriorityRepo : IRepository<TicketPriority>
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
         public void Add(TicketPriority entity)
         {
             db.TicketPriorities.Add(entity);

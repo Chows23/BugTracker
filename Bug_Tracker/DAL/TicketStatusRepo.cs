@@ -9,6 +9,7 @@ namespace Bug_Tracker.DAL
     public class TicketStatusRepo : IRepository<TicketStatus>
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
         public void Add(TicketStatus entity)
         {
             db.TicketStatuses.Add(entity);

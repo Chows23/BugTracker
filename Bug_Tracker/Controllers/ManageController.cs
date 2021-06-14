@@ -7,12 +7,16 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Bug_Tracker.Models;
+using System.Net;
+using Bug_Tracker.BL;
 
 namespace Bug_Tracker.Controllers
 {
     [Authorize]
     public class ManageController : Controller
     {
+        ApplicationDbContext db = new ApplicationDbContext();
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -32,9 +36,9 @@ namespace Bug_Tracker.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -48,6 +52,47 @@ namespace Bug_Tracker.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        public ActionResult ChangeUserRole()
+        {
+            var users = db.Users.ToList();
+            var roles = db.Roles.ToList();
+
+            if (users == null || roles == null)
+                return HttpNotFound();
+
+            ViewBag.Users = new SelectList(users, "Id", "Email");
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ChangeUserRole(string userId, int roleId)
+        {
+            var role = db.Roles.Find(roleId);
+
+            if (!UserService.UserInRole(userId, role.Name))
+                UserService.AddUserToRole(userId, role.Name);
+
+            db.SaveChanges();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RemoveRoles(string userId)
+        {
+            var user = db.Users.Find(userId);
+
+            foreach (var role in user.Roles)
+            {
+                var roleName = db.Roles.Find(role.RoleId).Name;
+                UserService.RemoveUserFromRole(userId, roleName);
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("ChangeUserRole");
         }
 
         //
@@ -333,7 +378,7 @@ namespace Bug_Tracker.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -384,6 +429,6 @@ namespace Bug_Tracker.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

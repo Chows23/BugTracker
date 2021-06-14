@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "ChangeUserRole";
+}
+
+<h2>Change User Roles</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <div>Select a user: @Html.DropDownList("Users")</div>
+        <div>Select a role: @Html.DropDownList("Roles")</div>
+        <br />
+        @Html.ActionLink("Remove All Roles", "RemoveRoles", null, new { @class = "btn btn-danger" })
+        <input type="submit" value="Add To Role" class="btn btn-default" />
+    </div>
+}

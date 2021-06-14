@@ -62,12 +62,13 @@ namespace Bug_Tracker.Controllers
             if (users == null || roles == null)
                 return HttpNotFound();
 
-            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+            ViewBag.roleId = new SelectList(roles, "Id", "Name");
 
             return View(users);
         }
 
-        public ActionResult AddToRole(string userId, int roleId)
+        [HttpPost]
+        public ActionResult ChangeUserRole(string userId, string roleId)
         {
             var role = db.Roles.Find(roleId);
 
@@ -78,9 +79,11 @@ namespace Bug_Tracker.Controllers
             return RedirectToAction("ChangeUserRole");
         }
 
-        [HttpPost]
         public ActionResult RemoveRoles(string userId)
         {
+            if (userId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
             var user = db.Users.Find(userId);
 
             foreach (var role in user.Roles)

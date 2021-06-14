@@ -10,20 +10,21 @@
     <h3>No users to display.</h3>
 }
 
-@using (Html.BeginForm())
-{
-    <table class="table-striped">
+<table class="table-striped">
+    <tbody>
 
         @foreach (var user in Model)
         {
             <tr>
                 <td>@user.Email</td>
-                <td>@Html.DropDownList("Roles")</td>
-                <td>@Html.ActionLink("Add to Role", "AddToRole", new { id = user.Id }, new { @class = "btn btn-primary" })</td>
-                <td><input type="submit" value="Add To Role" class="btn btn-default" /></td>
-                <td>@Html.ActionLink("Remove All Roles", "RemoveRoles", null, new { @class = "btn btn-danger" })</td>
+                @using (Html.BeginForm("ChangeUserRole", "Manage", new { userId = user.Id }))
+                {
+                    <td>@Html.DropDownList("RoleId")</td>
+                    <td><input type="submit" value="Add To Role" class="btn btn-default" /></td>
+                }
+                <td>@Html.ActionLink("Remove All Roles", "RemoveRoles", new { userId = user.Id }, new { @class = "btn btn-danger" })</td>
             </tr>
         }
 
-    </table>
-}
+    </tbody>
+</table>

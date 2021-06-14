@@ -54,6 +54,7 @@ namespace Bug_Tracker.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult ChangeUserRole()
         {
             var users = db.Users.ToList();
@@ -86,6 +87,7 @@ namespace Bug_Tracker.Controllers
             return RedirectToAction("ChangeUserRole");
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult RemoveRoles(string userId)
         {
             if (userId == null)

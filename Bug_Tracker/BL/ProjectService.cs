@@ -25,5 +25,10 @@ namespace Bug_Tracker.BL
         {
             return repo.GetCollection(null);
         }
+
+        public void Update(Project project)
+        {
+            repo.Update(project);
+        }
     }
 }

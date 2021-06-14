@@ -60,11 +60,7 @@ namespace Bug_Tracker.Controllers
             if (ModelState.IsValid)
             {
                 projectService.Create(project);
-                ProjectUser newProjectUser = new ProjectUser
-                {
-                    ProjectId = project.Id,
-                    UserId = user.Id
-                };
+                var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
                 projectUserService.Create(newProjectUser);
                 return RedirectToAction("Edit", "Projects", new { id = project.Id });
             }
@@ -82,6 +78,19 @@ namespace Bug_Tracker.Controllers
             if (project == null)
                 return HttpNotFound();
 
+            return View(project);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Name")] Project project)
+        {
+            if (ModelState.IsValid)
+            {
+                projectService.Update(project);
+                return RedirectToAction("Details");
+            }
+            
             return View(project);
         }
     }

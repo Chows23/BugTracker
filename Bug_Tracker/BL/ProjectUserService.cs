@@ -14,5 +14,16 @@ namespace Bug_Tracker.BL
         {
             repo.Add(projectUser);
         }
+
+        public ProjectUser ProjectUser(string userId, int projectId)
+        {
+            var projectUser = new ProjectUser
+            {
+                UserId = userId,
+                ProjectId = projectId
+            };
+
+            return projectUser;
+        }
     }
 }

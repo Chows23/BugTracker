@@ -6,7 +6,7 @@
 }
 
 <h2>Your Projects</h2>
-@if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
+@if (UserService.UserInRole(User.Identity.GetUserId(), "manager"))
 {
     @Html.ActionLink("All Projects", "AllProjects", null, new { @class = "btn btn-primary", style = "margin-bottom: 20px" })
 }

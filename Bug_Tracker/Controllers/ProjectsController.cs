@@ -27,6 +27,9 @@ namespace Bug_Tracker.Controllers
                 user = userManager.FindById(User.Identity.GetUserId());
             else
                 return new HttpUnauthorizedResult();
+
+            if (userManager.IsInRole(user.Id, "admin"))
+                return RedirectToAction("AllProjects");
             
             return View(user.ProjectUsers.Select(p => p.Project));
         }

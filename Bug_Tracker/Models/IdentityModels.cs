@@ -17,16 +17,16 @@ namespace Bug_Tracker.Models
             this.ProjectUsers = new HashSet<ProjectUser>();
             this.TicketNotifications = new HashSet<TicketNotification>();
             this.TicketHistories = new HashSet<TicketHistory>();
-            this.TicketComments = new HashSet<TicketComments>();
-            this.TicketAttachments = new HashSet<TicketAttachments>();
+            this.TicketComments = new HashSet<TicketComment>();
+            this.TicketAttachments = new HashSet<TicketAttachment>();
         }
         [ForeignKey("OwnerUserId")]
         public virtual ICollection<Ticket> Tickets { get; set; }
         public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
         public virtual ICollection<TicketNotification> TicketNotifications { get; set; } 
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
-        public virtual ICollection<TicketComments> TicketComments { get; set; }
-        public virtual ICollection<TicketAttachments> TicketAttachments { get; set; }
+        public virtual ICollection<TicketComment> TicketComments { get; set; }
+        public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -42,8 +42,8 @@ namespace Bug_Tracker.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Ticket> Tickets { get; set; }
-        public virtual DbSet<TicketAttachments> TicketAttachments { get; set; }
-        public virtual DbSet<TicketComments> TicketComments { get; set; }
+        public virtual DbSet<TicketAttachment> TicketAttachments { get; set; }
+        public virtual DbSet<TicketComment> TicketComments { get; set; }
         public virtual DbSet<TicketHistory> TicketHistories { get; set; }
         public virtual DbSet<TicketNotification> TicketNotifications { get; set; }
         public virtual DbSet<TicketStatus> TicketStatuses { get; set; }

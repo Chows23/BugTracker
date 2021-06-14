@@ -5,9 +5,9 @@ using System.Web;
 
 namespace Bug_Tracker.Models
 {
-    public class TicketAttachments
+    public class TicketAttachment
     {
-        public TicketAttachments()
+        public TicketAttachment()
         {
             this.Created = DateTime.Now;
         }

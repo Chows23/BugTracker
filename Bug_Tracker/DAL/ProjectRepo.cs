@@ -9,6 +9,7 @@ namespace Bug_Tracker.DAL
     public class ProjectRepo : IRepository<Project>
     {
         ApplicationDbContext db = new ApplicationDbContext();
+
         public void Add(Project entity)
         {
             db.Projects.Add(entity);

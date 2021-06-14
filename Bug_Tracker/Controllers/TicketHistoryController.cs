@@ -6,8 +6,9 @@ using System.Web.Mvc;
 
 namespace Bug_Tracker.Controllers
 {
-    public class HomeController : Controller
+    public class TicketHistoryController : Controller
     {
+        // GET: TicketHistory
         public ActionResult Index()
         {
             return View();

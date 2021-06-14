@@ -9,7 +9,7 @@ namespace Bug_Tracker.BL
 {
     public class ProjectService
     {
-        public ProjectRepo repo;
+        public ProjectRepo repo = new ProjectRepo();
 
         public void Create(Project project)
         {

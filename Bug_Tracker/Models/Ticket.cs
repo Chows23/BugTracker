@@ -12,8 +12,8 @@ namespace Bug_Tracker.Models
         public Ticket()
         {
             this.TicketNotifications = new HashSet<TicketNotification>();
-            this.TicketAttachments = new HashSet<TicketAttachments>();
-            this.TicketComments = new HashSet<TicketComments>();
+            this.TicketAttachments = new HashSet<TicketAttachment>();
+            this.TicketComments = new HashSet<TicketComment>();
             this.TicketHistories = new HashSet<TicketHistory>();
             this.Created = DateTime.Now;
             this.Updated = Created;
@@ -43,7 +43,7 @@ namespace Bug_Tracker.Models
 
         public virtual ICollection<TicketNotification> TicketNotifications { get; set; }
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
-        public virtual ICollection<TicketComments> TicketComments { get; set; }
-        public virtual ICollection<TicketAttachments> TicketAttachments { get; set; }
+        public virtual ICollection<TicketComment> TicketComments { get; set; }
+        public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
     }
 }

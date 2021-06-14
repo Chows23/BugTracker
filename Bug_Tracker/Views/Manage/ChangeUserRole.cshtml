@@ -10,7 +10,15 @@
     <h3>No users to display.</h3>
 }
 
-<table class="table-striped">
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Select a Role</th>
+        </tr>
+    </thead>
+
     <tbody>
 
         @foreach (var user in Model)
@@ -22,7 +30,7 @@
                     <td>@Html.DropDownList("RoleId")</td>
                     <td><input type="submit" value="Add To Role" class="btn btn-default" /></td>
                 }
-                <td>@Html.ActionLink("Remove All Roles", "RemoveRoles", new { userId = user.Id }, new { @class = "btn btn-danger" })</td>
+                <td>@Html.ActionLink("Remove Roles", "RemoveRoles", new { userId = user.Id }, new { @class = "btn btn-danger" })</td>
             </tr>
         }
 

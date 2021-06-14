@@ -71,6 +71,13 @@ namespace Bug_Tracker.Controllers
         public ActionResult ChangeUserRole(string userId, string roleId)
         {
             var role = db.Roles.Find(roleId);
+            var user = db.Users.Find(userId);
+
+            if (user.Roles.Count > 0)
+            {
+                var currentRole = UserService.GetAllRolesOfUser(userId).FirstOrDefault();
+                UserService.RemoveUserFromRole(userId, currentRole);
+            }
 
             if (!UserService.UserInRole(userId, role.Name))
                 UserService.AddUserToRole(userId, role.Name);

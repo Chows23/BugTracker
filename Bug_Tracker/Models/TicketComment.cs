@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -12,6 +13,7 @@ namespace Bug_Tracker.Models
             this.Created = DateTime.Now;
         }
         public int Id { get; set; }
+        [Required]
         public string Comment { get; set; }
         public DateTime Created { get; set; }
         public int TicketId { get; set; }

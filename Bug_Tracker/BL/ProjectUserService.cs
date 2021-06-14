@@ -14,11 +14,5 @@ namespace Bug_Tracker.BL
         {
             repo.Add(projectUser);
         }
-
-        public IEnumerable<IGrouping<Project, ProjectUser>> GroupedByProject()
-        {
-            var projectUsers = repo.GetCollection(null).ToList();
-            return projectUsers.GroupBy(p => p.Project);
-        }
     }
 }

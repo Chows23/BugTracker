@@ -37,7 +37,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult AllProjects()
         {
-            return View(projectUserService.GroupedByProject());
+            return View(projectService.AllProjects());
         }
 
         [Authorize(Roles = "admin, manager")]

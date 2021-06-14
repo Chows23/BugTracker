@@ -20,5 +20,10 @@ namespace Bug_Tracker.BL
         {
             return repo.GetEntity(id);
         }
+
+        public IEnumerable<Project> AllProjects()
+        {
+            return repo.GetCollection(null);
+        }
     }
 }

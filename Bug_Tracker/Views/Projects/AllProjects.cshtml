@@ -1,0 +1,23 @@
+﻿@model IEnumerable<IGrouping<Bug_Tracker.Models.Project, Bug_Tracker.Models.ProjectUser>>
+@{
+    ViewBag.Title = "All Projects";
+}
+
+<h2>All Projects</h2>
+
+@foreach (var group in Model)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">@group.Key.Name</div>
+        <div class="panel-body">
+            <div>
+                @foreach (var projectUser in group)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">@projectUser.User.UserName</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

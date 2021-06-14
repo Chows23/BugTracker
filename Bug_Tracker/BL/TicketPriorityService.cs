@@ -7,13 +7,12 @@ using Bug_Tracker.Models;
 
 namespace Bug_Tracker.BL
 {
-    public class ProjectService
+    public class TicketPriorityService
     {
-        private ProjectRepo repo = new ProjectRepo();
-
-        public void Create(Project project)
+        private TicketPriorityRepo repo = new TicketPriorityRepo();
+        public void Create(TicketPriority ticketPriority)
         {
-            repo.Add(project);
+            repo.Add(ticketPriority);
         }
     }
 }

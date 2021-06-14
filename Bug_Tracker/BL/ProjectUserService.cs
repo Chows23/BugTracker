@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Bug_Tracker.Models;
+using Bug_Tracker.DAL;
+
+namespace Bug_Tracker.BL
+{
+    public class ProjectUserService
+    {
+        private ProjectUserRepo repo = new ProjectUserRepo();
+        public void Create(ProjectUser projectUser)
+        {
+            repo.Add(projectUser);
+        }
+
+        public IEnumerable<IGrouping<Project, ProjectUser>> GroupedByProject()
+        {
+            var projectUsers = repo.GetCollection(null).ToList();
+            return projectUsers.GroupBy(p => p.Project);
+        }
+    }
+}

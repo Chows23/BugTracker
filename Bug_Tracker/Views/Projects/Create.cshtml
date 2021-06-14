@@ -1,0 +1,26 @@
+﻿@model Bug_Tracker.Models.Project
+@{
+    ViewBag.Title = "Create Project";
+}
+
+<h2>Add a Project</h2>
+
+@using (Html.BeginForm())
+{
+    if (!Html.ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+        </div>
+    }
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name)
+        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+
+    <input type="submit" value="Create" class="btn btn-primary" />
+}
+

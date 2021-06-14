@@ -168,6 +168,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="BL\ProjectService.cs" />
+    <Compile Include="BL\ProjectUserService.cs" />
+    <Compile Include="BL\TicketPriorityService.cs" />
+    <Compile Include="BL\TicketStatusService.cs" />
+    <Compile Include="BL\TicketTypeService.cs" />
+    <Compile Include="BL\UserService.cs" />
     <Compile Include="BL\TicketAttachmentService.cs" />
     <Compile Include="BL\TicketCommentService.cs" />
     <Compile Include="BL\TicketHistoryService.cs" />
@@ -176,6 +181,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\TicketAttachmentController.cs" />
     <Compile Include="Controllers\TicketCommentController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
@@ -183,6 +189,10 @@
     <Compile Include="Controllers\TicketNotificationController.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\ProjectRepo.cs" />
+    <Compile Include="DAL\ProjectUserRepo.cs" />
+    <Compile Include="DAL\TicketPriorityRepo.cs" />
+    <Compile Include="DAL\TicketStatusRepo.cs" />
+    <Compile Include="DAL\TicketTypeRepo.cs" />
     <Compile Include="DAL\TicketAttachmentRepo.cs" />
     <Compile Include="DAL\TicketCommentRepo.cs" />
     <Compile Include="DAL\TicketHistoryRepo.cs" />
@@ -270,6 +280,9 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\AllProjects.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

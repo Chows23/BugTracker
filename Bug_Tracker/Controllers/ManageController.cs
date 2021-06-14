@@ -62,10 +62,9 @@ namespace Bug_Tracker.Controllers
             if (users == null || roles == null)
                 return HttpNotFound();
 
-            ViewBag.Users = new SelectList(users, "Id", "Email");
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
 
-            return View();
+            return View(users);
         }
 
         [HttpPost]

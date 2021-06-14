@@ -24,7 +24,7 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.Email</td>
+                <td>@user.UserName</td>
                 @using (Html.BeginForm("ChangeUserRole", "Manage", new { userId = user.Id }))
                 {
                     <td>@Html.DropDownList("RoleId")</td>

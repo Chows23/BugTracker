@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Bug_Tracker.BL;
@@ -64,6 +65,19 @@ namespace Bug_Tracker.Controllers
                 projectUserService.Create(newProjectUser);
                 return RedirectToAction("Edit", "Projects", new { id = project.Id });
             }
+
+            return View(project);
+        }
+
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var project = projectService.GetProject((int)id);
+
+            if (project == null)
+                return HttpNotFound();
 
             return View(project);
         }

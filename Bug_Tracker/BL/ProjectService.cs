@@ -15,5 +15,10 @@ namespace Bug_Tracker.BL
         {
             repo.Add(project);
         }
+
+        public Project GetProject(int id)
+        {
+            return repo.GetEntity(id);
+        }
     }
 }

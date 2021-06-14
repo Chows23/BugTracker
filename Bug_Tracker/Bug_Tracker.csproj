@@ -209,6 +209,10 @@
     <Compile Include="Migrations\202106112020376_AddAllClasses.Designer.cs">
       <DependentUpon>202106112020376_AddAllClasses.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202106141903437_modifyClasses.cs" />
+    <Compile Include="Migrations\202106141903437_modifyClasses.Designer.cs">
+      <DependentUpon>202106141903437_modifyClasses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -312,6 +316,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202106112020376_AddAllClasses.resx">
       <DependentUpon>202106112020376_AddAllClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106141903437_modifyClasses.resx">
+      <DependentUpon>202106141903437_modifyClasses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

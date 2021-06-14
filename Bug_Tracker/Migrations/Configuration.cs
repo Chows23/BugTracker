@@ -91,6 +91,71 @@ namespace Bug_Tracker.Migrations
                     project5
                 });
             }
+            db.SaveChanges();
+
+            // ProjectUsers
+
+            if (db.ProjectUsers.Count() == 0)
+            {
+                ProjectUser projectUser1 = new ProjectUser
+                {
+                    ProjectId = db.Projects.First(p => p.Name == "Test Project 1").Id,
+                    UserId = db.Users.First(u => u.Email == "manager@gmail.com").Id
+                };
+                ProjectUser projectUser2 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 2"),
+                    User = db.Users.First(u => u.Email == "manager@gmail.com")
+                };
+                ProjectUser projectUser3 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 3"),
+                    User = db.Users.First(u => u.Email == "manager@gmail.com")
+                };
+                ProjectUser projectUser4 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 4"),
+                    User = db.Users.First(u => u.Email == "manager2@gmail.com")
+                };
+                ProjectUser projectUser5 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 5"),
+                    User = db.Users.First(u => u.Email == "manager2@gmail.com")
+                };
+                ProjectUser projectUser6 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 1"),
+                    User = db.Users.First(u => u.Email == "elizabeth@gmail.com")
+                };
+                ProjectUser projectUser7 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 2"),
+                    User = db.Users.First(u => u.Email == "chows@gmail.com")
+                };
+                ProjectUser projectUser8 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 3"),
+                    User = db.Users.First(u => u.Email == "katherine@gmail.com")
+                };
+                ProjectUser projectUser9 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 1"),
+                    User = db.Users.First(u => u.Email == "katherine@gmail.com")
+                };
+
+                db.ProjectUsers.AddRange(new List<ProjectUser>
+                {
+                    projectUser1,
+                    projectUser2,
+                    projectUser3,
+                    projectUser4,
+                    projectUser5,
+                    projectUser6,
+                    projectUser7,
+                    projectUser8,
+                    projectUser9
+                });
+            }
         }
     }
 }

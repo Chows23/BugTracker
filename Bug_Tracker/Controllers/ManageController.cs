@@ -67,8 +67,7 @@ namespace Bug_Tracker.Controllers
             return View(users);
         }
 
-        [HttpPost]
-        public ActionResult ChangeUserRole(string userId, int roleId)
+        public ActionResult AddToRole(string userId, int roleId)
         {
             var role = db.Roles.Find(roleId);
 
@@ -76,7 +75,7 @@ namespace Bug_Tracker.Controllers
                 UserService.AddUserToRole(userId, role.Name);
 
             db.SaveChanges();
-            return View();
+            return RedirectToAction("ChangeUserRole");
         }
 
         [HttpPost]

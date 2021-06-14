@@ -12,18 +12,18 @@
 
 @using (Html.BeginForm())
 {
-    <table>
+    <table class="table-striped">
 
         @foreach (var user in Model)
         {
             <tr>
                 <td>@user.Email</td>
                 <td>@Html.DropDownList("Roles")</td>
+                <td>@Html.ActionLink("Add to Role", "AddToRole", new { id = user.Id }, new { @class = "btn btn-primary" })</td>
+                <td><input type="submit" value="Add To Role" class="btn btn-default" /></td>
                 <td>@Html.ActionLink("Remove All Roles", "RemoveRoles", null, new { @class = "btn btn-danger" })</td>
             </tr>
         }
 
     </table>
-
-    <input type="submit" value="Add To Role" class="btn btn-default" />
 }

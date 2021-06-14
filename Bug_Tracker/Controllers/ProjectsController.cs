@@ -37,7 +37,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult AllProjects()
         {
-            return View(projectService.AllProjects());
+            return View(projectService.AllProjects().ToList());
         }
 
         [Authorize(Roles = "admin, manager")]
@@ -68,7 +68,7 @@ namespace Bug_Tracker.Controllers
             return View(project);
         }
 
-        public ActionResult Edit(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -83,15 +83,17 @@ namespace Bug_Tracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Name")] Project project)
+        public ActionResult Edit([Bind(Include = "Id,Name")] Project project)
         {
             if (ModelState.IsValid)
             {
                 projectService.Update(project);
-                return RedirectToAction("Details");
+                return RedirectToAction("Details", new { id = project.Id });
             }
-            
-            return View(project);
+            else
+                TempData["Error"] = "Your project is missing something";
+
+            return RedirectToAction("Details", new { id = project.Id });
         }
     }
 }

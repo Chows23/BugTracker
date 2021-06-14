@@ -288,7 +288,7 @@
     <Content Include="Views\Projects\Create.cshtml" />
     <Content Include="Views\Projects\AllProjects.cshtml" />
     <Content Include="Views\Manage\ChangeUserRole.cshtml" />
-    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

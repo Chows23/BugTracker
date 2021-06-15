@@ -3,7 +3,7 @@ namespace Bug_Tracker.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddAllClasses : DbMigration
+    public partial class AddClasses : DbMigration
     {
         public override void Up()
         {
@@ -12,7 +12,7 @@ namespace Bug_Tracker.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
+                        Name = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -31,16 +31,74 @@ namespace Bug_Tracker.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
+                "dbo.AspNetUsers",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Email = c.String(maxLength: 256),
+                        EmailConfirmed = c.Boolean(nullable: false),
+                        PasswordHash = c.String(),
+                        SecurityStamp = c.String(),
+                        PhoneNumber = c.String(),
+                        PhoneNumberConfirmed = c.Boolean(nullable: false),
+                        TwoFactorEnabled = c.Boolean(nullable: false),
+                        LockoutEndDateUtc = c.DateTime(),
+                        LockoutEnabled = c.Boolean(nullable: false),
+                        AccessFailedCount = c.Int(nullable: false),
+                        UserName = c.String(nullable: false, maxLength: 256),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
+            
+            CreateTable(
+                "dbo.AspNetUserClaims",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        ClaimType = c.String(),
+                        ClaimValue = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.AspNetUserLogins",
+                c => new
+                    {
+                        LoginProvider = c.String(nullable: false, maxLength: 128),
+                        ProviderKey = c.String(nullable: false, maxLength: 128),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.AspNetUserRoles",
+                c => new
+                    {
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.UserId, t.RoleId })
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
+                .Index(t => t.UserId)
+                .Index(t => t.RoleId);
+            
+            CreateTable(
                 "dbo.TicketAttachments",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
                         TicketId = c.Int(nullable: false),
-                        FilePath = c.String(),
-                        Description = c.String(),
+                        FilePath = c.String(nullable: false),
+                        Description = c.String(nullable: false),
                         Created = c.DateTime(nullable: false),
                         UserId = c.String(maxLength: 128),
-                        FileUrl = c.String(),
+                        FileUrl = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Tickets", t => t.TicketId, cascadeDelete: true)
@@ -52,9 +110,9 @@ namespace Bug_Tracker.Migrations
                 "dbo.Tickets",
                 c => new
                     {
-                        Id = c.Int(nullable: false),
-                        Title = c.String(),
-                        Description = c.String(),
+                        Id = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false),
+                        Description = c.String(nullable: false),
                         Created = c.DateTime(nullable: false),
                         Updated = c.DateTime(nullable: false),
                         ProjectId = c.Int(nullable: false),
@@ -68,11 +126,13 @@ namespace Bug_Tracker.Migrations
                 .ForeignKey("dbo.AspNetUsers", t => t.AssignedToUserId)
                 .ForeignKey("dbo.AspNetUsers", t => t.OwnerUserId)
                 .ForeignKey("dbo.Projects", t => t.ProjectId, cascadeDelete: true)
-                .ForeignKey("dbo.TicketPriorities", t => t.Id)
-                .ForeignKey("dbo.TicketStatus", t => t.Id)
-                .ForeignKey("dbo.TicketTypes", t => t.Id)
-                .Index(t => t.Id)
+                .ForeignKey("dbo.TicketPriorities", t => t.TicketPriorityId, cascadeDelete: true)
+                .ForeignKey("dbo.TicketStatus", t => t.TicketStatusId, cascadeDelete: true)
+                .ForeignKey("dbo.TicketTypes", t => t.TicketTypeId, cascadeDelete: true)
                 .Index(t => t.ProjectId)
+                .Index(t => t.TicketTypeId)
+                .Index(t => t.TicketPriorityId)
+                .Index(t => t.TicketStatusId)
                 .Index(t => t.OwnerUserId)
                 .Index(t => t.AssignedToUserId);
             
@@ -81,7 +141,7 @@ namespace Bug_Tracker.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Comment = c.String(),
+                        Comment = c.String(nullable: false),
                         Created = c.DateTime(nullable: false),
                         TicketId = c.Int(nullable: false),
                         UserId = c.String(maxLength: 128),
@@ -151,14 +211,25 @@ namespace Bug_Tracker.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
+            CreateTable(
+                "dbo.AspNetRoles",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 256),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true, name: "RoleNameIndex");
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.TicketAttachments", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Tickets", "Id", "dbo.TicketTypes");
-            DropForeignKey("dbo.Tickets", "Id", "dbo.TicketStatus");
-            DropForeignKey("dbo.Tickets", "Id", "dbo.TicketPriorities");
+            DropForeignKey("dbo.Tickets", "TicketTypeId", "dbo.TicketTypes");
+            DropForeignKey("dbo.Tickets", "TicketStatusId", "dbo.TicketStatus");
+            DropForeignKey("dbo.Tickets", "TicketPriorityId", "dbo.TicketPriorities");
             DropForeignKey("dbo.TicketNotifications", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.TicketNotifications", "TicketId", "dbo.Tickets");
             DropForeignKey("dbo.TicketHistories", "UserId", "dbo.AspNetUsers");
@@ -169,8 +240,12 @@ namespace Bug_Tracker.Migrations
             DropForeignKey("dbo.Tickets", "ProjectId", "dbo.Projects");
             DropForeignKey("dbo.Tickets", "OwnerUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "AssignedToUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.ProjectUsers", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.ProjectUsers", "ProjectId", "dbo.Projects");
+            DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.TicketNotifications", new[] { "UserId" });
             DropIndex("dbo.TicketNotifications", new[] { "TicketId" });
             DropIndex("dbo.TicketHistories", new[] { "UserId" });
@@ -179,12 +254,20 @@ namespace Bug_Tracker.Migrations
             DropIndex("dbo.TicketComments", new[] { "TicketId" });
             DropIndex("dbo.Tickets", new[] { "AssignedToUserId" });
             DropIndex("dbo.Tickets", new[] { "OwnerUserId" });
+            DropIndex("dbo.Tickets", new[] { "TicketStatusId" });
+            DropIndex("dbo.Tickets", new[] { "TicketPriorityId" });
+            DropIndex("dbo.Tickets", new[] { "TicketTypeId" });
             DropIndex("dbo.Tickets", new[] { "ProjectId" });
-            DropIndex("dbo.Tickets", new[] { "Id" });
             DropIndex("dbo.TicketAttachments", new[] { "UserId" });
             DropIndex("dbo.TicketAttachments", new[] { "TicketId" });
+            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
+            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
+            DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.ProjectUsers", new[] { "UserId" });
             DropIndex("dbo.ProjectUsers", new[] { "ProjectId" });
+            DropTable("dbo.AspNetRoles");
             DropTable("dbo.TicketTypes");
             DropTable("dbo.TicketStatus");
             DropTable("dbo.TicketPriorities");
@@ -193,6 +276,10 @@ namespace Bug_Tracker.Migrations
             DropTable("dbo.TicketComments");
             DropTable("dbo.Tickets");
             DropTable("dbo.TicketAttachments");
+            DropTable("dbo.AspNetUserRoles");
+            DropTable("dbo.AspNetUserLogins");
+            DropTable("dbo.AspNetUserClaims");
+            DropTable("dbo.AspNetUsers");
             DropTable("dbo.ProjectUsers");
             DropTable("dbo.Projects");
         }

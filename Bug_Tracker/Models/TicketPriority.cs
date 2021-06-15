@@ -9,8 +9,9 @@ namespace Bug_Tracker.Models
     {
         public TicketPriority()
         {
-            this.Tickets = new HashSet<Ticket>();
+            Tickets = new HashSet<Ticket>();
         }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }

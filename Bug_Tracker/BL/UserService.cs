@@ -31,6 +31,12 @@ namespace Bug_Tracker.BL
             return result.Succeeded;
         }
 
+        // Get User
+        public static ApplicationUser GetUser(string username)
+        {
+            return db.Users.FirstOrDefault(u => u.UserName == username);
+        }
+
         //Check if user is in a role
         public static bool UserInRole(string userId, string role)
         {

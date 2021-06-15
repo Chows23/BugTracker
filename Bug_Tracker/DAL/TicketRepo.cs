@@ -18,7 +18,12 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<Ticket> GetCollection(Func<Ticket, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.Tickets.Where(condition).ToList();
+        }
+
+        public IEnumerable<Ticket> GetCollection(Func<Ticket, DateTime> condition)
+        {
+            return db.Tickets.OrderByDescending(condition);
         }
 
         public Ticket GetEntity(int id)

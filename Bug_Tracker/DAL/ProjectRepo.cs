@@ -24,6 +24,11 @@ namespace Bug_Tracker.DAL
             return db.Projects.Where(condition);
         }
 
+        public IEnumerable<Project> GetCollection(Func<Project, DateTime> condition)
+        {
+            return db.Projects.OrderByDescending(condition);
+        }
+
         public Project GetEntity(int id)
         {
             return db.Projects.Find(id);

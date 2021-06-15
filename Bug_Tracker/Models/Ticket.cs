@@ -27,18 +27,17 @@ namespace Bug_Tracker.Models
         public DateTime Created { get; set; } 
         public DateTime Updated { get; set; }
         public int ProjectId { get; set; }
+        [Required]
         public int TicketTypeId { get; set; }
+        [Required]
         public int TicketPriorityId { get; set; }
         public int TicketStatusId { get; set; }
         public string OwnerUserId { get; set; }
         public string AssignedToUserId { get; set; }
 
         public virtual Project Project { get; set; }
-        [Required]
         public virtual TicketType TicketType { get; set; }
-        [Required]
         public virtual TicketPriority TicketPriority { get; set; }
-        [Required]
         public virtual TicketStatus TicketStatus { get; set; }
         public virtual ApplicationUser OwnerUser { get; set; }
         public virtual ApplicationUser AssignedToUser { get; set; }

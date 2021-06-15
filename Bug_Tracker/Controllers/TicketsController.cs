@@ -8,12 +8,14 @@ using System.Web;
 using System.Web.Mvc;
 using Bug_Tracker.Models;
 using PagedList;
+using Bug_Tracker.BL;
 
 namespace Bug_Tracker.Controllers
 {
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private TicketService ticketService = new TicketService();
 
         // GET: Tickets
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -78,29 +80,29 @@ namespace Bug_Tracker.Controllers
         }
 
         // GET: Tickets/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
-            //ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name");
-            //ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name");
+
+            ViewBag.ProjectId = id;
+            ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");
+            ViewBag.Type = new SelectList(db.TicketTypes, "Id", "Name");
             return View();
         }
 
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Description,Created")] Ticket ticket)
+        public ActionResult Create([Bind(Include = "Title,Description,ProjectId,TicketTypeId,TicketPriorityId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                db.Tickets.Add(ticket);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                ticketService.Create(ticket);
+                return RedirectToAction("Details", new { id = ticket.Id});
             }
 
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            //ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
-            //ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
+            ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");
+            ViewBag.Type = new SelectList(db.TicketTypes, "Id", "Name");
+
             return View(ticket);
         }
 

@@ -130,6 +130,26 @@ namespace Bug_Tracker.Migrations
                     Name = "Function Change",
                 };
 
+                db.TicketStatuses.AddRange(new List<TicketStatus>
+                {
+                    unresolvedStatus,
+                    abandonedStatus,
+                    resolvedStatus,
+                });
+
+                db.TicketTypes.AddRange(new List<TicketType>
+                {
+                    bugType,
+                    featureType,
+                    functionType,
+                });
+
+                db.TicketPriorities.AddRange(new List<TicketPriority>
+                {
+                    highPriority,
+                    lowPriority,
+                });
+
                 Ticket ticket1 = new Ticket
                 {
                     Title = "Test Ticket 1",

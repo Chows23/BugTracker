@@ -52,6 +52,12 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -184,9 +190,9 @@
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\TicketAttachmentController.cs" />
     <Compile Include="Controllers\TicketCommentController.cs" />
-    <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\TicketHistoryController.cs" />
     <Compile Include="Controllers\TicketNotificationController.cs" />
+    <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\ProjectRepo.cs" />
     <Compile Include="DAL\ProjectUserRepo.cs" />
@@ -235,6 +241,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -288,6 +295,11 @@
     <Content Include="Views\Projects\Create.cshtml" />
     <Content Include="Views\Projects\AllProjects.cshtml" />
     <Content Include="Views\Manage\ChangeUserRole.cshtml" />
+    <Content Include="Views\Tickets\Create.cshtml" />
+    <Content Include="Views\Tickets\Delete.cshtml" />
+    <Content Include="Views\Tickets\Details.cshtml" />
+    <Content Include="Views\Tickets\Edit.cshtml" />
+    <Content Include="Views\Tickets\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -295,7 +307,6 @@
     <Folder Include="Views\TicketComment\" />
     <Folder Include="Views\TicketHistory\" />
     <Folder Include="Views\TicketNotification\" />
-    <Folder Include="Views\Ticket\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -12,6 +12,8 @@ namespace Bug_Tracker.DAL
 
         public void Add(Ticket entity)
         {
+            //entity.ticket status id
+            entity.TicketStatusId = db.TicketStatuses.FirstOrDefault(ts => ts.Name == "unresolved").Id;
             db.Tickets.Add(entity);
             db.SaveChanges();
         }

@@ -16,7 +16,6 @@ namespace Bug_Tracker.Controllers
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
         private UserService userService = new UserService();
-        public static ApplicationDbContext db = new ApplicationDbContext();
         
         [Authorize]
         public ActionResult Index()

@@ -18,6 +18,8 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<ProjectUser> GetCollection(Func<ProjectUser, bool> condition)
         {
+            if (condition == null)
+                return db.ProjectUsers;
             return db.ProjectUsers.Where(condition);
         }
 

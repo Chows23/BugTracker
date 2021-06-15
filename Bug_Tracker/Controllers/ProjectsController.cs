@@ -78,6 +78,8 @@ namespace Bug_Tracker.Controllers
             if (project == null)
                 return HttpNotFound();
 
+            ViewBag.UserId = new SelectList(db.Users, "Id", "UserName");
+
             return View(project);
         }
 
@@ -92,6 +94,32 @@ namespace Bug_Tracker.Controllers
             }
             else
                 TempData["Error"] = "Your project is missing something";
+
+            return RedirectToAction("Details", new { id = project.Id });
+        }
+
+        [HttpPost]
+        public ActionResult AddUser(int? id, string userId)
+        {
+            if (id == null || userId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = db.Users.Find(userId);
+            var project = projectService.GetProject((int)id);
+
+            if (user == null || project == null)
+                return HttpNotFound();
+
+            if (ModelState.IsValid)
+            {
+                var existingProjectUser = projectUserService.GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == id && pu.UserId == userId);
+                
+                if (existingProjectUser == null)
+                {
+                    var newProjectUser = projectUserService.ProjectUser(userId, (int)id);
+                    projectUserService.Create(newProjectUser);
+                }                          
+            }
 
             return RedirectToAction("Details", new { id = project.Id });
         }

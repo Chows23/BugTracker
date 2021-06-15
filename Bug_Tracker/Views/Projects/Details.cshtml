@@ -68,7 +68,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Add a User</h4>
             </div>
-            @using (Html.BeginForm("AddUser", "Projects"))
+            @using (Html.BeginForm("AddUser", "Projects", new { id = Model.Id }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
@@ -80,9 +80,7 @@
                     }
 
                     <div class="form-group">
-                        @Html.HiddenFor(model => model.Id)
-                        @Html.LabelFor(model => model.Name)
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.DropDownList("UserId")
                     </div>
                 </div>
                 <div class="modal-footer">

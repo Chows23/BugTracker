@@ -10,9 +10,9 @@ namespace Bug_Tracker.BL
     public class TicketCommentService
     {
         public TicketCommentRepo repo = new TicketCommentRepo();
-        public void Create(TicketComment ticketComment)
+        public void Create(TicketComment ticketComment, Ticket ticket)
         {
-            repo.Add(ticketComment);
+            ticket.TicketComments.Add(ticketComment);
         }
     }
 }

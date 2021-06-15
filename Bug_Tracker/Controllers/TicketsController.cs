@@ -16,6 +16,7 @@ namespace Bug_Tracker.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private TicketService ticketService = new TicketService();
+        private TicketCommentService ticketCommentService = new TicketCommentService();
 
         // GET: Tickets
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -176,6 +177,24 @@ namespace Bug_Tracker.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        // Comment
+
+        [HttpPost]
+        public ActionResult Comment([Bind(Include = "Comment,TicketId,UserId")] TicketComment comment)
+        {
+            var user = UserService.GetUser(User.Identity.Name);
+            var ticket = ticketService.GetTicket(comment.TicketId);
+
+            // add comment to ticket in comment service
+
+            if (ModelState.IsValid)
+                ticketCommentService.Create(comment, ticket);
+            else
+                TempData["Error"] = "Your comment is missing something";
+
+            return RedirectToAction("Details", "Tickets", new { id = comment.TicketId });
         }
     }
 }

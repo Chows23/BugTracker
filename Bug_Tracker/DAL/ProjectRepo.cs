@@ -19,9 +19,12 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<Project> GetCollection(Func<Project, bool> condition)
         {
-            if (condition == null)
-                return db.Projects;
             return db.Projects.Where(condition);
+        }
+
+        public IEnumerable<Project> GetAll()
+        {
+            return db.Projects;
         }
 
         public IEnumerable<Project> GetCollection(Func<Project, DateTime> condition)

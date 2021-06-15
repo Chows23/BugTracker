@@ -23,7 +23,7 @@ namespace Bug_Tracker.BL
 
         public IEnumerable<Project> AllProjects()
         {
-            return repo.GetCollection(null);
+            return repo.GetAll();
         }
 
         public void Update(Project project)

@@ -90,8 +90,123 @@ namespace Bug_Tracker.Migrations
                     project4,
                     project5
                 });
+
+                db.SaveChanges();
+
+                // Tickets
+
+                TicketPriority highPriority = new TicketPriority
+                {
+                    Name = "High",
+                };
+                TicketPriority lowPriority = new TicketPriority
+                {
+                    Name = "Low",
+                };
+
+                TicketStatus unresolvedStatus = new TicketStatus
+                {
+                    Name = "Unresolved",
+                };
+                TicketStatus abandonedStatus = new TicketStatus
+                {
+                    Name = "Abandoned",
+                };
+                TicketStatus resolvedStatus = new TicketStatus
+                {
+                    Name = "Resolved",
+                };
+
+                TicketType bugType = new TicketType
+                {
+                    Name = "Bug",
+                };
+                TicketType featureType = new TicketType
+                {
+                    Name = "Feature",
+                };
+                TicketType functionType = new TicketType
+                {
+                    Name = "Function Change",
+                };
+
+                Ticket ticket1 = new Ticket
+                {
+                    Title = "Test Ticket 1",
+                    Description = "This is a test bug ticket.",
+                    Project = project1,
+                    TicketType = bugType,
+                    TicketPriority = highPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
+                };
+                Ticket ticket2 = new Ticket
+                {
+                    Title = "Test Ticket 2",
+                    Description = "This is a test feature ticket.",
+                    Project = project1,
+                    TicketType = featureType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "elizabeth@gmail.com"),
+                };
+                Ticket ticket3 = new Ticket
+                {
+                    Title = "Test Ticket 3",
+                    Description = "This is a test function change ticket.",
+                    Project = project2,
+                    TicketType = functionType,
+                    TicketPriority = highPriority,
+                    TicketStatus = resolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com"),
+                };
+                Ticket ticket4 = new Ticket
+                {
+                    Title = "Test Ticket 4",
+                    Description = "This is a test bug ticket.",
+                    Project = project3,
+                    TicketType = bugType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "elizabeth@gmail.com"),
+                };
+                Ticket ticket5 = new Ticket
+                {
+                    Title = "Test Ticket 5",
+                    Description = "This is a test bug ticket.",
+                    Project = project4,
+                    TicketType = bugType,
+                    TicketPriority = highPriority,
+                    TicketStatus = resolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
+                };
+
+                db.Tickets.AddRange(new List<Ticket>
+                {
+                    ticket1,
+                    ticket2,
+                    ticket3,
+                    ticket4,
+                    ticket5,
+                });
+
+                var katherine = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com");
+                var chows = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com");
+                var elizabeth = db.Users.FirstOrDefault(u => u.Email == "elizabeth@gmail.com");
+
+                katherine.Tickets.Add(ticket1);
+                katherine.Tickets.Add(ticket5);
+                chows.Tickets.Add(ticket3);
+                elizabeth.Tickets.Add(ticket2);
+                elizabeth.Tickets.Add(ticket4);
+
+                db.SaveChanges();
             }
-            db.SaveChanges();
 
             // ProjectUsers
 
@@ -99,8 +214,8 @@ namespace Bug_Tracker.Migrations
             {
                 ProjectUser projectUser1 = new ProjectUser
                 {
-                    ProjectId = db.Projects.First(p => p.Name == "Test Project 1").Id,
-                    UserId = db.Users.First(u => u.Email == "manager@gmail.com").Id
+                    Project = db.Projects.First(p => p.Name == "Test Project 1"),
+                    User = db.Users.First(u => u.Email == "manager@gmail.com")
                 };
                 ProjectUser projectUser2 = new ProjectUser
                 {
@@ -155,6 +270,8 @@ namespace Bug_Tracker.Migrations
                     projectUser8,
                     projectUser9
                 });
+
+                db.SaveChanges();
             }
         }
     }

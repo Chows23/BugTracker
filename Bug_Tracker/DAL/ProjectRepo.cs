@@ -17,6 +17,11 @@ namespace Bug_Tracker.DAL
             db.SaveChanges();
         }
 
+        public IEnumerable<Project> GetCollection()
+        {
+            return db.Projects;
+        }
+
         public IEnumerable<Project> GetCollection(Func<Project, bool> condition)
         {
             return db.Projects.Where(condition);

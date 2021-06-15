@@ -12,7 +12,7 @@
     <h3>Nothing to display.</h3>
 }
 
-@if (Model.Projects.Count > 1)
+@if (Model.Projects.Count >= 1)
 {
     <ul>
         @foreach (var item in Model.Projects)
@@ -22,7 +22,7 @@
     </ul>
 }
 
-@if (Model.Tickets.Count > 1)
+@if (Model.Tickets.Count >= 1)
 {
     <ul>
         @foreach (var item in Model.Tickets)

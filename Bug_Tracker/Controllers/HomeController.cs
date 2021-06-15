@@ -11,7 +11,6 @@ namespace Bug_Tracker.Controllers
 {
     public class HomeController : Controller
     {
-        ApplicationDbContext db = new ApplicationDbContext();
         private TicketService ticketService = new TicketService();
         private ProjectService projectService = new ProjectService();
 
@@ -41,7 +40,7 @@ namespace Bug_Tracker.Controllers
             }
             else if (User.IsInRole("manager"))
             {
-                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var user = UserService.GetUser(User.Identity.Name);
                 var recentProjects = projectService.GetNLatestUpdated(3, user);
 
                 var dashboardViewModel = new DashboardViewModels
@@ -53,7 +52,7 @@ namespace Bug_Tracker.Controllers
             }
             else if (User.IsInRole("developer"))
             {
-                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var user = UserService.GetUser(User.Identity.Name);
                 var recentTickets = ticketService.GetNLatestUpdated(3, user);
 
                 var dashboardViewModel = new DashboardViewModels
@@ -65,7 +64,7 @@ namespace Bug_Tracker.Controllers
             }
             else if (User.IsInRole("submitter"))
             {
-                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var user = UserService.GetUser(User.Identity.Name);
                 var recentTickets = ticketService.GetNLatestCreated(3, user);
 
                 var dashboardViewModel = new DashboardViewModels

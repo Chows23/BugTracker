@@ -19,13 +19,19 @@ namespace Bug_Tracker.Controllers
                 return View();
         }
 
+        [Authorize]
         public ActionResult Dashboard()
         {
             if (User.IsInRole("admin"))
             {
-                var recentTickets = db.Tickets.OrderByDescending(t => t.Updated).Take(5).ToList();
+                var recentTickets = db.Tickets.OrderByDescending(t => t.Updated).Take(3).ToList();
 
-                return View(recentTickets);
+                var dashboardViewModel = new DashboardViewModels
+                {
+                    Tickets = recentTickets,
+                };
+
+                return View(dashboardViewModel);
             }
             else if (User.IsInRole("manager"))
             {
@@ -35,22 +41,31 @@ namespace Bug_Tracker.Controllers
                 //    (t => t.Updated)).Take(5).ToList();
                 //FIX ^^^^^^^^^^^^^^^^^^^^^
 
-                var recentProjects = user.ProjectUsers.Take(5).ToList();
+                var recentProjects = user.ProjectUsers.Take(3).ToList();
 
-                return View(recentProjects);
+                var dashboardViewModel = new DashboardViewModels
+                {
+                    ProjectUsers = recentProjects,
+                };
+
+                return View(dashboardViewModel);
             }
             else if (User.IsInRole("developer"))
             {
                 var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var recentTickets = db.Tickets.OrderByDescending(t => t.Updated).Take(3).ToList();
+
                 return View();
             }
             else if (User.IsInRole("submitter"))
             {
                 var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var recentTickets = db.Tickets.OrderByDescending(t => t.Created).Take(3).ToList();
+
                 return View();
             }
             else
-                return View();
+                return RedirectToAction("Index");
         }
     }
 }

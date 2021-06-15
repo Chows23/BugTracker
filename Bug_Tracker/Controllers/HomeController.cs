@@ -1,4 +1,6 @@
-﻿using Bug_Tracker.Models;
+﻿using Bug_Tracker.BL;
+using Bug_Tracker.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,8 @@ namespace Bug_Tracker.Controllers
     public class HomeController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
+        private TicketService ticketService = new TicketService();
+        private ProjectService projectService = new ProjectService();
 
         public ActionResult Index()
         {
@@ -24,7 +28,33 @@ namespace Bug_Tracker.Controllers
         {
             if (User.IsInRole("admin"))
             {
-                var recentTickets = db.Tickets.OrderByDescending(t => t.Updated).Take(3).ToList();
+                var recentTickets = ticketService.GetNLatestUpdated(3, null);
+                var recentProjects = projectService.GetNLatestUpdated(3, null);
+
+                var dashboardViewModel = new DashboardViewModels
+                {
+                    Tickets = recentTickets,
+                    Projects = recentProjects,
+                };
+
+                return View(dashboardViewModel);
+            }
+            else if (User.IsInRole("manager"))
+            {
+                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var recentProjects = projectService.GetNLatestUpdated(3, user);
+
+                var dashboardViewModel = new DashboardViewModels
+                {
+                    Projects = recentProjects,
+                };
+
+                return View(dashboardViewModel);
+            }
+            else if (User.IsInRole("developer"))
+            {
+                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var recentTickets = ticketService.GetNLatestUpdated(3, user);
 
                 var dashboardViewModel = new DashboardViewModels
                 {
@@ -33,36 +63,17 @@ namespace Bug_Tracker.Controllers
 
                 return View(dashboardViewModel);
             }
-            else if (User.IsInRole("manager"))
-            {
-                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-                //var recentProjects = user.ProjectUsers.OrderByDescending
-                //    (p => p.Project.Tickets.OrderByDescending
-                //    (t => t.Updated)).Take(5).ToList();
-                //FIX ^^^^^^^^^^^^^^^^^^^^^
-
-                var recentProjects = user.ProjectUsers.Take(3).ToList();
-
-                var dashboardViewModel = new DashboardViewModels
-                {
-                    ProjectUsers = recentProjects,
-                };
-
-                return View(dashboardViewModel);
-            }
-            else if (User.IsInRole("developer"))
-            {
-                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-                var recentTickets = db.Tickets.OrderByDescending(t => t.Updated).Take(3).ToList();
-
-                return View();
-            }
             else if (User.IsInRole("submitter"))
             {
                 var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-                var recentTickets = db.Tickets.OrderByDescending(t => t.Created).Take(3).ToList();
+                var recentTickets = ticketService.GetNLatestCreated(3, user);
 
-                return View();
+                var dashboardViewModel = new DashboardViewModels
+                {
+                    Tickets = recentTickets,
+                };
+
+                return View(dashboardViewModel);
             }
             else
                 return RedirectToAction("Index");

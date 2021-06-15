@@ -9,11 +9,11 @@ namespace Bug_Tracker.Models
     {
         public DashboardViewModels()
         {
-            ProjectUsers = new List<ProjectUser>();
+            Projects = new List<Project>();
             Tickets = new List<Ticket>();
         }
 
-        public List<ProjectUser> ProjectUsers;
+        public List<Project> Projects;
         public List<Ticket> Tickets;
     }
 }

@@ -7,20 +7,22 @@
 
 <h2>Dashboard</h2>
 
-@if (Model.ProjectUsers.Count == 0 && Model.Tickets.Count == 0)
+@if (Model.Projects.Count == 0 && Model.Tickets.Count == 0)
 {
     <h3>Nothing to display.</h3>
 }
-else if (Model.ProjectUsers.Count > 1)
+
+@if (Model.Projects.Count > 1)
 {
     <ul>
-        @foreach (var item in Model.ProjectUsers)
+        @foreach (var item in Model.Projects)
         {
-            <li>@item.Project.Name</li>
+            <li>@item.Name</li>
         }
     </ul>
 }
-else if (Model.Tickets.Count > 1)
+
+@if (Model.Tickets.Count > 1)
 {
     <ul>
         @foreach (var item in Model.Tickets)

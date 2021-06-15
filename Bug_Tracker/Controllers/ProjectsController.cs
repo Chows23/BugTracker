@@ -99,6 +99,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddUser(int? id, string userId)
         {
             if (id == null || userId == null)
@@ -117,6 +118,31 @@ namespace Bug_Tracker.Controllers
                     var newProjectUser = projectUserService.ProjectUser(userId, (int)id);
                     projectUserService.Create(newProjectUser);
                 }                          
+            }
+
+            return RedirectToAction("Details", new { id = project.Id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveUser(int? id, string userId)
+        {
+            if (id == null || userId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = db.Users.Find(userId);
+            var project = projectService.GetProject((int)id);
+
+            if (user == null || project == null)
+                return HttpNotFound();
+
+            if (ModelState.IsValid)
+            {
+                if (projectUserService.CheckIfUserOnProject((int)id, userId))
+                {
+                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, userId).Id;
+                    projectUserService.RemoveProjectUser(projectUserToRemoveId);
+                }
             }
 
             return RedirectToAction("Details", new { id = project.Id });

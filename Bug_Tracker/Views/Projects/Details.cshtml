@@ -9,7 +9,7 @@
     @Model.Name
     <span class="pull-right">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-name-modal">
-            Edit
+            Edit Name
         </button>
     </span>
 </h2>
@@ -99,7 +99,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Remove a User</h4>
             </div>
-            @using (Html.BeginForm("RemoveUser", "Projects"))
+            @using (Html.BeginForm("RemoveUser", "Projects", new { id = Model.Id }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
@@ -111,9 +111,7 @@
                     }
 
                     <div class="form-group">
-                        @Html.HiddenFor(model => model.Id)
-                        @Html.LabelFor(model => model.Name)
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.DropDownList("UserId")
                     </div>
                 </div>
                 <div class="modal-footer">

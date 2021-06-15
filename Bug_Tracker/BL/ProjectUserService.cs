@@ -39,5 +39,15 @@ namespace Bug_Tracker.BL
                 return true;
             return false;
         }
+
+        public ProjectUser GetExistingProjectUser(int projectId, string userId)
+        {
+            return GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == projectId && pu.UserId == userId);
+        }
+
+        public void RemoveProjectUser(int id)
+        {
+            repo.Delete(id);
+        }
     }
 }

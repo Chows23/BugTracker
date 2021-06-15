@@ -62,7 +62,7 @@ namespace Bug_Tracker.Controllers
                 projectService.Create(project);
                 var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
                 projectUserService.Create(newProjectUser);
-                return RedirectToAction("Edit", "Projects", new { id = project.Id });
+                return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
 
             return View(project);

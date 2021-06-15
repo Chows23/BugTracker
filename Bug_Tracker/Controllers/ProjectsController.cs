@@ -112,9 +112,7 @@ namespace Bug_Tracker.Controllers
 
             if (ModelState.IsValid)
             {
-                var existingProjectUser = projectUserService.GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == id && pu.UserId == userId);
-                
-                if (existingProjectUser == null)
+                if (!projectUserService.CheckIfUserOnProject((int)id, userId))
                 {
                     var newProjectUser = projectUserService.ProjectUser(userId, (int)id);
                     projectUserService.Create(newProjectUser);

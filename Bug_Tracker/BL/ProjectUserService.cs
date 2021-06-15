@@ -30,5 +30,14 @@ namespace Bug_Tracker.BL
         {
             return repo.GetCollection(null);
         }
+
+        public bool CheckIfUserOnProject(int projectId, string userId)
+        {
+            var existingProjectUser = GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == projectId && pu.UserId == userId);
+
+            if (existingProjectUser != null)
+                return true;
+            return false;
+        }
     }
 }

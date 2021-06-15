@@ -11,6 +11,8 @@ namespace Bug_Tracker.Controllers
 {
     public class HomeController : Controller
     {
+        ApplicationDbContext db = new ApplicationDbContext(); // REMOVE??
+
         private TicketService ticketService = new TicketService();
         private ProjectService projectService = new ProjectService();
 

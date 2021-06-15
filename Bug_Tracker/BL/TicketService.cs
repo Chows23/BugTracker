@@ -15,5 +15,18 @@ namespace Bug_Tracker.BL
         {
             repo.Add(ticket);
         }
+
+        public List<Ticket> GetNLatestUpdated(int n, ApplicationUser user)
+        {
+            if (user == null)
+                return repo.GetCollection(t => t.Updated).Take(n).ToList();
+            else
+                return user.Tickets.OrderByDescending(t => t.Updated).Take(n).ToList();
+        }
+
+        public List<Ticket> GetNLatestCreated(int n, ApplicationUser user)
+        {
+            return user.Tickets.OrderByDescending(t => t.Created).Take(n).ToList();
+        }
     }
 }

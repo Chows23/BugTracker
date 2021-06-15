@@ -1,0 +1,33 @@
+﻿@using Bug_Tracker.Models
+@model DashboardViewModels
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+@if (Model.Projects.Count == 0 && Model.Tickets.Count == 0)
+{
+    <h3>Nothing to display.</h3>
+}
+
+@if (Model.Projects.Count > 1)
+{
+    <ul>
+        @foreach (var item in Model.Projects)
+        {
+            <li>@item.Name</li>
+        }
+    </ul>
+}
+
+@if (Model.Tickets.Count > 1)
+{
+    <ul>
+        @foreach (var item in Model.Tickets)
+        {
+            <li>@item.Description</li>
+        }
+    </ul>
+}

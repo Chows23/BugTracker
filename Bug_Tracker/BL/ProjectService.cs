@@ -15,5 +15,17 @@ namespace Bug_Tracker.BL
         {
             repo.Add(project);
         }
+
+        public List<Project> GetNLatestUpdated(int n, ApplicationUser user)
+        {
+            if (user == null)
+                return repo.GetCollection(p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
+            else
+            {
+                return user.ProjectUsers.Select
+                    (pu => pu.Project).OrderByDescending
+                    (p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
+            }
+        }
     }
 }

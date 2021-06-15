@@ -116,9 +116,9 @@ namespace Bug_Tracker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
-            ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
+            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            //ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
+            //ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
             return View(ticket);
         }
 
@@ -135,9 +135,9 @@ namespace Bug_Tracker.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
-            ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
+            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            //ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
+            //ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
             return View(ticket);
         }
 

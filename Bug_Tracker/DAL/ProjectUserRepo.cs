@@ -37,5 +37,12 @@ namespace Bug_Tracker.DAL
         {
             throw new NotImplementedException();
         }
+
+        public void Delete(int id)
+        {
+            var projectUser = db.ProjectUsers.Find(id);
+            db.ProjectUsers.Remove(projectUser);
+            db.SaveChanges();
+        }
     }
 }

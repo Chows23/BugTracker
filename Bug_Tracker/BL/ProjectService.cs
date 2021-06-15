@@ -16,6 +16,21 @@ namespace Bug_Tracker.BL
             repo.Add(project);
         }
 
+        public Project GetProject(int id)
+        {
+            return repo.GetEntity(id);
+        }
+
+        public IEnumerable<Project> AllProjects()
+        {
+            return repo.GetAll();
+        }
+
+        public void Update(Project project)
+        {
+            repo.Update(project);
+        }
+
         public List<Project> GetNLatestUpdated(int n, ApplicationUser user)
         {
             if (user == null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using Bug_Tracker.Models;
@@ -26,6 +27,11 @@ namespace Bug_Tracker.DAL
             return db.Projects.Where(condition);
         }
 
+        public IEnumerable<Project> GetAll()
+        {
+            return db.Projects;
+        }
+
         public IEnumerable<Project> GetCollection(Func<Project, DateTime> condition)
         {
             return db.Projects.OrderByDescending(condition);
@@ -43,7 +49,8 @@ namespace Bug_Tracker.DAL
 
         public void Update(Project entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
         }
     }
 }

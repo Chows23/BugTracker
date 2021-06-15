@@ -15,10 +15,39 @@ namespace Bug_Tracker.BL
             repo.Add(projectUser);
         }
 
-        public IEnumerable<IGrouping<Project, ProjectUser>> GroupedByProject()
+        public ProjectUser ProjectUser(string userId, int projectId)
         {
-            var projectUsers = repo.GetCollection(null).ToList();
-            return projectUsers.GroupBy(p => p.Project);
+            var projectUser = new ProjectUser
+            {
+                UserId = userId,
+                ProjectId = projectId
+            };
+
+            return projectUser;
+        }
+
+        public IEnumerable<ProjectUser> GetAllProjectUsers()
+        {
+            return repo.GetCollection(null);
+        }
+
+        public bool CheckIfUserOnProject(int projectId, string userId)
+        {
+            var existingProjectUser = GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == projectId && pu.UserId == userId);
+
+            if (existingProjectUser != null)
+                return true;
+            return false;
+        }
+
+        public ProjectUser GetExistingProjectUser(int projectId, string userId)
+        {
+            return GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == projectId && pu.UserId == userId);
+        }
+
+        public void RemoveProjectUser(int id)
+        {
+            repo.Delete(id);
         }
     }
 }

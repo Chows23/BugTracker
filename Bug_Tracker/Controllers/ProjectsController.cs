@@ -80,7 +80,7 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
          
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
-            ViewBag.RemoveUserId = new SelectList(db.Users, "Id", "UserName");
+            ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
 
             return View(project);
         }

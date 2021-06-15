@@ -99,5 +99,20 @@ namespace Bug_Tracker.BL
 
             return result;
         }
+
+        // Get possible users to remove from a project
+        public static List<ApplicationUser> GetRemoveFromProjectUsers(int projectId)
+        {
+            List<ApplicationUser> result = new List<ApplicationUser>();
+            foreach (var user in db.Users.ToList())
+            {
+                if (projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager")))
+                {
+                    result.Add(user);
+                }
+            }
+
+            return result;
+        }
     }
 }

@@ -30,18 +30,23 @@ namespace Bug_Tracker.Controllers
             else if (User.IsInRole("manager"))
             {
                 var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-                var recentProjects = user.ProjectUsers.OrderByDescending
-                    (p => p.Project.Tickets.OrderByDescending
-                    (t => t.Updated)).Take(5).ToList();
+                //var recentProjects = user.ProjectUsers.OrderByDescending
+                //    (p => p.Project.Tickets.OrderByDescending
+                //    (t => t.Updated)).Take(5).ToList();
+                //FIX ^^^^^^^^^^^^^^^^^^^^^
+
+                var recentProjects = user.ProjectUsers.Take(5).ToList();
 
                 return View(recentProjects);
             }
             else if (User.IsInRole("developer"))
             {
+                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
                 return View();
             }
             else if (User.IsInRole("submitter"))
             {
+                var user = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
                 return View();
             }
             else

@@ -1,4 +1,4 @@
-﻿@model List<Bug_Tracker.Models.Ticket>
+﻿@model List<Bug_Tracker.Models.Project>
 
 @{
     ViewBag.Title = "Dashboard";
@@ -6,3 +6,9 @@
 
 <h2>Dashboard</h2>
 
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>@item.Name</li>
+    }
+</ul>

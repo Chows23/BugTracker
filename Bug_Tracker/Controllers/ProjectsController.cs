@@ -17,18 +17,17 @@ namespace Bug_Tracker.Controllers
         private ProjectUserService projectUserService = new ProjectUserService();
         private UserService userService = new UserService();
         public static ApplicationDbContext db = new ApplicationDbContext();
-        private UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-
+        
         [Authorize]
         public ActionResult Index()
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = userManager.FindById(User.Identity.GetUserId());
+                user = UserService.GetUser(User.Identity.Name);
             else
                 return new HttpUnauthorizedResult();
 
-            if (userManager.IsInRole(user.Id, "admin"))
+            if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
             
             return View(user.ProjectUsers.Select(p => p.Project));
@@ -53,7 +52,7 @@ namespace Bug_Tracker.Controllers
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = userManager.FindById(User.Identity.GetUserId());
+                user = UserService.GetUser(User.Identity.Name);
             else
                 return new HttpUnauthorizedResult();
 
@@ -109,7 +108,7 @@ namespace Bug_Tracker.Controllers
             if (id == null || addUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(addUserId);
+            var user = UserService.GetUserById(addUserId);
             var project = projectService.GetProject((int)id);
 
             if (user == null || project == null)
@@ -135,7 +134,7 @@ namespace Bug_Tracker.Controllers
             if (id == null || removeUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(removeUserId);
+            var user = UserService.GetUserById(removeUserId);
             var project = projectService.GetProject((int)id);
 
             if (user == null || project == null)

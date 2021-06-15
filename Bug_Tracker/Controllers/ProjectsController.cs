@@ -68,6 +68,7 @@ namespace Bug_Tracker.Controllers
             return View(project);
         }
 
+        [Authorize(Roles = "admin, manager")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -85,7 +86,8 @@ namespace Bug_Tracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Project project)
+        [Authorize(Roles = "admin, manager")]
+        public ActionResult EditName([Bind(Include = "Id,Name")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -100,6 +102,7 @@ namespace Bug_Tracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin, manager")]
         public ActionResult AddUser(int? id, string userId)
         {
             if (id == null || userId == null)
@@ -125,6 +128,7 @@ namespace Bug_Tracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin, manager")]
         public ActionResult RemoveUser(int? id, string userId)
         {
             if (id == null || userId == null)

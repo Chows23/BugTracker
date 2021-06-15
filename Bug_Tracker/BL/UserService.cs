@@ -20,6 +20,8 @@ namespace Bug_Tracker.BL
             new UserStore<ApplicationUser>(db)
         );
 
+        private static ProjectUserService projectUserService = new ProjectUserService();
+
         public static IEnumerable<string> GetAllRoles()
         {
             return roleManager.Roles.Select(r => r.Name).ToList();
@@ -81,6 +83,21 @@ namespace Bug_Tracker.BL
         public static IEnumerable<string> GetAllRolesOfUser(string userId)
         {
             return userManager.GetRoles(userId);
+        }
+
+        // Get possible users to add to a project
+        public static List<ApplicationUser> GetAddToProjectUsers(int projectId)
+        {
+            List<ApplicationUser> result = new List<ApplicationUser>();
+            foreach (var user in db.Users.ToList())
+            {
+                if (!projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager")))
+                {
+                    result.Add(user);
+                }
+            }
+
+            return result;
         }
     }
 }

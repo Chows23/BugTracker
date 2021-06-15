@@ -78,8 +78,9 @@ namespace Bug_Tracker.Controllers
 
             if (project == null)
                 return HttpNotFound();
-
-            ViewBag.UserId = new SelectList(db.Users, "Id", "UserName");
+         
+            ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
+            ViewBag.RemoveUserId = new SelectList(db.Users, "Id", "UserName");
 
             return View(project);
         }
@@ -103,12 +104,12 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin, manager")]
-        public ActionResult AddUser(int? id, string userId)
+        public ActionResult AddUser(int? id, string addUserId)
         {
-            if (id == null || userId == null)
+            if (id == null || addUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(userId);
+            var user = db.Users.Find(addUserId);
             var project = projectService.GetProject((int)id);
 
             if (user == null || project == null)
@@ -116,9 +117,9 @@ namespace Bug_Tracker.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!projectUserService.CheckIfUserOnProject((int)id, userId))
+                if (!projectUserService.CheckIfUserOnProject((int)id, addUserId))
                 {
-                    var newProjectUser = projectUserService.ProjectUser(userId, (int)id);
+                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
                     projectUserService.Create(newProjectUser);
                 }                          
             }
@@ -129,12 +130,12 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin, manager")]
-        public ActionResult RemoveUser(int? id, string userId)
+        public ActionResult RemoveUser(int? id, string removeUserId)
         {
-            if (id == null || userId == null)
+            if (id == null || removeUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(userId);
+            var user = db.Users.Find(removeUserId);
             var project = projectService.GetProject((int)id);
 
             if (user == null || project == null)
@@ -142,9 +143,9 @@ namespace Bug_Tracker.Controllers
 
             if (ModelState.IsValid)
             {
-                if (projectUserService.CheckIfUserOnProject((int)id, userId))
+                if (projectUserService.CheckIfUserOnProject((int)id, removeUserId))
                 {
-                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, userId).Id;
+                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, removeUserId).Id;
                     projectUserService.RemoveProjectUser(projectUserToRemoveId);
                 }
             }

@@ -87,16 +87,16 @@ namespace Bug_Tracker.BL
                     tickets = tickets.OrderByDescending(s => s.Updated);
                     break;
                 case "assign_asc":
-                    tickets = tickets.OrderBy(s => s.AssignedToUser.UserName);
+                    tickets = tickets.OrderBy(s => s.AssignedToUserId);
                     break;
                 case "assign_desc":
-                    tickets = tickets.OrderByDescending(s => s.AssignedToUser.UserName);
+                    tickets = tickets.OrderByDescending(s => s.AssignedToUserId);
                     break;
                 case "own_asc":
-                    tickets = tickets.OrderBy(s => s.OwnerUser.UserName);
+                    tickets = tickets.OrderBy(s => s.OwnerUserId);
                     break;
                 case "own_desc":
-                    tickets = tickets.OrderByDescending(s => s.OwnerUser.UserName);
+                    tickets = tickets.OrderByDescending(s => s.OwnerUserId);
                     break;
                 default:
                     tickets = tickets.OrderBy(s => s.Id);

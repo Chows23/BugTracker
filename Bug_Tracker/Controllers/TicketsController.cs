@@ -19,8 +19,20 @@ namespace Bug_Tracker.Controllers
         private TicketCommentService ticketCommentService = new TicketCommentService();
 
         // GET: Tickets
+        [Authorize]
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            //ApplicationUser user;
+            //if (User.Identity.IsAuthenticated)
+            //    user = UserService.GetUser(User.Identity.Name);
+            //else
+            //    return new HttpUnauthorizedResult();
+
+            //if (UserService.UserInRole(user.Id, "admin"))
+            //    return RedirectToAction("AllTickets");
+
+            //return View(user.ProjectUsers.Select(p => p.Project));
+
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";

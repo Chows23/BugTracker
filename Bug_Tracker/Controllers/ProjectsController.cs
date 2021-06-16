@@ -78,7 +78,7 @@ namespace Bug_Tracker.Controllers
 
             var user = UserService.GetUser(User.Identity.Name);
 
-            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
+            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer") || UserService.UserInRole(user.Id, "manager"))
             {
                 var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
                 if (projectUser == null)

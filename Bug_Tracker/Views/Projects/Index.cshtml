@@ -5,15 +5,18 @@
     ViewBag.Title = "Your Projects";
 }
 
-<h2>Your Projects</h2>
-@if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
-{
-    @Html.ActionLink("All Projects", "AllProjects", null, new { @class = "btn btn-primary", style = "margin-bottom: 20px" })
-}
+<h2>
+    Your Projects
+    @if (UserService.UserInRole(User.Identity.GetUserId(), "manager"))
+    {
+    <span class="pull-right">@Html.ActionLink("All Projects", "AllProjects", null, new { @class = "btn btn-primary" })</span>       
+    }
+</h2>
+
 
 <ul class="list-group">
     @foreach (var project in Model)
     {
-        <li class="list-group-item">@project.Name</li>
+        <li class="list-group-item">@Html.ActionLink(project.Name, "Details", new { id = project.Id })</li>
     }
 </ul>

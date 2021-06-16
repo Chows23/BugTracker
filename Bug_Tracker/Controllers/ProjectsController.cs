@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Bug_Tracker.BL;
@@ -14,18 +15,18 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
-        private UserService userService = new UserService();
-        public static ApplicationDbContext db = new ApplicationDbContext();
-        private UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-
+        
         [Authorize]
         public ActionResult Index()
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = userManager.FindById(User.Identity.GetUserId());
+                user = UserService.GetUser(User.Identity.Name);
             else
                 return new HttpUnauthorizedResult();
+
+            if (UserService.UserInRole(user.Id, "admin"))
+                return RedirectToAction("AllProjects");
             
             return View(user.ProjectUsers.Select(p => p.Project));
         }
@@ -33,7 +34,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult AllProjects()
         {
-            return View(projectUserService.GroupedByProject());
+            return View(projectService.AllProjects().ToList());
         }
 
         [Authorize(Roles = "admin, manager")]
@@ -49,23 +50,115 @@ namespace Bug_Tracker.Controllers
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = userManager.FindById(User.Identity.GetUserId());
+                user = UserService.GetUser(User.Identity.Name);
             else
                 return new HttpUnauthorizedResult();
 
             if (ModelState.IsValid)
             {
                 projectService.Create(project);
-                ProjectUser newProjectUser = new ProjectUser
-                {
-                    ProjectId = project.Id,
-                    UserId = user.Id
-                };
+                var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
                 projectUserService.Create(newProjectUser);
-                return RedirectToAction("Edit", "Projects", new { id = project.Id });
+                return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
 
             return View(project);
+        }
+
+        [Authorize]
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var project = projectService.GetProject((int)id);
+
+            if (project == null)
+                return HttpNotFound();
+
+            var user = UserService.GetUser(User.Identity.Name);
+
+            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
+            {
+                var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
+                if (projectUser == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+         
+            ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
+            ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
+            var tickets = projectService.GetUserTicketsOnProject(UserService.GetUser(User.Identity.Name), project.Tickets.ToList());
+            project.Tickets = tickets;
+
+            return View(project);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin, manager")]
+        public ActionResult EditName([Bind(Include = "Id,Name")] Project project)
+        {
+            if (ModelState.IsValid)
+            {
+                projectService.Update(project);
+                return RedirectToAction("Details", new { id = project.Id });
+            }
+            else
+                TempData["Error"] = "Your project is missing something";
+
+            return RedirectToAction("Details", new { id = project.Id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin, manager")]
+        public ActionResult AddUser(int? id, string addUserId)
+        {
+            if (id == null || addUserId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = UserService.GetUserById(addUserId);
+            var project = projectService.GetProject((int)id);
+
+            if (user == null || project == null)
+                return HttpNotFound();
+
+            if (ModelState.IsValid)
+            {
+                if (!projectUserService.CheckIfUserOnProject((int)id, addUserId))
+                {
+                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
+                    projectUserService.Create(newProjectUser);
+                }                          
+            }
+
+            return RedirectToAction("Details", new { id = project.Id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin, manager")]
+        public ActionResult RemoveUser(int? id, string removeUserId)
+        {
+            if (id == null || removeUserId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = UserService.GetUserById(removeUserId);
+            var project = projectService.GetProject((int)id);
+
+            if (user == null || project == null)
+                return HttpNotFound();
+
+            if (ModelState.IsValid)
+            {
+                if (projectUserService.CheckIfUserOnProject((int)id, removeUserId))
+                {
+                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, removeUserId).Id;
+                    projectUserService.RemoveProjectUser(projectUserToRemoveId);
+                }
+            }
+
+            return RedirectToAction("Details", new { id = project.Id });
         }
     }
 }

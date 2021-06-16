@@ -16,6 +16,11 @@ namespace Bug_Tracker.BL
             repo.Add(ticket);
         }
 
+        public Ticket GetTicket(int ticketId)
+        {
+           return repo.GetEntity(ticketId);
+        }
+
         public List<Ticket> GetNLatestUpdated(int n, ApplicationUser user)
         {
             if (user == null)

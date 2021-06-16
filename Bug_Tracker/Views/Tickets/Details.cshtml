@@ -1,4 +1,5 @@
 ﻿@model Bug_Tracker.Models.Ticket
+@using Microsoft.AspNet.Identity;
 
 @{
     ViewBag.Title = "Details";
@@ -116,6 +117,28 @@
 
     </dl>
 </div>
+
+<div>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse">Add a Comment</button>
+    <div class="collapse" id="collapse">
+        @using (Html.BeginForm("Comment", "Tickets", new { TicketId = Model.Id, UserId = User.Identity.GetUserId() }))
+        {
+            @Html.TextArea("Comment", new { style = "max-width: 400px; width: 100%;" }) <br />
+            <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />
+        }
+    </div>
+</div>
+
+@if (Model.TicketComments.Count > 0)
+{
+    <ul>
+        @foreach (var comment in Model.TicketComments)
+        {
+            <li>@comment.Comment</li>
+        }
+    </ul>
+}
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
 </p>

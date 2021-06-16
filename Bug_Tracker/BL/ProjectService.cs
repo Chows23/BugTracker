@@ -16,6 +16,21 @@ namespace Bug_Tracker.BL
             repo.Add(project);
         }
 
+        public Project GetProject(int id)
+        {
+            return repo.GetEntity(id);
+        }
+
+        public IEnumerable<Project> AllProjects()
+        {
+            return repo.GetAll();
+        }
+
+        public void Update(Project project)
+        {
+            repo.Update(project);
+        }
+
         public List<Project> GetNLatestUpdated(int n, ApplicationUser user)
         {
             if (user == null)
@@ -26,6 +41,17 @@ namespace Bug_Tracker.BL
                     (pu => pu.Project).OrderByDescending
                     (p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
             }
+        }
+
+        public List<Ticket> GetUserTicketsOnProject(ApplicationUser user, List<Ticket> tickets)
+        {
+            if (UserService.UserInRole(user.Id, "submitter"))
+                return tickets.Where(t => t.OwnerUserId == user.Id).ToList();
+            else if (UserService.UserInRole(user.Id, "developer"))
+                return tickets.Where(t => t.AssignedToUserId == user.Id).ToList();            
+            else
+                return tickets;
+            
         }
     }
 }

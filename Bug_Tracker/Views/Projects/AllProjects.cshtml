@@ -1,20 +1,21 @@
-﻿@model IEnumerable<IGrouping<Bug_Tracker.Models.Project, Bug_Tracker.Models.ProjectUser>>
+﻿@model List<Bug_Tracker.Models.Project>
 @{
     ViewBag.Title = "All Projects";
 }
 
 <h2>All Projects</h2>
 
-@foreach (var group in Model)
+@foreach (var project in Model)
 {
     <div class="panel panel-default">
-        <div class="panel-heading">@group.Key.Name</div>
+        <div class="panel-heading">@Html.ActionLink(project.Name, "Details", new { id = project.Id })</div>
         <div class="panel-body">
             <div>
-                @foreach (var projectUser in group)
+                @foreach (var ticket in project.Tickets)
                 {
                     <div class="panel panel-default">
-                        <div class="panel-heading">@projectUser.User.UserName</div>
+                        <div class="panel-heading">@Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null )<span class="pull-right">@ticket.Created.ToShortDateString()</span></div>
+                        <div class="panel-body">@(ticket.Description.Length > 50 ? ticket.Description.Substring(0, 47) + "..." : ticket.Description)</div>
                     </div>
                 }
             </div>

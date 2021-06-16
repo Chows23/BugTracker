@@ -46,5 +46,22 @@ namespace Bug_Tracker.Models
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
         public virtual ICollection<TicketComment> TicketComments { get; set; }
         public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
+
+        [NotMapped]
+        public string StatusClassName
+        {
+            get
+            {
+                switch (TicketStatus.Name)
+                {
+                    case "Abandoned":
+                        return "danger";
+                    case "Resolved":
+                        return "success";
+                    default:
+                        return "default";
+                }
+            }
+        }
     }
 }

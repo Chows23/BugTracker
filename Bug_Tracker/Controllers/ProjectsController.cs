@@ -15,20 +15,17 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
-        private UserService userService = new UserService();
-        public static ApplicationDbContext db = new ApplicationDbContext();
-        private UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-
+        
         [Authorize]
         public ActionResult Index()
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = userManager.FindById(User.Identity.GetUserId());
+                user = UserService.GetUser(User.Identity.Name);
             else
                 return new HttpUnauthorizedResult();
 
-            if (userManager.IsInRole(user.Id, "admin"))
+            if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
             
             return View(user.ProjectUsers.Select(p => p.Project));
@@ -53,7 +50,7 @@ namespace Bug_Tracker.Controllers
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = userManager.FindById(User.Identity.GetUserId());
+                user = UserService.GetUser(User.Identity.Name);
             else
                 return new HttpUnauthorizedResult();
 
@@ -62,13 +59,13 @@ namespace Bug_Tracker.Controllers
                 projectService.Create(project);
                 var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
                 projectUserService.Create(newProjectUser);
-                return RedirectToAction("Edit", "Projects", new { id = project.Id });
+                return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
 
             return View(project);
         }
 
-        [Authorize(Roles = "admin, manager")]
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -79,7 +76,19 @@ namespace Bug_Tracker.Controllers
             if (project == null)
                 return HttpNotFound();
 
-            ViewBag.UserId = new SelectList(db.Users, "Id", "UserName");
+            var user = UserService.GetUser(User.Identity.Name);
+
+            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
+            {
+                var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
+                if (projectUser == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+         
+            ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
+            ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
+            var tickets = projectService.GetUserTicketsOnProject(UserService.GetUser(User.Identity.Name), project.Tickets.ToList());
+            project.Tickets = tickets;
 
             return View(project);
         }
@@ -103,12 +112,12 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin, manager")]
-        public ActionResult AddUser(int? id, string userId)
+        public ActionResult AddUser(int? id, string addUserId)
         {
-            if (id == null || userId == null)
+            if (id == null || addUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(userId);
+            var user = UserService.GetUserById(addUserId);
             var project = projectService.GetProject((int)id);
 
             if (user == null || project == null)
@@ -116,9 +125,9 @@ namespace Bug_Tracker.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!projectUserService.CheckIfUserOnProject((int)id, userId))
+                if (!projectUserService.CheckIfUserOnProject((int)id, addUserId))
                 {
-                    var newProjectUser = projectUserService.ProjectUser(userId, (int)id);
+                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
                     projectUserService.Create(newProjectUser);
                 }                          
             }
@@ -129,12 +138,12 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin, manager")]
-        public ActionResult RemoveUser(int? id, string userId)
+        public ActionResult RemoveUser(int? id, string removeUserId)
         {
-            if (id == null || userId == null)
+            if (id == null || removeUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(userId);
+            var user = UserService.GetUserById(removeUserId);
             var project = projectService.GetProject((int)id);
 
             if (user == null || project == null)
@@ -142,9 +151,9 @@ namespace Bug_Tracker.Controllers
 
             if (ModelState.IsValid)
             {
-                if (projectUserService.CheckIfUserOnProject((int)id, userId))
+                if (projectUserService.CheckIfUserOnProject((int)id, removeUserId))
                 {
-                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, userId).Id;
+                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, removeUserId).Id;
                     projectUserService.RemoveProjectUser(projectUserToRemoveId);
                 }
             }

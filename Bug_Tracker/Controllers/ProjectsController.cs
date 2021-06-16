@@ -154,8 +154,6 @@ namespace Bug_Tracker.Controllers
                 if (projectUserService.CheckIfUserOnProject((int)id, removeUserId))
                 {
                     var projectUserToRemove = projectUserService.GetExistingProjectUser((int)id, removeUserId);
-                    //user.ProjectUsers.Remove(projectUserToRemove);
-                    //project.ProjectUsers.Remove(projectUserToRemove);
                     projectUserService.RemoveProjectUser(projectUserToRemove);
                 }
             }

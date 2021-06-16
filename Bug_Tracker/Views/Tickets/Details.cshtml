@@ -24,7 +24,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>@Model.AssignedToUser.UserName</td>
+                    <td>@(Model.AssignedToUser == null ? "Unassigned" : Model.AssignedToUser.UserName)</td>
                     <td>@Model.OwnerUser.UserName</td>
                     <td>@Model.TicketType.Name</td>
                     <td>@Model.TicketStatus.Name</td>

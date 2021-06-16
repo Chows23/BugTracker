@@ -37,6 +37,9 @@ namespace Bug_Tracker.BL
                 return repo.GetCollection().Take(n).ToList();
             else
             {
+                if (user.ProjectUsers.Any(pu => pu.Project.Tickets.Count == 0))
+                    return user.ProjectUsers.Select(pu => pu.Project).Take(n).ToList();
+
                 return user.ProjectUsers.Select
                     (pu => pu.Project).OrderByDescending
                     (p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
@@ -48,10 +51,9 @@ namespace Bug_Tracker.BL
             if (UserService.UserInRole(user.Id, "submitter"))
                 return tickets.Where(t => t.OwnerUserId == user.Id).ToList();
             else if (UserService.UserInRole(user.Id, "developer"))
-                return tickets.Where(t => t.AssignedToUserId == user.Id).ToList();            
+                return tickets.Where(t => t.AssignedToUserId == user.Id).ToList();
             else
                 return tickets;
-            
         }
     }
 }

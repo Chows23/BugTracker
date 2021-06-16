@@ -21,6 +21,14 @@
         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
     </div>
 
+    if (User.IsInRole("admin"))
+    {
+<div class="form-group">
+    @Html.DisplayName("Manager")
+    @Html.DropDownList("ManagerId", null, new { @class = "form-control" })
+</div>
+    }
+
     <input type="submit" value="Create" class="btn btn-primary" />
 }
 

@@ -44,84 +44,8 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            //var tickets = from s in db.Tickets
-            //              select s;
-
             var tickets = ticketService.GetFilteredTickets(searchString);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
-
-            //if (!String.IsNullOrEmpty(searchString))
-            //{
-            //    tickets = tickets.Where(s => s.Title.Contains(searchString)
-            //                           || s.Description.Contains(searchString));
-            //}
-
-            //switch (sortOrder)
-            //{
-            //    case "name_asc":
-            //        tickets = tickets.OrderBy(s => s.Title);
-            //        break;
-            //    case "name_desc":
-            //        tickets = tickets.OrderByDescending(s => s.Title);
-            //        break;
-            //    case "date_asc":
-            //        tickets = tickets.OrderBy(s => s.Created);
-            //        break;
-            //    case "date_desc":
-            //        tickets = tickets.OrderByDescending(s => s.Created);
-            //        break;
-            //    case "desc_asc":
-            //        tickets = tickets.OrderBy(s => s.Description);
-            //        break;
-            //    case "desc_desc":
-            //        tickets = tickets.OrderByDescending(s => s.Description);
-            //        break;
-            //    case "proj_asc":
-            //        tickets = tickets.OrderBy(s => s.Project.Name);
-            //        break;
-            //    case "proj_desc":
-            //        tickets = tickets.OrderByDescending(s => s.Project.Name);
-            //        break;
-            //    case "prior_asc":
-            //        tickets = tickets.OrderBy(s => s.TicketPriority.Name);
-            //        break;
-            //    case "prior_desc":
-            //        tickets = tickets.OrderByDescending(s => s.TicketPriority.Name);
-            //        break;
-            //    case "stat_asc":
-            //        tickets = tickets.OrderBy(s => s.TicketStatus.Name);
-            //        break;
-            //    case "stat_desc":
-            //        tickets = tickets.OrderByDescending(s => s.TicketStatus.Name);
-            //        break;
-            //    case "type_asc":
-            //        tickets = tickets.OrderBy(s => s.TicketType.Name);
-            //        break;
-            //    case "type_desc":
-            //        tickets = tickets.OrderByDescending(s => s.TicketType.Name);
-            //        break;
-            //    case "update_asc":
-            //        tickets = tickets.OrderBy(s => s.Updated);
-            //        break;
-            //    case "update_desc":
-            //        tickets = tickets.OrderByDescending(s => s.Updated);
-            //        break;
-            //    case "assign_asc":
-            //        tickets = tickets.OrderBy(s => s.AssignedToUser.UserName);
-            //        break;
-            //    case "assign_desc":
-            //        tickets = tickets.OrderByDescending(s => s.AssignedToUser.UserName);
-            //        break;
-            //    case "own_asc":
-            //        tickets = tickets.OrderBy(s => s.OwnerUser.UserName);
-            //        break;
-            //    case "own_desc":
-            //        tickets = tickets.OrderByDescending(s => s.OwnerUser.UserName);
-            //        break;
-            //    default:
-            //        tickets = tickets.OrderBy(s => s.Id);
-            //        break;
-            //}
 
             int pageSize = 5;
             int pageNumber = (page ?? 1);

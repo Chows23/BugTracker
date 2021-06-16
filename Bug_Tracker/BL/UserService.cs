@@ -42,7 +42,7 @@ namespace Bug_Tracker.BL
         //Get User by Id
         public static ApplicationUser GetUserById(string id)
         {
-            return db.Users.Find(id);
+            return db.Users.FirstOrDefault(u => u.Id == id);
         }
 
         //Check if user is in a role

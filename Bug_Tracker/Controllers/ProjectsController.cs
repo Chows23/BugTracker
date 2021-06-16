@@ -40,13 +40,14 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult Create()
         {
+            ViewBag.ManagerId = new SelectList(UserService.AllManagers(), "Id", "UserName");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin, manager")]
-        public ActionResult Create([Bind(Include = "Name")] Project project)
+        public ActionResult Create([Bind(Include = "Name")] Project project, string managerId)
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
@@ -57,10 +58,26 @@ namespace Bug_Tracker.Controllers
             if (ModelState.IsValid)
             {
                 projectService.Create(project);
-                var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
-                projectUserService.Create(newProjectUser);
+
+                if (UserService.UserInRole(user.Id, "admin") && managerId != null)
+                {
+                    var newProjectUser = projectUserService.ProjectUser(managerId, project.Id);
+                    newProjectUser.Project = project;
+                    var manager = UserService.GetUserById(managerId);
+                    manager.ProjectUsers.Add(newProjectUser);
+                    projectUserService.Create(newProjectUser);
+                }
+                else
+                {
+                    var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
+                    newProjectUser.Project = project;
+                    user.ProjectUsers.Add(newProjectUser);
+                    projectUserService.Create(newProjectUser);
+                }
+                
                 return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
+            ViewBag.ManagerId = new SelectList(UserService.AllManagers(), "Id", "UserName");
 
             return View(project);
         }
@@ -78,7 +95,7 @@ namespace Bug_Tracker.Controllers
 
             var user = UserService.GetUser(User.Identity.Name);
 
-            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
+            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer") || UserService.UserInRole(user.Id, "manager"))
             {
                 var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
                 if (projectUser == null)
@@ -127,7 +144,7 @@ namespace Bug_Tracker.Controllers
             {
                 if (!projectUserService.CheckIfUserOnProject((int)id, addUserId))
                 {
-                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
+                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);                   
                     projectUserService.Create(newProjectUser);
                 }                          
             }
@@ -153,8 +170,8 @@ namespace Bug_Tracker.Controllers
             {
                 if (projectUserService.CheckIfUserOnProject((int)id, removeUserId))
                 {
-                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, removeUserId).Id;
-                    projectUserService.RemoveProjectUser(projectUserToRemoveId);
+                    var projectUserToRemove = projectUserService.GetExistingProjectUser((int)id, removeUserId);
+                    projectUserService.RemoveProjectUser(projectUserToRemove);
                 }
             }
 

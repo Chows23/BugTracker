@@ -38,7 +38,7 @@ namespace Bug_Tracker.BL
             else
             {
                 if (user.ProjectUsers.Any(pu => pu.Project.Tickets.Count == 0))
-                    return user.ProjectUsers.Select(pu => pu.Project).ToList();
+                    return user.ProjectUsers.Select(pu => pu.Project).Take(n).ToList();
 
                 return user.ProjectUsers.Select
                     (pu => pu.Project).OrderByDescending

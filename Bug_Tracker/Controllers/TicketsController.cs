@@ -37,7 +37,7 @@ namespace Bug_Tracker.Controllers
             ViewBag.CurrentFilter = searchString;
 
             var tickets = from s in db.Tickets
-                           select s;
+                          select s;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -98,7 +98,7 @@ namespace Bug_Tracker.Controllers
             if (ModelState.IsValid)
             {
                 ticketService.Create(ticket);
-                return RedirectToAction("Details", new { id = ticket.Id});
+                return RedirectToAction("Details", new { id = ticket.Id });
             }
 
             ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");
@@ -182,19 +182,22 @@ namespace Bug_Tracker.Controllers
         // Comment
 
         [HttpPost]
-        public ActionResult Comment([Bind(Include = "Comment,TicketId,UserId")] TicketComment comment)
+        public ActionResult Comment([Bind(Include = "Comment,TicketId,UserId")] TicketComment ticketComment)
         {
             var user = UserService.GetUser(User.Identity.Name);
-            var ticket = ticketService.GetTicket(comment.TicketId);
+            var ticket = ticketService.GetTicket(ticketComment.TicketId);
 
             // add comment to ticket in comment service
 
             if (ModelState.IsValid)
-                ticketCommentService.Create(comment, ticket);
+            {
+                user.TicketComments.Add(ticketComment);
+                ticketCommentService.Create(ticketComment, ticket);
+            }
             else
                 TempData["Error"] = "Your comment is missing something";
 
-            return RedirectToAction("Details", "Tickets", new { id = comment.TicketId });
+            return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
         }
     }
 }

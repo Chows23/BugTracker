@@ -119,9 +119,9 @@
 </div>
 
 <div>
+    <h4>Add a Comment</h4>
     @using (Html.BeginForm("Comment", "Tickets", new { TicketId = Model.Id, UserId = User.Identity.GetUserId() }))
     {
-        @Html.AntiForgeryToken()
         @Html.TextArea("Comment", new { style = "max-width: 900px; width: 100%;" }) <br />
         <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />
     }

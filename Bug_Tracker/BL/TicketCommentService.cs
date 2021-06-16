@@ -13,6 +13,7 @@ namespace Bug_Tracker.BL
         public void Create(TicketComment ticketComment, Ticket ticket)
         {
             ticket.TicketComments.Add(ticketComment);
+            repo.Add(ticketComment);
         }
     }
 }

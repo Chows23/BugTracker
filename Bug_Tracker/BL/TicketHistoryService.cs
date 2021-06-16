@@ -15,5 +15,22 @@ namespace Bug_Tracker.BL
         {
             repo.Add(ticketHistory);
         }
+
+        public void CompareTickets(Ticket oldTicket, Ticket newTicket)
+        {
+            if (oldTicket.Title != newTicket.Title)
+            {
+                var ticketHistory = new TicketHistory
+                {
+                    Property = "Title",
+                    OldValue = oldTicket.Title,
+                    NewValue = newTicket.Title,
+                    Changed = DateTime.Now,
+                    // add ids and stuff
+                };
+
+                Create(ticketHistory);
+            }
+        }
     }
 }

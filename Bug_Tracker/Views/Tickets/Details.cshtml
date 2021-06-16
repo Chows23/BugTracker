@@ -4,7 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Ticket History</h2>
 
 <div>
     <h4>Ticket</h4>
@@ -117,6 +117,35 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">History</th>
+            <th scope="col">Property</th>
+            <th scope="col">Old Value</th>
+            <th scope="col">New Value</th>
+            <th scope="col">Changed Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model.TicketHistories)
+        {
+            <tr>
+                <th scope="row">@history.Id</th>
+                <td>@history.Property</td>
+                <td>@history.OldValue</td>
+                <td>@history.NewValue</td>
+                <td>@history.Changed</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<p>
     @Html.ActionLink("Back to List", "Index")
 </p>

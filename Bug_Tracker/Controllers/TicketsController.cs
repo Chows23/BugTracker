@@ -195,7 +195,7 @@ namespace Bug_Tracker.Controllers
                 ticketCommentService.Create(ticketComment, ticket);
             }
             else
-                TempData["Error"] = "Your comment is missing something";
+                TempData["Error"] = "Your comment needs content.";
 
             return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
         }

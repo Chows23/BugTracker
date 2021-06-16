@@ -20,6 +20,8 @@ namespace Bug_Tracker.BL
             new UserStore<ApplicationUser>(db)
         );
 
+        private static ProjectUserService projectUserService = new ProjectUserService();
+
         public static IEnumerable<string> GetAllRoles()
         {
             return roleManager.Roles.Select(r => r.Name).ToList();
@@ -35,6 +37,12 @@ namespace Bug_Tracker.BL
         public static ApplicationUser GetUser(string username)
         {
             return db.Users.FirstOrDefault(u => u.UserName == username);
+        }
+
+        //Get User by Id
+        public static ApplicationUser GetUserById(string id)
+        {
+            return db.Users.Find(id);
         }
 
         //Check if user is in a role
@@ -81,6 +89,36 @@ namespace Bug_Tracker.BL
         public static IEnumerable<string> GetAllRolesOfUser(string userId)
         {
             return userManager.GetRoles(userId);
+        }
+
+        // Get possible users to add to a project
+        public static List<ApplicationUser> GetAddToProjectUsers(int projectId)
+        {
+            List<ApplicationUser> result = new List<ApplicationUser>();
+            foreach (var user in db.Users.ToList())
+            {
+                if (!projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager") || UserInRole(user.Id, "submitter")))
+                {
+                    result.Add(user);
+                }
+            }
+
+            return result;
+        }
+
+        // Get possible users to remove from a project
+        public static List<ApplicationUser> GetRemoveFromProjectUsers(int projectId)
+        {
+            List<ApplicationUser> result = new List<ApplicationUser>();
+            foreach (var user in db.Users.ToList())
+            {
+                if (projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager") || UserInRole(user.Id, "submitter")))
+                {
+                    result.Add(user);
+                }
+            }
+
+            return result;
         }
     }
 }

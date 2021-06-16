@@ -42,5 +42,16 @@ namespace Bug_Tracker.BL
                     (p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
             }
         }
+
+        public List<Ticket> GetUserTicketsOnProject(ApplicationUser user, List<Ticket> tickets)
+        {
+            if (UserService.UserInRole(user.Id, "submitter"))
+                return tickets.Where(t => t.OwnerUserId == user.Id).ToList();
+            else if (UserService.UserInRole(user.Id, "developer"))
+                return tickets.Where(t => t.AssignedToUserId == user.Id).ToList();            
+            else
+                return tickets;
+            
+        }
     }
 }

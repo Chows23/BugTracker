@@ -40,13 +40,14 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult Create()
         {
+            ViewBag.ManagerId = new SelectList(UserService.AllManagers(), "Id", "UserName");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin, manager")]
-        public ActionResult Create([Bind(Include = "Name")] Project project)
+        public ActionResult Create([Bind(Include = "Name")] Project project, string managerId)
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
@@ -57,10 +58,22 @@ namespace Bug_Tracker.Controllers
             if (ModelState.IsValid)
             {
                 projectService.Create(project);
-                var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
-                projectUserService.Create(newProjectUser);
+
+                if (UserService.UserInRole(user.Id, "admin") && managerId != null)
+                {
+                    var newProjectUser = projectUserService.ProjectUser(managerId, project.Id);
+                    projectUserService.Create(newProjectUser);
+                }
+                else
+                {
+                    var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
+                    user.ProjectUsers.Add(newProjectUser);
+                    projectUserService.Create(newProjectUser);
+                }
+                
                 return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
+            ViewBag.ManagerId = new SelectList(UserService.AllManagers(), "Id", "UserName");
 
             return View(project);
         }

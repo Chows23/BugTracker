@@ -120,5 +120,11 @@ namespace Bug_Tracker.BL
 
             return result;
         }
+
+        // Get all managers
+        public static List<ApplicationUser> AllManagers()
+        {
+            return db.Users.ToList().Where(u => UserInRole(u.Id, "manager")).ToList();
+        }
     }
 }

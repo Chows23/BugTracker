@@ -1,6 +1,7 @@
 ﻿@model Bug_Tracker.Models.Project
 @using Bug_Tracker.Models;
 @using Bug_Tracker.BL;
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Details";
 }
@@ -8,9 +9,16 @@
 <h2>
     @Model.Name
     <span class="pull-right">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-name-modal">
-            Edit Name
-        </button>
+        @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
+        {
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-name-modal">
+                Edit Name
+            </button>
+        }
+        else if (UserService.UserInRole(User.Identity.GetUserId(), "submitter"))
+        {
+            @Html.ActionLink("Create Ticket", "Create", "Tickets", new { id = Model.Id }, new { @class = "btn btn-primary" })
+        }
     </span>
 </h2>
 
@@ -47,101 +55,107 @@
     </div>
 </div>
 
-<h3>
-    Users
-    <span>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-user-modal">
-            Add
-        </button>
-    </span>
-    <span>
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-user-modal">
-            Remove
-        </button>
-    </span>
-</h3>
-
-<div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Add a User</h4>
-            </div>
-            @using (Html.BeginForm("AddUser", "Projects", new { id = Model.Id }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    @if (!Html.ViewData.ModelState.IsValid)
-                    {
-                        <div class="alert alert-danger">
-                            @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
-                        </div>
-                    }
-
-                    <div class="form-group">
-                        @Html.DropDownList("AddUserId", null, new { @class = "form-control"})
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Update" />
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="remove-user-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Remove a User</h4>
-            </div>
-            @using (Html.BeginForm("RemoveUser", "Projects", new { id = Model.Id }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    @if (!Html.ViewData.ModelState.IsValid)
-                    {
-                        <div class="alert alert-danger">
-                            @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
-                        </div>
-                    }
-
-                    <div class="form-group">
-                        @Html.DropDownList("RemoveUserId", null, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Update" />
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">@Html.DisplayName("Username")</th>
-            <th scope="col">@Html.DisplayName("Email")</th>
-            <th scope="col">@Html.DisplayName("Role")</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var projectUser in Model.ProjectUsers)
+@if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager") || UserService.UserInRole(User.Identity.GetUserId(), "developer"))
+{
+    <h3>
+        Users
+        @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
         {
-            <tr>
-                <td>@projectUser.User.UserName</td>
-                <td>@projectUser.User.Email</td>
-                <td>@(UserService.GetAllRolesOfUser(projectUser.UserId).ToList()[0])</td>
-            </tr>
+            <span>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-user-modal">
+                    Add
+                </button>
+            </span>
+            <span>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-user-modal">
+                    Remove
+                </button>
+            </span>
         }
-    </tbody>
-</table>
+    </h3>
 
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">@Html.DisplayName("Username")</th>
+                <th scope="col">@Html.DisplayName("Email")</th>
+                <th scope="col">@Html.DisplayName("Role")</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var projectUser in Model.ProjectUsers)
+            {
+                <tr>
+                    <td>@projectUser.User.UserName</td>
+                    <td>@projectUser.User.Email</td>
+                    <td>@(UserService.GetAllRolesOfUser(projectUser.UserId).ToList()[0])</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add a User</h4>
+                </div>
+                @using (Html.BeginForm("AddUser", "Projects", new { id = Model.Id }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        @if (!Html.ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            @Html.DropDownList("AddUserId", null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Update" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="remove-user-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Remove a User</h4>
+                </div>
+                @using (Html.BeginForm("RemoveUser", "Projects", new { id = Model.Id }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        @if (!Html.ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            @Html.DropDownList("RemoveUserId", null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Update" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+}
 

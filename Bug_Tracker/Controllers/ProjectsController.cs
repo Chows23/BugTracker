@@ -66,7 +66,7 @@ namespace Bug_Tracker.Controllers
             return View(project);
         }
 
-        [Authorize(Roles = "admin, manager")]
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)

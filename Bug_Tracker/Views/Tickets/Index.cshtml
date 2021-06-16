@@ -7,13 +7,9 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Ticket Index</h2>
+<h2>Tickets</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-
-@using (Html.BeginForm("Index", "Student", FormMethod.Get))
+@using (Html.BeginForm("Index", "Tickets", FormMethod.Get))
 {
     <p>
         Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
@@ -44,7 +40,15 @@
         <th>
             @Html.ActionLink("Create Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
-        <th></th>
+        <th>
+            Last Updated
+        </th>
+        <th>
+            Assigned To
+        </th>
+        <th>
+            Owner
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -69,32 +73,16 @@
                 @Html.DisplayFor(modelItem => item.TicketType.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Created)
+                @item.Created.ToShortDateString()
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedToUser.Email)
+                @item.Updated.ToShortDateString()
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OwnerUser.Email)
-            </td>
-
-
-
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
+                @Html.DisplayFor(modelItem => item.AssignedToUser.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TicketTypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketPriorityId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketStatusId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.DisplayFor(modelItem => item.OwnerUser.UserName)
             </td>
         </tr>
     }

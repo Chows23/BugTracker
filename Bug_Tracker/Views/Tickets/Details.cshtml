@@ -119,12 +119,14 @@
 </div>
 
 <div>
-    <h4>Add a Comment</h4>
-    @using (Html.BeginForm("Comment", "Tickets", new { TicketId = Model.Id, UserId = User.Identity.GetUserId() }))
-    {
-        @Html.TextArea("Comment", new { style = "max-width: 900px; width: 100%;" }) <br />
-        <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />
-    }
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse">Add a Comment</button>
+    <div class="collapse" id="collapse">
+        @using (Html.BeginForm("Comment", "Tickets", new { TicketId = Model.Id, UserId = User.Identity.GetUserId() }))
+        {
+            @Html.TextArea("Comment", new { style = "max-width: 400px; width: 100%;" }) <br />
+            <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />
+        }
+    </div>
 </div>
 
 @if (Model.TicketComments.Count > 0)

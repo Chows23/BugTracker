@@ -50,9 +50,9 @@ namespace Bug_Tracker.BL
             return GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == projectId && pu.UserId == userId);
         }
 
-        public void RemoveProjectUser(int id)
+        public void RemoveProjectUser(ProjectUser projectUser)
         {
-            repo.Delete(id);
+            repo.Delete(projectUser.Id);
         }
     }
 }

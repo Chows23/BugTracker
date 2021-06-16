@@ -127,9 +127,7 @@ namespace Bug_Tracker.Controllers
             {
                 if (!projectUserService.CheckIfUserOnProject((int)id, addUserId))
                 {
-                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
-                    user.ProjectUsers.Add(newProjectUser);
-                    project.ProjectUsers.Add(newProjectUser);
+                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);                   
                     projectUserService.Create(newProjectUser);
                 }                          
             }
@@ -155,11 +153,10 @@ namespace Bug_Tracker.Controllers
             {
                 if (projectUserService.CheckIfUserOnProject((int)id, removeUserId))
                 {
-                    var projectUserToRemoveId = projectUserService.GetExistingProjectUser((int)id, removeUserId).Id;
-                    var projectUserToRemove = projectUserService.GetProjectUser(projectUserToRemoveId);
-                    user.ProjectUsers.Remove(projectUserToRemove);
-                    project.ProjectUsers.Remove(projectUserToRemove);
-                    projectUserService.RemoveProjectUser(projectUserToRemoveId);
+                    var projectUserToRemove = projectUserService.GetExistingProjectUser((int)id, removeUserId);
+                    //user.ProjectUsers.Remove(projectUserToRemove);
+                    //project.ProjectUsers.Remove(projectUserToRemove);
+                    projectUserService.RemoveProjectUser(projectUserToRemove);
                 }
             }
 

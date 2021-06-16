@@ -62,6 +62,7 @@ namespace Bug_Tracker.Controllers
                 if (UserService.UserInRole(user.Id, "admin") && managerId != null)
                 {
                     var newProjectUser = projectUserService.ProjectUser(managerId, project.Id);
+                    newProjectUser.Project = project;
                     var manager = UserService.GetUserById(managerId);
                     manager.ProjectUsers.Add(newProjectUser);
                     projectUserService.Create(newProjectUser);
@@ -69,6 +70,7 @@ namespace Bug_Tracker.Controllers
                 else
                 {
                     var newProjectUser = projectUserService.ProjectUser(user.Id, project.Id);
+                    newProjectUser.Project = project;
                     user.ProjectUsers.Add(newProjectUser);
                     projectUserService.Create(newProjectUser);
                 }

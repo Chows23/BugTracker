@@ -26,6 +26,11 @@ namespace Bug_Tracker.BL
             return projectUser;
         }
 
+        public ProjectUser GetProjectUser(int id)
+        {
+            return repo.GetEntity(id);
+        }
+
         public IEnumerable<ProjectUser> GetAllProjectUsers()
         {
             return repo.GetCollection(null);

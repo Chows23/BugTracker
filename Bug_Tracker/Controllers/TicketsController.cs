@@ -119,9 +119,10 @@ namespace Bug_Tracker.Controllers
             {
                 return HttpNotFound();
             }
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            //ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
-            //ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
+
+            ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");
+            ViewBag.Type = new SelectList(db.TicketTypes, "Id", "Name");
+            ViewBag.Status = new SelectList(db.TicketStatuses, "Id", "Name");
             return View(ticket);
         }
 
@@ -130,17 +131,21 @@ namespace Bug_Tracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,ProjectId,OwnerUserId,OwnerUser,Created,Title,Description,TicketTypeId,TicketPriorityId,TicketStatusId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                // change updated time and create history object for each property changed
+                // add assign to user
+                ticket.Updated = DateTime.Now;
                 db.Entry(ticket).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            //ViewBag.Id = new SelectList(db.TicketPriorities, "Id", "Name", ticket.Id);
-            //ViewBag.Id = new SelectList(db.TicketTypes, "Id", "Name", ticket.Id);
+
+            ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");
+            ViewBag.Type = new SelectList(db.TicketTypes, "Id", "Name");
+            ViewBag.Status = new SelectList(db.TicketStatuses, "Id", "Name");
             return View(ticket);
         }
 

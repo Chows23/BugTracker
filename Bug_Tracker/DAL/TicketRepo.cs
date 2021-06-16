@@ -30,7 +30,7 @@ namespace Bug_Tracker.DAL
 
         public Ticket GetEntity(int id)
         {
-            throw new NotImplementedException();
+           return db.Tickets.Find(id);
         }
 
         public Ticket GetEntity(Func<Ticket, bool> condition)

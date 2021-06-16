@@ -97,7 +97,7 @@ namespace Bug_Tracker.BL
             List<ApplicationUser> result = new List<ApplicationUser>();
             foreach (var user in db.Users.ToList())
             {
-                if (!projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager")))
+                if (!projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager") || UserInRole(user.Id, "submitter")))
                 {
                     result.Add(user);
                 }
@@ -112,7 +112,7 @@ namespace Bug_Tracker.BL
             List<ApplicationUser> result = new List<ApplicationUser>();
             foreach (var user in db.Users.ToList())
             {
-                if (projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager")))
+                if (projectUserService.CheckIfUserOnProject(projectId, user.Id) && (UserInRole(user.Id, "developer") || UserInRole(user.Id, "manager") || UserInRole(user.Id, "submitter")))
                 {
                     result.Add(user);
                 }

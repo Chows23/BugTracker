@@ -15,7 +15,6 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
-        private UserService userService = new UserService();
         
         [Authorize]
         public ActionResult Index()
@@ -76,9 +75,20 @@ namespace Bug_Tracker.Controllers
 
             if (project == null)
                 return HttpNotFound();
+
+            var user = UserService.GetUser(User.Identity.Name);
+
+            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
+            {
+                var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
+                if (projectUser == null)
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
          
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
             ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
+            var tickets = projectService.GetUserTicketsOnProject(UserService.GetUser(User.Identity.Name), project.Tickets.ToList());
+            project.Tickets = tickets;
 
             return View(project);
         }

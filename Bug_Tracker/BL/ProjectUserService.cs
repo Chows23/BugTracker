@@ -26,6 +26,11 @@ namespace Bug_Tracker.BL
             return projectUser;
         }
 
+        public ProjectUser GetProjectUser(int id)
+        {
+            return repo.GetEntity(id);
+        }
+
         public IEnumerable<ProjectUser> GetAllProjectUsers()
         {
             return repo.GetCollection(null);
@@ -45,9 +50,9 @@ namespace Bug_Tracker.BL
             return GetAllProjectUsers().FirstOrDefault(pu => pu.ProjectId == projectId && pu.UserId == userId);
         }
 
-        public void RemoveProjectUser(int id)
+        public void RemoveProjectUser(ProjectUser projectUser)
         {
-            repo.Delete(id);
+            repo.Delete(projectUser.Id);
         }
     }
 }

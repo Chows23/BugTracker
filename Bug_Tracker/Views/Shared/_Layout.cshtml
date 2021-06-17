@@ -26,6 +26,7 @@
 
                     @if (User.IsInRole("admin") || User.IsInRole("manager"))
                     {
+                        <li>@Html.ActionLink("Create a Project", "Create", "Projects")</li>
                         <li>@Html.ActionLink("All Projects", "AllProjects", "Projects")</li>
                     }
                     @if (User.IsInRole("admin"))

@@ -111,7 +111,7 @@ namespace Bug_Tracker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(UserService.AllDevelopers(), "Id", "UserName");
+            ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
             return View(ticket);
         }
 

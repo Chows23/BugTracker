@@ -123,10 +123,10 @@ namespace Bug_Tracker.BL
             return result;
         }
 
-        // Get all managers
-        public static List<ApplicationUser> AllManagers()
+        // get all users by role
+        public static List<ApplicationUser> GetUserByRole(string role)
         {
-            return db.Users.ToList().Where(u => UserInRole(u.Id, "manager")).ToList();
+            return db.Users.ToList().Where(u => UserInRole(u.Id, role)).ToList();
         }
 
         public List<DashboardDevChart> GetChartData()
@@ -149,11 +149,6 @@ namespace Bug_Tracker.BL
             }).ToList();
 
             return chartData;
-        }
-
-        public static List<ApplicationUser> AllDevelopers()
-        {
-            return db.Users.ToList().Where(u => UserInRole(u.Id, "developer")).ToList();
         }
     }
 }

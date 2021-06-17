@@ -32,8 +32,16 @@ namespace Bug_Tracker.Controllers
                 return RedirectToAction("AllTickets");
 
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_asc" : "name_desc";
+            ViewBag.DateSortParm = sortOrder == "date_asc" ? "date_desc" : "date_asc";
+            ViewBag.DescSortParm = sortOrder == "desc_asc" ? "desc_desc" : "desc_asc";
+            ViewBag.ProjSortParm = sortOrder == "proj_asc" ? "proj_desc" : "proj_asc";
+            ViewBag.PriorSortParm = sortOrder == "prior_asc" ? "prior_desc" : "prior_asc";
+            ViewBag.StatSortParm = sortOrder == "stat_asc" ? "stat_desc" : "stat_asc";
+            ViewBag.TypeSortParm = sortOrder == "type_asc" ? "type_desc" : "type_asc";
+            ViewBag.UpdateSortParm = sortOrder == "update_asc" ? "update_desc" : "update_asc";
+            ViewBag.AssignSortParm = sortOrder == "assign_asc" ? "assign_desc" : "assign_asc";
+            ViewBag.OwnSortParm = sortOrder == "own_asc" ? "own_desc" : "own_asc";
 
             if (searchString != null)
             {
@@ -46,31 +54,10 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            var tickets = from s in user.Tickets
-                          select s;
+            var tickets = ticketService.GetFilteredTickets(searchString, user);
+            tickets = ticketService.GetSortedTickets(tickets, sortOrder);
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                tickets = tickets.Where(s => s.Title.Contains(searchString)
-                                       || s.Description.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    tickets = tickets.OrderByDescending(s => s.Title);
-                    break;
-                case "Date":
-                    tickets = tickets.OrderBy(s => s.Created);
-                    break;
-                case "date_desc":
-                    tickets = tickets.OrderByDescending(s => s.Created);
-                    break;
-                default:
-                    tickets = tickets.OrderBy(s => s.Id);
-                    break;
-            }
-            int pageSize = 5;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(tickets.ToPagedList(pageNumber, pageSize));
         }
@@ -101,7 +88,7 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            var tickets = ticketService.GetFilteredTickets(searchString);
+            var tickets = ticketService.GetFilteredTickets(searchString, null);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
 
             int pageSize = 10;

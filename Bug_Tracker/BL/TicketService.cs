@@ -21,9 +21,14 @@ namespace Bug_Tracker.BL
             return repo.GetEntity(ticketId);
         }
 
-        public IEnumerable<Ticket> GetFilteredTickets(string searchString)
+        public IEnumerable<Ticket> GetFilteredTickets(string searchString, ApplicationUser user)
         {
-            var tickets = repo.GetCollection();
+            IEnumerable<Ticket> tickets;
+
+            if (user == null)
+                tickets = repo.GetCollection();
+            else
+                tickets = user.Tickets;
 
             if (!String.IsNullOrEmpty(searchString))
             {

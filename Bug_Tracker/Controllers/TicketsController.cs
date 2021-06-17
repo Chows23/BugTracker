@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Bug_Tracker.Models;
 using PagedList;
 using Bug_Tracker.BL;
+using System.IO;
 
 namespace Bug_Tracker.Controllers
 {
@@ -18,6 +19,7 @@ namespace Bug_Tracker.Controllers
         private TicketService ticketService = new TicketService();
         private TicketCommentService ticketCommentService = new TicketCommentService();
         private TicketHistoryService ticketHistoryService = new TicketHistoryService();
+        private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
 
         // GET: Tickets
         [Authorize]
@@ -240,6 +242,26 @@ namespace Bug_Tracker.Controllers
                 TempData["Error"] = "Your comment needs content.";
 
             return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Attach(int ticketId, HttpPostedFileBase file, string attachmentDescription)
+        {
+            string path;
+            var user = UserService.GetUser(User.Identity.Name);
+            
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss").Replace(":", "-") + "_" + Path.GetFileName(file.FileName);
+                path = Path.Combine(Server.MapPath("../Data/attachments"), fileName);
+                file.SaveAs(path);
+
+                var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, file.FileName, attachmentDescription, user.Id, path);
+                ticketAttachmentService.Create(newTicketAttachment);
+            }
+            
+            return RedirectToAction("Details", new { id = ticketId });
         }
     }
 }

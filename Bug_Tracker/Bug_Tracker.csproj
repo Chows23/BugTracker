@@ -304,6 +304,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Data\attachments\" />
     <Folder Include="Views\TicketAttachment\" />
     <Folder Include="Views\TicketComment\" />
     <Folder Include="Views\TicketHistory\" />

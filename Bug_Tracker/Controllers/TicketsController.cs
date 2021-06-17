@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Bug_Tracker.Models;
 using PagedList;
 using Bug_Tracker.BL;
+using System.IO;
 
 namespace Bug_Tracker.Controllers
 {
@@ -17,6 +18,7 @@ namespace Bug_Tracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private TicketService ticketService = new TicketService();
         private TicketCommentService ticketCommentService = new TicketCommentService();
+        private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
 
         // GET: Tickets
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -203,6 +205,28 @@ namespace Bug_Tracker.Controllers
                 TempData["Error"] = "Your comment needs content.";
 
             return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Attach(HttpPostedFileBase file, int id, string attachmentDescription)
+        {
+            string path;
+            var user = UserService.GetUser(User.Identity.Name);
+            // Verify that the user selected a file
+            if (file != null && file.ContentLength > 0)
+            {
+                // extract only the filename
+                var fileName = Path.GetFileName(file.FileName);
+                // store the file inside ~/App_Data/uploads folder
+                path = Path.Combine(Server.MapPath("~/Data/attachments"), fileName);
+                file.SaveAs(path);
+
+                var newTicketAttachment = ticketAttachmentService.TicketAttachment(id, path, attachmentDescription, user.Id, "");
+                ticketAttachmentService.Create(newTicketAttachment);
+            }
+            // redirect back to the index action to show the form once again
+            return RedirectToAction("Details", new { id = id});
         }
     }
 }

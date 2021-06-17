@@ -42,9 +42,15 @@ namespace Bug_Tracker.DAL
             throw new NotImplementedException();
         }
 
-        public void Update(Ticket entity)
+        public void Update(Ticket ticket)
         {
             throw new NotImplementedException();
+        }
+
+        public void Update(Ticket entity, ApplicationUser user)
+        {
+            entity.AssignedToUserId = user.Id;
+            db.SaveChanges();
         }
     }
 }

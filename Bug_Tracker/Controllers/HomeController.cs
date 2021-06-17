@@ -16,6 +16,7 @@ namespace Bug_Tracker.Controllers
         private TicketService ticketService = new TicketService();
         private ProjectService projectService = new ProjectService();
         private TicketStatusService ticketStatusService = new TicketStatusService();
+        private UserService userService = new UserService();
 
         public ActionResult Index()
         {
@@ -97,7 +98,7 @@ namespace Bug_Tracker.Controllers
         public JsonResult GetPieChartJSON2()
         {
             List<DashboardDevChart> list = new List<DashboardDevChart>();
-            list = UserService.GetChartData();
+            list = userService.GetChartData();
 
             return Json(new { JSONList = list }, JsonRequestBehavior.AllowGet);
         }

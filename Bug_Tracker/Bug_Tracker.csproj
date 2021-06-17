@@ -205,6 +205,7 @@
     <Compile Include="DAL\TicketHistoryRepo.cs" />
     <Compile Include="DAL\TicketNotificationRepo.cs" />
     <Compile Include="DAL\TicketRepo.cs" />
+    <Compile Include="DAL\UserRepo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

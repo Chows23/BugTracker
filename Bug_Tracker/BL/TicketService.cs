@@ -27,6 +27,11 @@ namespace Bug_Tracker.BL
 
             if (user == null)
                 tickets = repo.GetCollection();
+            else if (UserService.UserInRole(user.Id, "manager"))
+            {
+                tickets = repo.GetCollection().ToList();
+                tickets = tickets.Where(t => t.Project.ProjectUsers.Any(pu => pu.UserId == user.Id));
+            }
             else
                 tickets = user.Tickets;
 

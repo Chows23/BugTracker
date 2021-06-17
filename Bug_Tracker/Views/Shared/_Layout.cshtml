@@ -36,9 +36,6 @@
                     @if (!User.IsInRole("admin") && User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Your Projects", "Index", "Projects")</li>
-                    }
-                    @if (User.IsInRole("developer") || User.IsInRole("submitter"))
-                    {
                         <li>@Html.ActionLink("Your Tickets", "Index", "Tickets")</li>
                     }
 

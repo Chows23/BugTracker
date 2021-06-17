@@ -9,6 +9,7 @@ namespace Bug_Tracker.BL
 {
     public class TicketHistoryService
     {
+        ApplicationDbContext db = new ApplicationDbContext();
         public TicketHistoryRepo repo = new TicketHistoryRepo();
 
         public void Create(TicketHistory ticketHistory)
@@ -43,37 +44,43 @@ namespace Bug_Tracker.BL
                 };
                 historyList.Add(ticketHistory);
             }
-            if (oldTicket.TicketType != newTicket.TicketType)
+            if (oldTicket.TicketTypeId != newTicket.TicketTypeId)
             {
+                var type = db.TicketTypes;
+
                 var ticketHistory = new TicketHistory
                 {
                     Property = "TicketType",
-                    OldValue = oldTicket.TicketType.Name,
-                    NewValue = newTicket.TicketType.Name,
+                    OldValue = type.FirstOrDefault(t=> t.Id == oldTicket.TicketTypeId).Name,
+                    NewValue = type.FirstOrDefault(t => t.Id == newTicket.TicketTypeId).Name,
                     Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);
             }
-            if (oldTicket.TicketPriority != newTicket.TicketPriority)
+            if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
             {
+                var priority = db.TicketPriorities;
+
                 var ticketHistory = new TicketHistory
                 {
                     Property = "TicketPriority",
-                    OldValue = oldTicket.TicketPriority.Name,
-                    NewValue = newTicket.TicketPriority.Name,
+                    OldValue = priority.FirstOrDefault(t => t.Id == oldTicket.TicketPriorityId).Name,
+                    NewValue = priority.FirstOrDefault(t => t.Id == newTicket.TicketPriorityId).Name,
                     Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);
             }
-            if (oldTicket.TicketStatus != newTicket.TicketStatus)
+            if (oldTicket.TicketStatusId != newTicket.TicketStatusId)
             {
+                var status = db.TicketStatuses;
+
                 var ticketHistory = new TicketHistory
                 {
                     Property = "TicketStatus",
-                    OldValue = oldTicket.TicketStatus.Name,
-                    NewValue = newTicket.TicketStatus.Name,
+                    OldValue = status.FirstOrDefault(t => t.Id == oldTicket.TicketStatusId).Name,
+                    NewValue = status.FirstOrDefault(t => t.Id == newTicket.TicketStatusId).Name,
                     Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };

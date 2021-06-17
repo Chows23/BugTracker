@@ -5,29 +5,120 @@
     ViewBag.Title = "Dashboard";
 }
 
-<h1>Dashboard</h1>
+@Styles.Render("~/Content/dashboard.css")
+
+<h1 class="text-center"><u><i class="fas fa-bug" aria-hidden="true"></i> Bug Tracker Dashboard <i class="fas fa-bug" aria-hidden="true"></i></u></h1>
 
 @if (Model.Projects.Count == 0 && Model.Tickets.Count == 0)
 {
     <h3>Nothing to display.</h3>
 }
+<div class="dashboard">
 
-@if (Model.Projects.Count >= 1)
-{
-    <ul>
-        @foreach (var item in Model.Projects)
-        {
-            <li>@item.Name</li>
-        }
-    </ul>
-}
+    @if (Model.Projects.Count >= 1)
+    {
+        <div class="dashboard-item dashboard-item-panel">
+            <h3>Recent Projects</h3>
+            @foreach (var project in Model.Projects)
+            {
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3>@Html.ActionLink(project.Name, "Details", "Projects", new { id = project.Id }, null)</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            @if (project.Tickets.Any(t => t.TicketStatus.Name == "Unresolved"))
+                            {
+                                <span class="text-danger">@project.Tickets.Where(t => t.TicketStatus.Name == "Unresolved").Count() unresolved tickets.</span>
+                            }
+                            else
+                            {
+                                <span class="text-success">All tickets complete!</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 
-@if (Model.Tickets.Count >= 1)
-{
-    <ul>
-        @foreach (var item in Model.Tickets)
-        {
-            <li>@item.Description</li>
-        }
-    </ul>
-}
+    @if (Model.Tickets.Count >= 1)
+    {
+        <div class="dashboard-item">
+            <h3>Recent Tickets</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Project Name
+                    </th>
+                    <th>
+                        Priority
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Last Updated
+                    </th>
+                    <th>
+                        Assigned To
+                    </th>
+                    <th>
+                        Owned By
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.Tickets)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketType.Name)
+                        </td>
+                        <td>
+                            @item.Created.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.Updated.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssignedToUser.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OwnerUser.UserName)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+
+        </div>
+    }
+</div>

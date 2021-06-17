@@ -31,11 +31,14 @@
                     }
                     @if (User.IsInRole("admin"))
                     {
-                        <li>@Html.ActionLink("All Tickets", "Index", "Tickets")</li>
+                        <li>@Html.ActionLink("All Tickets", "AllTickets", "Tickets")</li>
                     }
                     @if (!User.IsInRole("admin") && User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Your Projects", "Index", "Projects")</li>
+                    }
+                    @if (User.IsInRole("developer") || User.IsInRole("submitter"))
+                    {
                         <li>@Html.ActionLink("Your Tickets", "Index", "Tickets")</li>
                     }
 

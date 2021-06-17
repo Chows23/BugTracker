@@ -13,6 +13,7 @@ using System.IO;
 
 namespace Bug_Tracker.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -21,8 +22,7 @@ namespace Bug_Tracker.Controllers
         private TicketHistoryService ticketHistoryService = new TicketHistoryService();
         private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
 
-        // GET: Tickets
-        [Authorize]
+        // GET: Tickets      
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ApplicationUser user;
@@ -111,6 +111,7 @@ namespace Bug_Tracker.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.UserId = new SelectList(UserService.AllDevelopers(), "Id", "UserName");
             return View(ticket);
         }
 
@@ -262,6 +263,34 @@ namespace Bug_Tracker.Controllers
             }
             
             return RedirectToAction("Details", new { id = ticketId });
+        }
+
+        [HttpPost]
+        public ActionResult AssignDeveloper(int? id, string userId)
+        {
+            if (id == null || userId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = UserService.GetUserById(userId);
+            var ticket = ticketService.GetTicket((int)id);
+
+            if (user == null || ticket == null)
+                return HttpNotFound();
+
+            if (ModelState.IsValid && ticket.AssignedToUserId != userId)
+            {              
+                var ticketHistory = new TicketHistory
+                {
+                    Property = "AssignedToUser",
+                    OldValue = ticket.AssignedToUser.UserName,
+                    NewValue = user.UserName,
+                    TicketId = ticket.Id
+                };
+                ticketService.ChangeDeveloper(ticket, user);
+                ticketHistoryService.Create(ticketHistory);
+            }
+
+            return RedirectToAction("Details", new { id = ticket.Id });
         }
     }
 }

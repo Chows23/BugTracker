@@ -129,5 +129,10 @@ namespace Bug_Tracker.BL
         {
             return user.Tickets.OrderByDescending(t => t.Created).Take(n).ToList();
         }
+
+        public void ChangeDeveloper(Ticket ticket, ApplicationUser user)
+        {
+            repo.Update(ticket, user);
+        }
     }
 }

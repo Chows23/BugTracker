@@ -150,5 +150,10 @@ namespace Bug_Tracker.BL
 
             return chartData;
         }
+
+        public static List<ApplicationUser> AllDevelopers()
+        {
+            return db.Users.ToList().Where(u => UserInRole(u.Id, "developer")).ToList();
+        }
     }
 }

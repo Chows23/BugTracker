@@ -1,11 +1,49 @@
 ﻿@model Bug_Tracker.Models.Ticket
 @using Microsoft.AspNet.Identity;
+@using Bug_Tracker.BL;
 
-@{
-    ViewBag.Title = "Details";
-}
+@{ ViewBag.Title = "Details"; }
 
 @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary", style = "margin-top: 10px" })
+@if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
+{
+    <span>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assign-user-modal">
+            Assign
+        </button>
+    </span>
+}
+
+<div class="modal fade" id="assign-user-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Assign a Developer</h4>
+            </div>
+            @using (Html.BeginForm("AssignDeveloper", "Tickets", new { id = Model.Id }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @if (!Html.ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        @Html.DropDownList("UserId", null, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Update" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 <div class="panel panel-default" style="margin-top: 20px">
     <div class="panel-heading">
@@ -49,13 +87,12 @@
             <tbody>
                 @foreach (var history in Model.TicketHistories)
                 {
-                    <tr>
-                        <td>@history.Property</td>
-                        <td>@history.OldValue</td>
-                        <td>@history.NewValue</td>
-                        <td>@history.Changed.ToShortDateString()</td>
-                    </tr>
-                }
+    <tr>
+        <td>@history.Property</td>
+        <td>@history.OldValue</td>
+        <td>@history.NewValue</td>
+        <td>@history.Changed.ToShortDateString()</td>
+    </tr>}
 
             </tbody>
         </table>
@@ -65,14 +102,13 @@
 
 <div>
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse" style="margin-bottom: 10px">Add a Comment</button>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#attachment-modal" style = "margin-bottom: 10px">Attach</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#attachment-modal" style="margin-bottom: 10px">Attach</button>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary", style = "margin-bottom: 10px" })
     <div class="collapse" id="collapse">
         @using (Html.BeginForm("Comment", "Tickets", new { TicketId = Model.Id, UserId = User.Identity.GetUserId() }))
         {
-            @Html.TextArea("Comment", new { style = "max-width: 400px; width: 100%;" }) <br />
-            <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />
-        }
+@Html.TextArea("Comment", new { style = "max-width: 400px; width: 100%;" }) <br />
+                <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />}
     </div>
 </div>
 
@@ -112,29 +148,27 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Add Attachment</h4>
             </div>
-            @using (Html.BeginForm("Attach", "Tickets", new { ticketId = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data"}))
+            @using (Html.BeginForm("Attach", "Tickets", new { ticketId = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                @Html.AntiForgeryToken()
-               
+@Html.AntiForgeryToken()
+
                 <div class="modal-body">
                     @if (!Html.ViewData.ModelState.IsValid)
                     {
-                        <div class="alert alert-danger">
-                            @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
-                        </div>
-                    }
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+    </div>}
 
                     <div class="form-group">
                         @Html.Label("Description")
-                        @Html.TextArea("AttachmentDescription", "Attachment", new { @class = "form-control", style = "max-width: 550px" } )
+                        @Html.TextArea("AttachmentDescription", "Attachment", new { @class = "form-control", style = "max-width: 550px" })
                     </div>
                     <input type="file" name="File" id="File" />
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Attach" />
-                </div>
-             }
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <input type="submit" class="btn btn-primary" value="Attach" />
+                                </div>}
         </div>
     </div>
 </div>

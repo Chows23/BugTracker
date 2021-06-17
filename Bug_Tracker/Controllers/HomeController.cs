@@ -15,6 +15,7 @@ namespace Bug_Tracker.Controllers
 
         private TicketService ticketService = new TicketService();
         private ProjectService projectService = new ProjectService();
+        private TicketStatusService ticketStatusService = new TicketStatusService();
 
         public ActionResult Index()
         {
@@ -78,6 +79,27 @@ namespace Bug_Tracker.Controllers
             }
             else
                 return RedirectToAction("Index");
+        }
+
+        public JsonResult GetPieChartJSON()
+        {
+            var user = UserService.GetUser(User.Identity.Name);
+            List<DashboardTicketChart> list = new List<DashboardTicketChart>();
+
+            if (User.IsInRole("admin") || User.IsInRole("manager"))
+                list = ticketStatusService.GetChartData(null);
+            else if (User.IsInRole("developer") || User.IsInRole("submitter"))
+                list = ticketStatusService.GetChartData(user);
+
+            return Json(new { JSONList = list }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetPieChartJSON2()
+        {
+            List<DashboardDevChart> list = new List<DashboardDevChart>();
+            list = UserService.GetChartData();
+
+            return Json(new { JSONList = list }, JsonRequestBehavior.AllowGet);
         }
     }
 }

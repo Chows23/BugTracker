@@ -126,5 +126,20 @@ namespace Bug_Tracker.BL
         {
             return db.Users.ToList().Where(u => UserInRole(u.Id, "manager")).ToList();
         }
+
+        public static List<DashboardDevChart> GetChartData()
+        {
+            List<ApplicationUser> users = db.Users.Where(u => UserInRole(u.Id, "developer")).ToList();//FIXxxxxxxxxxxxxxxxxxx
+
+            List<DashboardDevChart> chartData = new List<DashboardDevChart>();
+
+            chartData = users.Select(u => new DashboardDevChart
+            {
+                Developer = u.UserName,
+                TicketCount = u.Tickets.Count,
+            }).ToList();
+
+            return chartData;
+        }
     }
 }

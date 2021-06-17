@@ -30,7 +30,7 @@ namespace Bug_Tracker.BL
                 tickets = tickets.Where(s => s.Title.Contains(searchString)
                                        || s.Description.Contains(searchString));
             }
-            
+
             return tickets;
         }
 

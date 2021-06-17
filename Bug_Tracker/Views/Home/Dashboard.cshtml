@@ -29,7 +29,7 @@
                         <div>
                             @if (project.Tickets.Any(t => t.TicketStatus.Name == "Unresolved"))
                             {
-                                <span class="text-danger">@project.Tickets.Where(t => t.TicketStatus.Name == "Unresolved").Count() unresolved tickets.</span>
+                                <span class="text-danger">@project.Tickets.Where(t => t.TicketStatus.Name == "Unresolved").Count() unresolved ticket(s).</span>
                             }
                             else
                             {
@@ -42,9 +42,10 @@
         </div>
     }
 
-    @if (Model.Tickets.Count >= 1)
-    {
-        <div class="dashboard-item">
+    <div class="dashboard-item">
+
+        @if (Model.Tickets.Count >= 1)
+        {
             <h3>Recent Tickets</h3>
             <table class="table">
                 <tr>
@@ -118,7 +119,94 @@
 
             </table>
 
+        }
 
+        <div>
+            <h3>Ticket Data</h3>
+            <div id="chartdiv" style="width: 600px; height: 350px;"></div>
+            <div id="chartdiv2" style="width: 600px; height: 350px;"></div>
         </div>
-    }
+
+    </div>
 </div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+
+    google.charts.setOnLoadCallback(DrawonLoad);
+
+    function DrawonLoad() {
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/GetPiechartJSON',
+                success: function (chartsdata) {
+
+                    var Data = chartsdata.JSONList;
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Status');
+                    data.addColumn('number', 'StatusCount');
+
+                    for (var i = 0; i < Data.length; i++) {
+                        data.addRow([Data[i].Status, Data[i].StatusCount]);
+                    }
+
+                    var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+
+                    chart.draw(data,
+                        {
+                            title: "Ticket Resolutions",
+                            position: "top",
+                            fontsize: "16px",
+                            colors: ['#0066ff', '#3399ff', '#99ccff',],
+                            is3D: true,
+                            width: 700,
+                            height: 400,
+                        });
+
+                },
+                error: function () {
+                    alert("Error loading data! Please try again.");
+                }
+            });
+        })
+
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/GetPiechartJSON2',
+                success: function (chartsdata) {
+
+                    var Data = chartsdata.JSONList;
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Developer');
+                    data.addColumn('number', 'TicketCount');
+
+                    for (var i = 0; i < Data.length; i++) {
+                        data.addRow([Data[i].Developer, Data[i].TicketCount]);
+                    }
+
+                    var chart = new google.visualization.PieChart(document.getElementById('chartdiv2'));
+
+                    chart.draw(data,
+                        {
+                            title: "Tickets by Developer",
+                            position: "top",
+                            fontsize: "16px",
+                            colors: ['#0066ff', '#3399ff', '#99ccff',],
+                            is3D: true,
+                            width: 700,
+                            height: 400,
+                        });
+
+                },
+                error: function () {
+                    alert("Error loading data! Please try again.");
+                }
+            });
+        })
+    }
+</script>

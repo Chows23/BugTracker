@@ -16,12 +16,6 @@ namespace Bug_Tracker.BL
             repo.Add(ticket);
         }
 
-        public void UpDate(Ticket oldTicket, Ticket newTicket)
-        {
-            oldTicket.Title = newTicket.Title;
-            oldTicket.Description = newTicket.Description;
-        }
-
         public Ticket GetTicket(int ticketId)
         {
             return repo.GetEntity(ticketId);

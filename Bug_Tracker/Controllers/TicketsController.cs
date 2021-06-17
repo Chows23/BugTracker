@@ -167,16 +167,13 @@ namespace Bug_Tracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                // add assign to user
-                //var oldTicket = ticketService.GetTicket(ticket.Id);
-                var oldTicket = db.Tickets.Find(ticket.Id);
+                var oldTicket = ticketService.GetTicket(ticket.Id);
                 ticket.Updated = DateTime.Now;
 
                 if (oldTicket != null)
                 {
                     ticketHistoryService.CompareTickets(oldTicket, ticket);
-                    ticketService.UpDate(oldTicket, ticket);
-                    //db.Entry(ticket).State = EntityState.Modified;
+                    db.Entry(ticket).State = EntityState.Modified;
                     db.SaveChanges();
                 }
                 

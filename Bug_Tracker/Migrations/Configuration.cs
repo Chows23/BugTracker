@@ -160,6 +160,7 @@ namespace Bug_Tracker.Migrations
                     TicketStatus = unresolvedStatus,
                     OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
                     AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
+                    Created = DateTime.Now.AddDays(-10),
                 };
                 Ticket ticket2 = new Ticket
                 {
@@ -182,6 +183,7 @@ namespace Bug_Tracker.Migrations
                     TicketStatus = resolvedStatus,
                     OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
                     AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com"),
+                    Created = DateTime.Now.AddDays(-20),
                 };
                 Ticket ticket4 = new Ticket
                 {
@@ -205,6 +207,91 @@ namespace Bug_Tracker.Migrations
                     OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
                     AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
                 };
+                Ticket ticket6 = new Ticket
+                {
+                    Title = "Test Ticket 6",
+                    Description = "This is a test feature ticket.",
+                    Project = project5,
+                    TicketType = featureType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = abandonedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com"),
+                    Created = DateTime.Now.AddDays(-15),
+                };
+                Ticket ticket7 = new Ticket
+                {
+                    Title = "Test Ticket 7",
+                    Description = "This is a test bug ticket.",
+                    Project = project5,
+                    TicketType = bugType,
+                    TicketPriority = highPriority,
+                    TicketStatus = resolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "elizabeth@gmail.com"),
+                    Created = DateTime.Now.AddDays(-11),
+                };
+                Ticket ticket8 = new Ticket
+                {
+                    Title = "Test Ticket 8",
+                    Description = "This is a test function change ticket.",
+                    Project = project4,
+                    TicketType = functionType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com"),
+                    Created = DateTime.Now.AddDays(-5),
+                };
+                Ticket ticket9 = new Ticket
+                {
+                    Title = "Test Ticket 9",
+                    Description = "This is a test bug ticket.",
+                    Project = project1,
+                    TicketType = bugType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
+                    Created = DateTime.Now.AddDays(-25),
+                };
+                Ticket ticket10 = new Ticket
+                {
+                    Title = "Test Ticket 10",
+                    Description = "This is a test feature ticket.",
+                    Project = project2,
+                    TicketType = featureType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = resolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "elizabeth@gmail.com"),
+                    Created = DateTime.Now.AddDays(-1),
+                };
+                Ticket ticket11 = new Ticket
+                {
+                    Title = "Test Ticket 11",
+                    Description = "This is a test bug ticket.",
+                    Project = project2,
+                    TicketType = bugType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com"),
+                    Created = DateTime.Now.AddDays(-15),
+                };
+                Ticket ticket12 = new Ticket
+                {
+                    Title = "Test Ticket 12",
+                    Description = "This is a test function change ticket.",
+                    Project = project1,
+                    TicketType = functionType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = abandonedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
+                    Created = DateTime.Now.AddDays(-45),
+                };
+
 
                 db.Tickets.AddRange(new List<Ticket>
                 {
@@ -213,6 +300,13 @@ namespace Bug_Tracker.Migrations
                     ticket3,
                     ticket4,
                     ticket5,
+                    ticket6,
+                    ticket7,
+                    ticket8,
+                    ticket9,
+                    ticket10,
+                    ticket11,
+                    ticket12,
                 });
 
                 var katherine = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com");
@@ -224,6 +318,13 @@ namespace Bug_Tracker.Migrations
                 chows.Tickets.Add(ticket3);
                 elizabeth.Tickets.Add(ticket2);
                 elizabeth.Tickets.Add(ticket4);
+                chows.Tickets.Add(ticket6);
+                elizabeth.Tickets.Add(ticket7);
+                chows.Tickets.Add(ticket8);
+                katherine.Tickets.Add(ticket9);
+                elizabeth.Tickets.Add(ticket10);
+                chows.Tickets.Add(ticket11);
+                katherine.Tickets.Add(ticket12);
 
                 db.SaveChanges();
             }

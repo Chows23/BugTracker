@@ -13,6 +13,9 @@
     </div>
     <div class="panel-body">
         <h4 class="well">@Model.Description</h4>
+
+        <h3>Ticket Details</h3>
+
         <table class="table">
             <thead>
                 <tr>
@@ -32,25 +35,25 @@
             </tbody>
         </table>
 
+        <h3>Ticket History</h3>
+
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">History</th>
                     <th scope="col">Property</th>
                     <th scope="col">Old Value</th>
                     <th scope="col">New Value</th>
-                    <th scope="col">Changed Date</th>
+                    <th scope="col">Changed On</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var history in Model.TicketHistories)
                 {
                     <tr>
-                        <th scope="row">@history.Id</th>
                         <td>@history.Property</td>
                         <td>@history.OldValue</td>
                         <td>@history.NewValue</td>
-                        <td>@history.Changed</td>
+                        <td>@history.Changed.ToShortDateString()</td>
                     </tr>
                 }
 

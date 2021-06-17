@@ -1,4 +1,5 @@
 ﻿
+
 @model PagedList.IPagedList<Bug_Tracker.Models.Ticket>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -12,7 +13,7 @@
 @using (Html.BeginForm("Index", "Tickets", FormMethod.Get))
 {
     <p>
-        Search tickets: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-inline" })
+        Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" class="btn btn-primary" />
     </p>
 }
@@ -23,31 +24,31 @@
             @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Description", "Index", new { sortOrder = ViewBag.DescSortParm, currentFilter = ViewBag.CurrentFilter })
+            Description
         </th>
         <th>
-            @Html.ActionLink("Project Name", "Index", new { sortOrder = ViewBag.ProjSortParm, currentFilter = ViewBag.CurrentFilter })
+            Project Name
         </th>
         <th>
-            @Html.ActionLink("Priority", "Index", new { sortOrder = ViewBag.PriorSortParm, currentFilter = ViewBag.CurrentFilter })
+            Priority
         </th>
         <th>
-            @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.StatSortParm, currentFilter = ViewBag.CurrentFilter })
+            Status
         </th>
         <th>
-            @Html.ActionLink("Type", "Index", new { sortOrder = ViewBag.TypeSortParm, currentFilter = ViewBag.CurrentFilter })
+            Type
         </th>
         <th>
             @Html.ActionLink("Create Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Last Updated", "Index", new { sortOrder = ViewBag.UpdateSortParm, currentFilter = ViewBag.CurrentFilter })
+            Last Updated
         </th>
         <th>
-            @Html.ActionLink("Assigned To", "Index", new { sortOrder = ViewBag.AssignSortParm, currentFilter = ViewBag.CurrentFilter })
+            Assigned To
         </th>
         <th>
-            @Html.ActionLink("Owned By", "Index", new { sortOrder = ViewBag.OwnSortParm, currentFilter = ViewBag.CurrentFilter })
+            Owner
         </th>
     </tr>
 
@@ -91,5 +92,5 @@
 <br />
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index",
+@Html.PagedListPager(Model, page => Url.Action("AllTickets",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

@@ -15,6 +15,10 @@ namespace Bug_Tracker.DAL
             db.TicketStatuses.Add(entity);
             db.SaveChanges();
         }
+        public List<TicketStatus> GetCollection()
+        {
+            return db.TicketStatuses.ToList();
+        }
 
         public IEnumerable<TicketStatus> GetCollection(Func<TicketStatus, bool> condition)
         {

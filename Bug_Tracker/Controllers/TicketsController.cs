@@ -37,6 +37,12 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
+            //ApplicationUser user;
+            //if (User.Identity.IsAuthenticated)
+            //    user = UserService.GetUser(User.Identity.Name);
+            //else
+            //    return new HttpUnauthorizedResult();
+
             var tickets = from s in db.Tickets
                           select s;
 
@@ -137,12 +143,18 @@ namespace Bug_Tracker.Controllers
             if (ModelState.IsValid)
             {
                 // add assign to user
-                var oldTicket = ticketService.GetTicket(ticket.Id);
+                //var oldTicket = ticketService.GetTicket(ticket.Id);
+                var oldTicket = db.Tickets.Find(ticket.Id);
                 ticket.Updated = DateTime.Now;
 
-                ticketHistoryService.CompareTickets(ticket, oldTicket);
-                db.Entry(ticket).State = EntityState.Modified;
-                db.SaveChanges();
+                if (oldTicket != null)
+                {
+                    ticketHistoryService.CompareTickets(oldTicket, ticket);
+                    ticketService.UpDate(oldTicket, ticket);
+                    //db.Entry(ticket).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                
                 return RedirectToAction("Index");
             }
 

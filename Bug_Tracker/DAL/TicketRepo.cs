@@ -12,10 +12,14 @@ namespace Bug_Tracker.DAL
 
         public void Add(Ticket entity)
         {
-            //entity.ticket status id
             entity.TicketStatusId = db.TicketStatuses.FirstOrDefault(ts => ts.Name == "unresolved").Id;
             db.Tickets.Add(entity);
             db.SaveChanges();
+        }
+
+        public IEnumerable<Ticket> GetCollection()
+        {
+            return db.Tickets;
         }
 
         public IEnumerable<Ticket> GetCollection(Func<Ticket, bool> condition)
@@ -30,7 +34,7 @@ namespace Bug_Tracker.DAL
 
         public Ticket GetEntity(int id)
         {
-           return db.Tickets.Find(id);
+            return db.Tickets.Find(id);
         }
 
         public Ticket GetEntity(Func<Ticket, bool> condition)

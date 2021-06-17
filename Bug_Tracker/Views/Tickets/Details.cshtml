@@ -78,18 +78,32 @@
 
 <hr />
 
-<h4 class="text-muted">Comments</h4>
-
-@if (Model.TicketComments.Count > 0)
-{
-    <ul class="list-group">
-
-        @foreach (var comment in Model.TicketComments)
+<div style="display: flex">
+    <div style="width: 50%; margin-right: 10px;">
+        <h4 class="text-muted">Comments</h4>
+        @if (Model.TicketComments.Count > 0)
         {
-            <li class="list-group-item">@comment.Comment</li>
+            <ul style="padding-left: 0px">
+                @foreach (var comment in Model.TicketComments)
+                {
+                    <li class="list-group-item">@comment.Comment</li>
+                }
+            </ul>
         }
-    </ul>
-}
+    </div>
+    <div style="width: 50%;">
+        <h4 class="text-muted">Attachments</h4>
+        @if (Model.TicketAttachments.Count > 0)
+        {
+            <ul style="padding-left: 0px;">
+                @foreach (var attachment in Model.TicketAttachments)
+                {
+                    <li class="list-group-item">@attachment.FilePath</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
 
 <div class="modal fade" id="attachment-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

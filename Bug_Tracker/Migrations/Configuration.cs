@@ -378,6 +378,31 @@ namespace Bug_Tracker.Migrations
                     Project = db.Projects.First(p => p.Name == "Test Project 1"),
                     User = db.Users.First(u => u.Email == "katherine@gmail.com")
                 };
+                ProjectUser projectUser10 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 1"),
+                    User = db.Users.First(u => u.Email == "submitter@gmail.com")
+                };
+                ProjectUser projectUser11 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 2"),
+                    User = db.Users.First(u => u.Email == "submitter@gmail.com")
+                };
+                ProjectUser projectUser12 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 3"),
+                    User = db.Users.First(u => u.Email == "submitter@gmail.com")
+                };
+                ProjectUser projectUser13 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 4"),
+                    User = db.Users.First(u => u.Email == "submitter@gmail.com")
+                };
+                ProjectUser projectUser14 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 5"),
+                    User = db.Users.First(u => u.Email == "submitter@gmail.com")
+                };
 
                 db.ProjectUsers.AddRange(new List<ProjectUser>
                 {
@@ -389,7 +414,12 @@ namespace Bug_Tracker.Migrations
                     projectUser6,
                     projectUser7,
                     projectUser8,
-                    projectUser9
+                    projectUser9,
+                    projectUser10,
+                    projectUser11,
+                    projectUser12,
+                    projectUser13,
+                    projectUser14
                 });
 
                 db.SaveChanges();

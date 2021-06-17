@@ -98,7 +98,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Add Attachment</h4>
             </div>
-            @using (Html.BeginForm("Attach", "Tickets", new { TicketId = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data"}))
+            @using (Html.BeginForm("Attach", "Tickets", new { ticketId = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data"}))
             {
                 @Html.AntiForgeryToken()
                
@@ -112,7 +112,7 @@
 
                     <div class="form-group">
                         @Html.Label("Description")
-                        @Html.TextArea("AttachmentDescription", new { @class = "form-control", style = "max-width: 550px" } )
+                        @Html.TextArea("AttachmentDescription", "Attachment", new { @class = "form-control", style = "max-width: 550px" } )
                     </div>
                     <input type="file" name="File" id="File" />
                 </div>

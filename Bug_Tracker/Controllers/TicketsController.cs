@@ -250,19 +250,17 @@ namespace Bug_Tracker.Controllers
         {
             string path;
             var user = UserService.GetUser(User.Identity.Name);
-            // Verify that the user selected a file
+            
             if (file != null && file.ContentLength > 0)
             {
-                // extract only the filename
-                var fileName = Path.GetFileName(file.FileName);
-                // store the file inside ~/App_Data/uploads folder
-                path = Path.Combine(Server.MapPath("~/Data/attachments"), fileName);
+                var fileName = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss").Replace(":", "-") + "_" + Path.GetFileName(file.FileName);
+                path = Path.Combine(Server.MapPath("../Data/attachments"), fileName);
                 file.SaveAs(path);
 
-                var newTicketAttachment = ticketAttachmentService.TicketAttachment(1, path, attachmentDescription, user.Id, "fileurl");
+                var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, file.FileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
             }
-            // redirect back to the index action to show the form once again
+            
             return RedirectToAction("Details", new { id = ticketId });
         }
     }

@@ -95,10 +95,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Add Attachment</h4>
             </div>
-            @using (Html.BeginForm("Attach", "Tickets", FormMethod.Post, new { enctype = "multipart/form-data"}))
+            @using (Html.BeginForm("Attach", "Tickets", new { TicketId = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data"}))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(model => model.Id)
+               
                 <div class="modal-body">
                     @if (!Html.ViewData.ModelState.IsValid)
                     {

@@ -209,7 +209,7 @@ namespace Bug_Tracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Attach(HttpPostedFileBase file, int id, string attachmentDescription)
+        public ActionResult Attach(int ticketId, HttpPostedFileBase file, string attachmentDescription)
         {
             string path;
             var user = UserService.GetUser(User.Identity.Name);
@@ -222,11 +222,11 @@ namespace Bug_Tracker.Controllers
                 path = Path.Combine(Server.MapPath("~/Data/attachments"), fileName);
                 file.SaveAs(path);
 
-                var newTicketAttachment = ticketAttachmentService.TicketAttachment(id, path, attachmentDescription, user.Id, "");
+                var newTicketAttachment = ticketAttachmentService.TicketAttachment(1, path, attachmentDescription, user.Id, "fileurl");
                 ticketAttachmentService.Create(newTicketAttachment);
             }
             // redirect back to the index action to show the form once again
-            return RedirectToAction("Details", new { id = id});
+            return RedirectToAction("Details", new { id = ticketId });
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Bug_Tracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private TicketService ticketService = new TicketService();
         private TicketCommentService ticketCommentService = new TicketCommentService();
+        private TicketHistoryService ticketHistoryService = new TicketHistoryService();
 
         // GET: Tickets
         [Authorize]
@@ -166,12 +167,17 @@ namespace Bug_Tracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                // change updated time and create history object for each property changed
-                // add assign to user
+                var oldTicket = ticketService.GetTicket(ticket.Id);
                 ticket.Updated = DateTime.Now;
-                db.Entry(ticket).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+
+                if (oldTicket != null)
+                {
+                    ticketHistoryService.CompareTickets(oldTicket, ticket);
+                    db.Entry(ticket).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("Details", new { id = ticket.Id });
             }
 
             ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");

@@ -20,19 +20,64 @@ namespace Bug_Tracker.Controllers
 
         // GET: Tickets
         [Authorize]
-        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            //ApplicationUser user;
-            //if (User.Identity.IsAuthenticated)
-            //    user = UserService.GetUser(User.Identity.Name);
-            //else
-            //    return new HttpUnauthorizedResult();
+            ApplicationUser user;
+            if (User.Identity.IsAuthenticated)
+                user = UserService.GetUser(User.Identity.Name);
+            else
+                return new HttpUnauthorizedResult();
 
-            //if (UserService.UserInRole(user.Id, "admin"))
-            //    return RedirectToAction("AllTickets");
+            if (UserService.UserInRole(user.Id, "admin"))
+                return RedirectToAction("AllTickets");
 
-            //return View(user.ProjectUsers.Select(p => p.Project));
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
 
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var tickets = from s in user.Tickets
+                          select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                tickets = tickets.Where(s => s.Title.Contains(searchString)
+                                       || s.Description.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    tickets = tickets.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    tickets = tickets.OrderBy(s => s.Created);
+                    break;
+                case "date_desc":
+                    tickets = tickets.OrderByDescending(s => s.Created);
+                    break;
+                default:
+                    tickets = tickets.OrderBy(s => s.Id);
+                    break;
+            }
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            return View(tickets.ToPagedList(pageNumber, pageSize));
+        }
+
+        [Authorize(Roles = "admin, manager")]
+        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page)
+        {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";

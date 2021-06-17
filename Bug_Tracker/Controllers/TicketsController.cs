@@ -176,8 +176,8 @@ namespace Bug_Tracker.Controllers
                     db.Entry(ticket).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-                
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", new { id = ticket.Id });
             }
 
             ViewBag.Priority = new SelectList(db.TicketPriorities, "Id", "Name");

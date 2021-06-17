@@ -5,29 +5,210 @@
     ViewBag.Title = "Dashboard";
 }
 
-<h1>Dashboard</h1>
+@Styles.Render("~/Content/dashboard.css")
+
+<h1 class="text-center"><u><i class="fas fa-bug" aria-hidden="true"></i> Bug Tracker Dashboard <i class="fas fa-bug" aria-hidden="true"></i></u></h1>
 
 @if (Model.Projects.Count == 0 && Model.Tickets.Count == 0)
 {
     <h3>Nothing to display.</h3>
 }
+<div class="dashboard">
 
-@if (Model.Projects.Count >= 1)
-{
-    <ul>
-        @foreach (var item in Model.Projects)
-        {
-            <li>@item.Name</li>
-        }
-    </ul>
-}
+    @if (Model.Projects.Count >= 1)
+    {
+        <div class="dashboard-item dashboard-item-panel">
+            <h3>Recent Projects</h3>
+            @foreach (var project in Model.Projects)
+            {
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3>@Html.ActionLink(project.Name, "Details", "Projects", new { id = project.Id }, null)</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            @if (project.Tickets.Any(t => t.TicketStatus.Name == "Unresolved"))
+                            {
+                                <span class="text-danger">@project.Tickets.Where(t => t.TicketStatus.Name == "Unresolved").Count() unresolved ticket(s).</span>
+                            }
+                            else
+                            {
+                                <span class="text-success">All tickets complete!</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 
-@if (Model.Tickets.Count >= 1)
-{
-    <ul>
-        @foreach (var item in Model.Tickets)
+    <div class="dashboard-item">
+
+        @if (Model.Tickets.Count >= 1)
         {
-            <li>@item.Description</li>
+            <h3>Recent Tickets</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Project Name
+                    </th>
+                    <th>
+                        Priority
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Last Updated
+                    </th>
+                    <th>
+                        Assigned To
+                    </th>
+                    <th>
+                        Owned By
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.Tickets)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.Title, "Details", "Tickets", new { id = item.Id }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketType.Name)
+                        </td>
+                        <td>
+                            @item.Created.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.Updated.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssignedToUser.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OwnerUser.UserName)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
         }
-    </ul>
-}
+
+        <div>
+            <h3>Ticket Data</h3>
+            <div style="display: flex">
+                <div id="chartdiv" style="width: 550px; height: 350px;"></div>
+                <div id="chartdiv2" style="width: 550px; height: 350px;"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+
+    google.charts.setOnLoadCallback(DrawonLoad);
+
+    function DrawonLoad() {
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/GetPiechartJSON',
+                success: function (chartsdata) {
+
+                    var Data = chartsdata.JSONList;
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Status');
+                    data.addColumn('number', 'StatusCount');
+
+                    for (var i = 0; i < Data.length; i++) {
+                        data.addRow([Data[i].Status, Data[i].StatusCount]);
+                    }
+
+                    var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+
+                    chart.draw(data,
+                        {
+                            title: "Ticket Resolutions",
+                            position: "top",
+                            fontsize: "16px",
+                            colors: ['#0066ff', '#3399ff', '#99ccff',],
+                            is3D: true,
+                            width: 700,
+                            height: 400,
+                        });
+
+                },
+                error: function () {
+                    alert("Error loading data! Please try again.");
+                }
+            });
+        })
+
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/GetPiechartJSON2',
+                success: function (chartsdata) {
+
+                    var Data = chartsdata.JSONList;
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Developer');
+                    data.addColumn('number', 'TicketCount');
+
+                    for (var i = 0; i < Data.length; i++) {
+                        data.addRow([Data[i].Developer, Data[i].TicketCount]);
+                    }
+
+                    var chart = new google.visualization.PieChart(document.getElementById('chartdiv2'));
+
+                    chart.draw(data,
+                        {
+                            title: "Tickets by Developer",
+                            position: "top",
+                            fontsize: "16px",
+                            colors: ['#0066ff', '#3399ff', '#99ccff',],
+                            is3D: true,
+                            width: 700,
+                            height: 400,
+                        });
+
+                },
+                error: function () {
+                    alert("Error loading data! Please try again.");
+                }
+            });
+        })
+    }
+</script>

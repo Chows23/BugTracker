@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
+using Bug_Tracker.DAL;
 
 namespace Bug_Tracker.BL
 {
     public class UserService
     {
         private static ApplicationDbContext db = new ApplicationDbContext();
+        private UserRepo repo = new UserRepo();
 
         private static RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(
             new RoleStore<IdentityRole>(db)
@@ -125,6 +127,28 @@ namespace Bug_Tracker.BL
         public static List<ApplicationUser> AllManagers()
         {
             return db.Users.ToList().Where(u => UserInRole(u.Id, "manager")).ToList();
+        }
+
+        public List<DashboardDevChart> GetChartData()
+        {
+            List<ApplicationUser> allUsers = repo.GetCollection().ToList();
+            List<ApplicationUser> devs = new List<ApplicationUser>();
+
+            foreach (var user in allUsers)
+            {
+                if (UserInRole(user.Id, "developer"))
+                    devs.Add(user);
+            }
+
+            List<DashboardDevChart> chartData = new List<DashboardDevChart>();
+
+            chartData = devs.Select(u => new DashboardDevChart
+            {
+                Developer = u.UserName,
+                TicketCount = u.Tickets.Count,
+            }).ToList();
+
+            return chartData;
         }
     }
 }

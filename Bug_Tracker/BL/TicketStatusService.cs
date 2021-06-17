@@ -14,5 +14,30 @@ namespace Bug_Tracker.BL
         {
             repo.Add(ticketStatus);
         }
+        public List<DashboardTicketChart> GetChartData(ApplicationUser user)
+        {
+            List<TicketStatus> ticketStatus = repo.GetCollection();
+
+            List<DashboardTicketChart> chartData = new List<DashboardTicketChart>();
+
+            if (user != null)
+            {
+                chartData = ticketStatus.Select(ts => new DashboardTicketChart
+                {
+                    Status = ts.Name,
+                    StatusCount = ts.Tickets.Where(t => t.AssignedToUserId == user.Id).Count(),
+                }).ToList();
+            }
+            else
+            {
+                chartData = ticketStatus.Select(ts => new DashboardTicketChart
+                {
+                    Status = ts.Name,
+                    StatusCount = ts.Tickets.Count,
+                }).ToList();
+            }
+
+            return chartData;
+        }
     }
 }

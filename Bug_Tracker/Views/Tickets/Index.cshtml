@@ -12,7 +12,7 @@
 @using (Html.BeginForm("Index", "Tickets", FormMethod.Get))
 {
     <p>
-        Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        Search tickets: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-inline" })
         <input type="submit" value="Search" class="btn btn-primary" />
     </p>
 }
@@ -23,31 +23,31 @@
             @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Description
+            @Html.ActionLink("Description", "Index", new { sortOrder = ViewBag.DescSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Project Name
+            @Html.ActionLink("Project Name", "Index", new { sortOrder = ViewBag.ProjSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Priority
+            @Html.ActionLink("Priority", "Index", new { sortOrder = ViewBag.PriorSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Status
+            @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.StatSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Type
+            @Html.ActionLink("Type", "Index", new { sortOrder = ViewBag.TypeSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
             @Html.ActionLink("Create Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Last Updated
+            @Html.ActionLink("Last Updated", "Index", new { sortOrder = ViewBag.UpdateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Assigned To
+            @Html.ActionLink("Assigned To", "Index", new { sortOrder = ViewBag.AssignSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Owner
+            @Html.ActionLink("Owned By", "Index", new { sortOrder = ViewBag.OwnSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
     </tr>
 

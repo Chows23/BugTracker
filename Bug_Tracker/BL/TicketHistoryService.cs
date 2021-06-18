@@ -27,7 +27,6 @@ namespace Bug_Tracker.BL
                     Property = "Title",
                     OldValue = oldTicket.Title,
                     NewValue = newTicket.Title,
-                    Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);
@@ -39,7 +38,6 @@ namespace Bug_Tracker.BL
                     Property = "Description",
                     OldValue = oldTicket.Description,
                     NewValue = newTicket.Description,
-                    Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);
@@ -53,7 +51,6 @@ namespace Bug_Tracker.BL
                     Property = "TicketType",
                     OldValue = type.FirstOrDefault(t=> t.Id == oldTicket.TicketTypeId).Name,
                     NewValue = type.FirstOrDefault(t => t.Id == newTicket.TicketTypeId).Name,
-                    Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);
@@ -67,7 +64,6 @@ namespace Bug_Tracker.BL
                     Property = "TicketPriority",
                     OldValue = priority.FirstOrDefault(t => t.Id == oldTicket.TicketPriorityId).Name,
                     NewValue = priority.FirstOrDefault(t => t.Id == newTicket.TicketPriorityId).Name,
-                    Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);
@@ -81,7 +77,6 @@ namespace Bug_Tracker.BL
                     Property = "TicketStatus",
                     OldValue = status.FirstOrDefault(t => t.Id == oldTicket.TicketStatusId).Name,
                     NewValue = status.FirstOrDefault(t => t.Id == newTicket.TicketStatusId).Name,
-                    Changed = DateTime.Now,
                     TicketId = oldTicket.Id,
                 };
                 historyList.Add(ticketHistory);

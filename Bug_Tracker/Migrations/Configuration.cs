@@ -306,7 +306,7 @@ namespace Bug_Tracker.Migrations
                 };
                 Ticket ticket14 = new Ticket
                 {
-                    Title = "Test Ticket 12",
+                    Title = "Test Ticket 14",
                     Description = "This is a test function change ticket.",
                     Project = project2,
                     TicketType = functionType,

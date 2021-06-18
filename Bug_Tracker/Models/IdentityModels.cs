@@ -14,20 +14,22 @@ namespace Bug_Tracker.Models
         public ApplicationUser()
         {
             this.Tickets = new HashSet<Ticket>();
+            this.SubmittedTickets = new HashSet<Ticket>();
             this.ProjectUsers = new HashSet<ProjectUser>();
             this.TicketNotifications = new HashSet<TicketNotification>();
             this.TicketHistories = new HashSet<TicketHistory>();
             this.TicketComments = new HashSet<TicketComment>();
             this.TicketAttachments = new HashSet<TicketAttachment>();
         }
-        [ForeignKey("OwnerUserId")]
+        [InverseProperty("OwnerUser")]
+        public virtual ICollection<Ticket> SubmittedTickets { get; set; }
+        [InverseProperty("AssignedToUser")]
         public virtual ICollection<Ticket> Tickets { get; set; }
         public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
         public virtual ICollection<TicketNotification> TicketNotifications { get; set; } 
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
         public virtual ICollection<TicketComment> TicketComments { get; set; }
         public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
-
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

@@ -3,6 +3,8 @@
     ViewBag.Title = "ChangeUserRole";
 }
 
+@using Bug_Tracker.BL;
+
 <h2>Change User Roles</h2>
 
 @if (Model.Count == 0)
@@ -15,6 +17,7 @@
     <thead>
         <tr>
             <th>User</th>
+            <th>Current Role</th>
             <th>Select a Role</th>
         </tr>
     </thead>
@@ -25,12 +28,13 @@
         {
             <tr>
                 <td>@user.UserName</td>
+                <td>@(UserService.GetAllRolesOfUser(user.Id).ToList().Count != 0 ? UserService.GetAllRolesOfUser(user.Id).ToList()[0] : "Unassigned")</td>
                 @using (Html.BeginForm("ChangeUserRole", "Manage", new { userId = user.Id }))
                 {
                     <td>@Html.DropDownList("RoleId")</td>
-                    <td><input type="submit" value="Add To Role" class="btn btn-default" /></td>
+                    <td><input type="submit" value="Change Role" class="btn btn-default" /></td>
                 }
-                <td>@Html.ActionLink("Remove Roles", "RemoveRoles", new { userId = user.Id }, new { @class = "btn btn-danger" })</td>
+                <td>@Html.ActionLink("Remove Role", "RemoveRoles", new { userId = user.Id }, new { @class = "btn btn-danger" })</td>
             </tr>
         }
 

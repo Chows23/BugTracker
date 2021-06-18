@@ -43,6 +43,10 @@ namespace Bug_Tracker.BL
                 return user.ProjectUsers.Select
                     (pu => pu.Project).OrderByDescending
                     (p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
+
+                //return user.ProjectUsers.Select
+                //    (pu => pu.Project).OrderByDescending
+                //    (p => p.Tickets.OrderByDescending(t => t.Updated).First()).Take(n).ToList();
             }
         }
 

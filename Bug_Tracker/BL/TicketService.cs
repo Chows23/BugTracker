@@ -32,6 +32,10 @@ namespace Bug_Tracker.BL
                 tickets = repo.GetCollection().ToList();
                 tickets = tickets.Where(t => t.Project.ProjectUsers.Any(pu => pu.UserId == user.Id));
             }
+            else if (UserService.UserInRole(user.Id, "submitter"))
+            {
+                tickets = user.SubmittedTickets;
+            }
             else
                 tickets = user.Tickets;
 
@@ -127,7 +131,10 @@ namespace Bug_Tracker.BL
 
         public List<Ticket> GetNLatestCreated(int n, ApplicationUser user)
         {
-            return user.Tickets.OrderByDescending(t => t.Created).Take(n).ToList();
+            if (UserService.UserInRole(user.Id, "submitter"))
+                return user.SubmittedTickets.OrderByDescending(t => t.Created).Take(n).ToList();
+            else
+                return user.Tickets.OrderByDescending(t => t.Created).Take(n).ToList();
         }
 
         public void ChangeDeveloper(Ticket ticket, ApplicationUser user)

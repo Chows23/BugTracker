@@ -3,7 +3,7 @@ namespace Bug_Tracker.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddClasses : DbMigration
+    public partial class Models : DbMigration
     {
         public override void Up()
         {
@@ -89,24 +89,6 @@ namespace Bug_Tracker.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
-                "dbo.TicketAttachments",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        TicketId = c.Int(nullable: false),
-                        FilePath = c.String(nullable: false),
-                        Description = c.String(nullable: false),
-                        Created = c.DateTime(nullable: false),
-                        UserId = c.String(maxLength: 128),
-                        FileUrl = c.String(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Tickets", t => t.TicketId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .Index(t => t.TicketId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
                 "dbo.Tickets",
                 c => new
                     {
@@ -123,18 +105,36 @@ namespace Bug_Tracker.Migrations
                         AssignedToUserId = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.AssignedToUserId)
-                .ForeignKey("dbo.AspNetUsers", t => t.OwnerUserId)
                 .ForeignKey("dbo.Projects", t => t.ProjectId, cascadeDelete: true)
                 .ForeignKey("dbo.TicketPriorities", t => t.TicketPriorityId, cascadeDelete: true)
                 .ForeignKey("dbo.TicketStatus", t => t.TicketStatusId, cascadeDelete: true)
                 .ForeignKey("dbo.TicketTypes", t => t.TicketTypeId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.OwnerUserId)
+                .ForeignKey("dbo.AspNetUsers", t => t.AssignedToUserId)
                 .Index(t => t.ProjectId)
                 .Index(t => t.TicketTypeId)
                 .Index(t => t.TicketPriorityId)
                 .Index(t => t.TicketStatusId)
                 .Index(t => t.OwnerUserId)
                 .Index(t => t.AssignedToUserId);
+            
+            CreateTable(
+                "dbo.TicketAttachments",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        TicketId = c.Int(nullable: false),
+                        FilePath = c.String(nullable: false),
+                        Description = c.String(nullable: false),
+                        Created = c.DateTime(nullable: false),
+                        UserId = c.String(maxLength: 128),
+                        FileUrl = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Tickets", t => t.TicketId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
+                .Index(t => t.TicketId)
+                .Index(t => t.UserId);
             
             CreateTable(
                 "dbo.TicketComments",
@@ -226,7 +226,8 @@ namespace Bug_Tracker.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.TicketAttachments", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Tickets", "AssignedToUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Tickets", "OwnerUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "TicketTypeId", "dbo.TicketTypes");
             DropForeignKey("dbo.Tickets", "TicketStatusId", "dbo.TicketStatus");
             DropForeignKey("dbo.Tickets", "TicketPriorityId", "dbo.TicketPriorities");
@@ -236,10 +237,9 @@ namespace Bug_Tracker.Migrations
             DropForeignKey("dbo.TicketHistories", "TicketId", "dbo.Tickets");
             DropForeignKey("dbo.TicketComments", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.TicketComments", "TicketId", "dbo.Tickets");
+            DropForeignKey("dbo.TicketAttachments", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.TicketAttachments", "TicketId", "dbo.Tickets");
             DropForeignKey("dbo.Tickets", "ProjectId", "dbo.Projects");
-            DropForeignKey("dbo.Tickets", "OwnerUserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Tickets", "AssignedToUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.ProjectUsers", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
@@ -252,14 +252,14 @@ namespace Bug_Tracker.Migrations
             DropIndex("dbo.TicketHistories", new[] { "TicketId" });
             DropIndex("dbo.TicketComments", new[] { "UserId" });
             DropIndex("dbo.TicketComments", new[] { "TicketId" });
+            DropIndex("dbo.TicketAttachments", new[] { "UserId" });
+            DropIndex("dbo.TicketAttachments", new[] { "TicketId" });
             DropIndex("dbo.Tickets", new[] { "AssignedToUserId" });
             DropIndex("dbo.Tickets", new[] { "OwnerUserId" });
             DropIndex("dbo.Tickets", new[] { "TicketStatusId" });
             DropIndex("dbo.Tickets", new[] { "TicketPriorityId" });
             DropIndex("dbo.Tickets", new[] { "TicketTypeId" });
             DropIndex("dbo.Tickets", new[] { "ProjectId" });
-            DropIndex("dbo.TicketAttachments", new[] { "UserId" });
-            DropIndex("dbo.TicketAttachments", new[] { "TicketId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -274,8 +274,8 @@ namespace Bug_Tracker.Migrations
             DropTable("dbo.TicketNotifications");
             DropTable("dbo.TicketHistories");
             DropTable("dbo.TicketComments");
-            DropTable("dbo.Tickets");
             DropTable("dbo.TicketAttachments");
+            DropTable("dbo.Tickets");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");

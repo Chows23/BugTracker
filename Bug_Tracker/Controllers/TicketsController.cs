@@ -258,7 +258,7 @@ namespace Bug_Tracker.Controllers
                 path = Path.Combine(Server.MapPath("../Data/attachments"), fileName);
                 file.SaveAs(path);
 
-                var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, file.FileName, attachmentDescription, user.Id, path);
+                var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, fileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
             }
             
@@ -289,7 +289,7 @@ namespace Bug_Tracker.Controllers
                 var ticketHistory = new TicketHistory
                 {
                     Property = "AssignedToUser",
-                    OldValue = ticket.AssignedToUser.UserName,
+                    OldValue = ticket.AssignedToUserId != null ? ticket.AssignedToUser.UserName : "Unassigned",
                     NewValue = user.UserName,
                     TicketId = ticket.Id
                 };

@@ -258,7 +258,7 @@ namespace Bug_Tracker.Controllers
                 path = Path.Combine(Server.MapPath("../Data/attachments"), fileName);
                 file.SaveAs(path);
 
-                var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, file.FileName, attachmentDescription, user.Id, path);
+                var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, fileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
             }
             

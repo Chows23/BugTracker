@@ -8,7 +8,7 @@
 @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
 {
     <span>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assign-user-modal" style = "margin-top: 10px">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assign-user-modal" style="margin-top: 10px">
             Assign
         </button>
     </span>
@@ -136,10 +136,31 @@
                 @foreach (var attachment in Model.TicketAttachments)
                 {
                     <li class="list-group-item">
-                        @attachment.FilePath
-                        <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style = "font-size: 20px; margin-left: 10px;">
-                            <i class="fas fa-download"></i>
-                        </a>
+                        @if (attachment.FilePath.Substring(attachment.FilePath.IndexOf(".")) == ".jpg" ||
+                             attachment.FilePath.Substring(attachment.FilePath.IndexOf(".")) == ".jpeg" ||
+                             attachment.FilePath.Substring(attachment.FilePath.IndexOf(".")) == ".png" ||
+                             attachment.FilePath.Substring(attachment.FilePath.IndexOf(".")) == ".gif")
+                        {
+                            var localURL = "/Data/attachments/" + attachment.FilePath;
+
+                            <a data-toggle="collapse" data-target="#collapse-@attachment.Id" style="margin-bottom: 10px; cursor: pointer;">
+                                @attachment.FilePath.Substring(attachment.FilePath.IndexOf("_") + 1)
+                            </a>
+                            <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style="font-size: 20px; margin-left: 10px;">
+                                <i class="fas fa-download"></i>
+                            </a>
+
+                            <div class="collapse" id="collapse-@attachment.Id">
+                                <img src=@localURL alt="shark" style="width:50%; height: 50%" />
+                            </div>
+                        }
+                        else
+                        {
+                            @attachment.FilePath.Substring(attachment.FilePath.IndexOf("_") + 1)
+                            <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style="font-size: 20px; margin-left: 10px;">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        }
                     </li>
                 }
             </ul>
@@ -164,7 +185,7 @@
                         <div class="alert alert-danger">
                             @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
                         </div>
-                     }
+                    }
 
                     <div class="form-group">
                         @Html.Label("Description")
@@ -180,20 +201,3 @@
         </div>
     </div>
 </div>
-
-@*<div class="modal fade" id="view-file-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <embed src="~/Data/attachments/2021-06-17T20-00-50_index.html" />
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>*@

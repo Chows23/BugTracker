@@ -1,0 +1,147 @@
+body {
+  font-family: 'Lato', sans-serif;
+  margin: unset;
+}
+
+header {
+  text-align: center;
+  color: #009677;
+  font-size: 100px;
+}
+
+main {
+  width: 1024px;
+  margin: auto;
+}
+
+.inner {
+  width: 1024px;
+  margin: auto;
+}
+
+nav {
+  background-color: #009677;
+  position: sticky;
+  text-align: right;
+  height: 50px;
+  top: 0;
+}
+
+nav a {
+  height: 50px;
+  margin: 15px;
+  text-decoration: none;
+  font-size: 18px;
+  display: inline-block;
+  color: #073903;
+}
+
+.home {
+  font-size: 35px;
+  color: #073903;
+  text-align: left;
+  display: inline-block;
+}
+
+.button {
+  color: #073903;
+  border: #073903 1px solid;
+  display: inline-block;
+  background-color: #009677;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+.button:link {
+  color: #073903;
+}
+
+.button:visited {
+  color: #073903;
+}
+
+.button:hover {
+  background-color: brown;
+}
+
+h2 {
+  color: #009677;
+}
+
+.image {
+  position: relative;
+}
+
+.name {
+  position: absolute;
+  color: white;
+  font-size: 20px;
+  bottom: 40px;
+  left: 70px;
+}
+
+p {
+  width: 1024px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+form {
+  background-color: #00957738;
+  width: 600px;
+  margin: auto;
+  padding: 15px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+}
+
+input {
+  padding: 20px;
+  border-radius: 3px;
+  width: 100%;
+  border: none;
+  box-sizing: border-box;
+  margin: 10px;
+}
+
+
+input[type=submit] {
+  background-color: #00685f;
+  color: white;
+  padding: 10px;
+  border-radius: 3px;
+  width: 100%;
+  margin: 10px;
+}
+
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.tos {
+  color: #009677
+}
+
+.h2-signup {
+  margin-bottom: 50px;
+}
+
+.image {
+  float: left;
+}
+
+
+
+
+
+
+
+
+

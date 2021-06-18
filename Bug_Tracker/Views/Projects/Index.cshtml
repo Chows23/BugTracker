@@ -9,9 +9,14 @@
     Your Projects
     @if (UserService.UserInRole(User.Identity.GetUserId(), "manager"))
     {
-    <span class="pull-right">@Html.ActionLink("All Projects", "AllProjects", null, new { @class = "btn btn-primary" })</span>       
+        <span class="pull-right">@Html.ActionLink("All Projects", "AllProjects", null, new { @class = "btn btn-primary" })</span>
     }
 </h2>
+
+@if (Model.Count() == 0)
+{
+    <h3>Nothing to display.</h3>
+}
 
 
 <ul class="list-group">

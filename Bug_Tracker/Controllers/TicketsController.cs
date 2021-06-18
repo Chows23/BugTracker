@@ -272,7 +272,8 @@ namespace Bug_Tracker.Controllers
         public FileResult DownloadFile(string fileUrl, string filePath)
         {
             byte[] bytes = System.IO.File.ReadAllBytes(fileUrl);
-            return File(bytes, "application/octet-stream", filePath);
+            string contentType = MimeMapping.GetMimeMapping(fileUrl);
+            return File(bytes, contentType, filePath);
         }
 
         [HttpPost]

@@ -37,6 +37,7 @@ namespace Bug_Tracker.Migrations
                 {"chows@gmail.com", "developer" },
                 {"elizabeth@gmail.com", "developer" },
                 {"katherine@gmail.com", "developer" },
+                {"anton@gmail.com", "developer" },
                 {"admin@gmail.com", "admin" },
                 {"admin2@gmail.com", "admin" },
                 {"submitter@gmail.com", "submitter" },
@@ -291,6 +292,30 @@ namespace Bug_Tracker.Migrations
                     AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com"),
                     Created = DateTime.Now.AddDays(-45),
                 };
+                Ticket ticket13 = new Ticket
+                {
+                    Title = "Test Ticket 13",
+                    Description = "This is a test bug ticket.",
+                    Project = project1,
+                    TicketType = bugType,
+                    TicketPriority = lowPriority,
+                    TicketStatus = unresolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "anton@gmail.com"),
+                    Created = DateTime.Now.AddDays(-20),
+                };
+                Ticket ticket14 = new Ticket
+                {
+                    Title = "Test Ticket 12",
+                    Description = "This is a test function change ticket.",
+                    Project = project2,
+                    TicketType = functionType,
+                    TicketPriority = highPriority,
+                    TicketStatus = resolvedStatus,
+                    OwnerUser = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com"),
+                    AssignedToUser = db.Users.FirstOrDefault(u => u.Email == "anton@gmail.com"),
+                    Created = DateTime.Now.AddDays(-10),
+                };
 
                 db.Tickets.AddRange(new List<Ticket>
                 {
@@ -306,6 +331,8 @@ namespace Bug_Tracker.Migrations
                     ticket10,
                     ticket11,
                     ticket12,
+                    ticket13,
+                    ticket14
                 });
 
                 db.SaveChanges();
@@ -385,6 +412,46 @@ namespace Bug_Tracker.Migrations
                     Project = db.Projects.First(p => p.Name == "Test Project 5"),
                     User = db.Users.First(u => u.Email == "submitter@gmail.com")
                 };
+                ProjectUser projectUser15 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 3"),
+                    User = db.Users.First(u => u.Email == "elizabeth@gmail.com")
+                };
+                ProjectUser projectUser16 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 4"),
+                    User = db.Users.First(u => u.Email == "katherine@gmail.com")
+                };
+                ProjectUser projectUser17 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 5"),
+                    User = db.Users.First(u => u.Email == "chows@gmail.com")
+                };
+                ProjectUser projectUser18 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 5"),
+                    User = db.Users.First(u => u.Email == "elizabeth@gmail.com")
+                };
+                ProjectUser projectUser19 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 4"),
+                    User = db.Users.First(u => u.Email == "chows@gmail.com")
+                };
+                ProjectUser projectUser20 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 2"),
+                    User = db.Users.First(u => u.Email == "elizabeth@gmail.com")
+                };
+                ProjectUser projectUser21 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 1"),
+                    User = db.Users.First(u => u.Email == "anton@gmail.com")
+                };
+                ProjectUser projectUser22 = new ProjectUser
+                {
+                    Project = db.Projects.First(p => p.Name == "Test Project 2"),
+                    User = db.Users.First(u => u.Email == "anton@gmail.com")
+                };
 
                 db.ProjectUsers.AddRange(new List<ProjectUser>
                 {
@@ -401,7 +468,15 @@ namespace Bug_Tracker.Migrations
                     projectUser11,
                     projectUser12,
                     projectUser13,
-                    projectUser14
+                    projectUser14,
+                    projectUser15,
+                    projectUser16,
+                    projectUser17,
+                    projectUser18,
+                    projectUser19,
+                    projectUser20,
+                    projectUser21,
+                    projectUser22,
                 });
 
                 db.SaveChanges();

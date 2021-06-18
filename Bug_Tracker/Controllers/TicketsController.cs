@@ -282,7 +282,7 @@ namespace Bug_Tracker.Controllers
                 var ticketHistory = new TicketHistory
                 {
                     Property = "AssignedToUser",
-                    OldValue = ticket.AssignedToUser.UserName,
+                    OldValue = ticket.AssignedToUserId != null ? ticket.AssignedToUser.UserName : "Unassigned",
                     NewValue = user.UserName,
                     TicketId = ticket.Id
                 };

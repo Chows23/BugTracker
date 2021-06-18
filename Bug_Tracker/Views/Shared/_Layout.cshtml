@@ -22,8 +22,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Dashboard", "Index", "Home")</li>
-
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Dashboard", "Index", "Home")</li>
+                    }
                     @if (User.IsInRole("admin") || User.IsInRole("manager"))
                     {
                         <li>@Html.ActionLink("Create a Project", "Create", "Projects")</li>
@@ -32,6 +34,7 @@
                     @if (User.IsInRole("admin"))
                     {
                         <li>@Html.ActionLink("All Tickets", "AllTickets", "Tickets")</li>
+                        <li>@Html.ActionLink("Change Roles", "ChangeUserRole", "Manage")</li>
                     }
                     @if (!User.IsInRole("admin") && User.Identity.IsAuthenticated)
                     {

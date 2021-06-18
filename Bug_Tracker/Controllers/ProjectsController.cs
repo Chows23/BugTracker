@@ -40,7 +40,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult Create()
         {
-            ViewBag.ManagerId = new SelectList(UserService.AllManagers(), "Id", "UserName");
+            ViewBag.ManagerId = new SelectList(UserService.GetUserByRole("manager"), "Id", "UserName");
             return View();
         }
 
@@ -77,7 +77,7 @@ namespace Bug_Tracker.Controllers
                 
                 return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
-            ViewBag.ManagerId = new SelectList(UserService.AllManagers(), "Id", "UserName");
+            ViewBag.ManagerId = new SelectList(UserService.GetUserByRole("manager"), "Id", "UserName");
 
             return View(project);
         }

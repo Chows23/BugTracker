@@ -29,7 +29,9 @@ namespace Bug_Tracker.Controllers
                 return RedirectToAction("AllProjects");
 
             var projects = user.ProjectUsers.Select(p => p.Project);
-            projects.ToList().ForEach(p => projectService.GetUserTicketsOnProject(user, p.Tickets.ToList()));
+            foreach (var project in projects)
+                project.Tickets = projectService.GetUserTicketsOnProject(user, project.Tickets.ToList());
+            
             return View(projects);
         }
 

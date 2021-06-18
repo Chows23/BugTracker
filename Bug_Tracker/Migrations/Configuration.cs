@@ -292,7 +292,6 @@ namespace Bug_Tracker.Migrations
                     Created = DateTime.Now.AddDays(-45),
                 };
 
-
                 db.Tickets.AddRange(new List<Ticket>
                 {
                     ticket1,
@@ -308,36 +307,6 @@ namespace Bug_Tracker.Migrations
                     ticket11,
                     ticket12,
                 });
-
-                var katherine = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com");
-                var chows = db.Users.FirstOrDefault(u => u.Email == "chows@gmail.com");
-                var elizabeth = db.Users.FirstOrDefault(u => u.Email == "elizabeth@gmail.com");
-                var submitter = db.Users.FirstOrDefault(u => u.Email == "submitter@gmail.com");
-
-                //katherine.Tickets.Add(ticket1);
-                //katherine.Tickets.Add(ticket5);
-                //chows.Tickets.Add(ticket3);
-                //elizabeth.Tickets.Add(ticket2);
-                //elizabeth.Tickets.Add(ticket4);
-                //chows.Tickets.Add(ticket6);
-                //elizabeth.Tickets.Add(ticket7);
-                //chows.Tickets.Add(ticket8);
-                //katherine.Tickets.Add(ticket9);
-                //elizabeth.Tickets.Add(ticket10);
-                //chows.Tickets.Add(ticket11);
-                //katherine.Tickets.Add(ticket12);
-                //submitter.Tickets.Add(ticket1);
-                //submitter.Tickets.Add(ticket2);
-                //submitter.Tickets.Add(ticket3);
-                //submitter.Tickets.Add(ticket4);
-                //submitter.Tickets.Add(ticket5);
-                //submitter.Tickets.Add(ticket6);
-                //submitter.Tickets.Add(ticket7);
-                //submitter.Tickets.Add(ticket8);
-                //submitter.Tickets.Add(ticket9);
-                //submitter.Tickets.Add(ticket10);
-                //submitter.Tickets.Add(ticket11);
-                //submitter.Tickets.Add(ticket12);
 
                 db.SaveChanges();
             }

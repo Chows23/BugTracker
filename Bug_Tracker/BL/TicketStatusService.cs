@@ -25,7 +25,7 @@ namespace Bug_Tracker.BL
                 chartData = ticketStatus.Select(ts => new DashboardTicketChart
                 {
                     Status = ts.Name,
-                    StatusCount = ts.Tickets.Where(t => t.AssignedToUserId == user.Id).Count(),
+                    StatusCount = ts.Tickets.Where(t => t.AssignedToUserId == user.Id || t.OwnerUserId == user.Id).Count(),
                 }).ToList();
             }
             else

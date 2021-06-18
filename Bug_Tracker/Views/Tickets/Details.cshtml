@@ -87,13 +87,13 @@
             <tbody>
                 @foreach (var history in Model.TicketHistories)
                 {
-    <tr>
-        <td>@history.Property</td>
-        <td>@history.OldValue</td>
-        <td>@history.NewValue</td>
-        <td>@history.Changed.ToShortDateString()</td>
-    </tr>}
-
+                    <tr>
+                        <td>@history.Property</td>
+                        <td>@history.OldValue</td>
+                        <td>@history.NewValue</td>
+                        <td>@history.Changed.ToShortDateString()</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -107,8 +107,9 @@
     <div class="collapse" id="collapse">
         @using (Html.BeginForm("Comment", "Tickets", new { TicketId = Model.Id, UserId = User.Identity.GetUserId() }))
         {
-@Html.TextArea("Comment", new { style = "max-width: 400px; width: 100%;" }) <br />
-                <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />}
+            @Html.TextArea("Comment", new { style = "max-width: 400px; width: 100%;" }) <br />
+            <input type="submit" value="Submit" class="btn btn-primary" style="margin-top: 4px;" />
+        }
     </div>
 </div>
 
@@ -134,7 +135,12 @@
             <ul style="padding-left: 0px;">
                 @foreach (var attachment in Model.TicketAttachments)
                 {
-                    <li class="list-group-item">@attachment.FilePath</li>
+                    <li class="list-group-item">
+                        @attachment.FilePath
+                        <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style = "font-size: 20px; margin-left: 10px;">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </li>
                 }
             </ul>
         }
@@ -150,14 +156,15 @@
             </div>
             @using (Html.BeginForm("Attach", "Tickets", new { ticketId = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-@Html.AntiForgeryToken()
+                @Html.AntiForgeryToken()
 
                 <div class="modal-body">
                     @if (!Html.ViewData.ModelState.IsValid)
                     {
-    <div class="alert alert-danger">
-        @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
-    </div>}
+                        <div class="alert alert-danger">
+                            @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                        </div>
+                     }
 
                     <div class="form-group">
                         @Html.Label("Description")
@@ -165,10 +172,28 @@
                     </div>
                     <input type="file" name="File" id="File" />
                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <input type="submit" class="btn btn-primary" value="Attach" />
-                                </div>}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Attach" />
+                </div>
+            }
         </div>
     </div>
 </div>
+
+@*<div class="modal fade" id="view-file-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <embed src="~/Data/attachments/2021-06-17T20-00-50_index.html" />
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>*@

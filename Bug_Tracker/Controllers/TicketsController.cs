@@ -265,6 +265,13 @@ namespace Bug_Tracker.Controllers
             return RedirectToAction("Details", new { id = ticketId });
         }
 
+        public FileResult DownloadFile(string fileUrl, string filePath)
+        {
+            byte[] bytes = System.IO.File.ReadAllBytes(fileUrl);
+            string contentType = MimeMapping.GetMimeMapping(fileUrl);
+            return File(bytes, contentType, filePath);
+        }
+
         [HttpPost]
         public ActionResult AssignDeveloper(int? id, string userId)
         {

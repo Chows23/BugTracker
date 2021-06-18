@@ -27,8 +27,10 @@ namespace Bug_Tracker.Controllers
 
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
-            
-            return View(user.ProjectUsers.Select(p => p.Project));
+
+            var projects = user.ProjectUsers.Select(p => p.Project);
+            projects.ToList().ForEach(p => projectService.GetUserTicketsOnProject(user, p.Tickets.ToList()));
+            return View(projects);
         }
 
         [Authorize(Roles = "admin, manager")]

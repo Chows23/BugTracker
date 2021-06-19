@@ -21,6 +21,7 @@ namespace Bug_Tracker.Controllers
         private TicketCommentService ticketCommentService = new TicketCommentService();
         private TicketHistoryService ticketHistoryService = new TicketHistoryService();
         private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
+        private ProjectUserService projectUserService = new ProjectUserService();
 
         // GET: Tickets      
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
@@ -299,6 +300,13 @@ namespace Bug_Tracker.Controllers
                     NewValue = user.UserName,
                     TicketId = ticket.Id
                 };
+
+                if (!projectUserService.CheckIfUserOnProject(ticket.ProjectId, user.Id))
+                {
+                    var newProjectUser = projectUserService.ProjectUser(user.Id, ticket.ProjectId);
+                    projectUserService.Create(newProjectUser);
+                }
+
                 ticketService.ChangeDeveloper(ticket, user);
                 ticketHistoryService.Create(ticketHistory);
             }

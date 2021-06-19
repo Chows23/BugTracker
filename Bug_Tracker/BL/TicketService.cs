@@ -41,16 +41,15 @@ namespace Bug_Tracker.BL
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                tickets = tickets.ToList().Where(t => t.Title.Contains(searchString)
-                                       || t.Description.Contains(searchString)
-                                       || t.AssignedToUser.UserName.Contains(searchString)
-                                       || t.Project.Name.Contains(searchString)
-                                       || t.TicketPriority.Name.Contains(searchString)
-                                       || t.TicketStatus.Name.Contains(searchString)
-                                       || t.TicketType.Name.Contains(searchString)
-                                       || t.Created.ToString().Contains(searchString)
-                                       || t.Updated.ToString().Contains(searchString)
-                                       || t.OwnerUser.UserName.Contains(searchString));
+                tickets = tickets.ToList().Where(t => t.Title.ToLower().Contains(searchString)
+                                       || t.Description.ToLower().Contains(searchString)
+                                       || t.Project.Name.ToLower().Contains(searchString)
+                                       || t.TicketPriority.Name.ToLower().Contains(searchString)
+                                       || t.TicketStatus.Name.ToLower().Contains(searchString)
+                                       || t.TicketType.Name.ToLower().Contains(searchString)
+                                       || t.Created.ToString().ToLower().Contains(searchString)
+                                       || t.Updated.ToString().ToLower().Contains(searchString)
+                                       || t.OwnerUser.UserName.ToLower().Contains(searchString));
             }
 
             return tickets;

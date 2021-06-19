@@ -31,23 +31,12 @@ namespace Bug_Tracker.BL
             repo.Update(project);
         }
 
-        public List<Project> GetNLatestUpdated(int n, ApplicationUser user)
+        public List<Project> GetNProjects(int n, ApplicationUser user)
         {
             if (user == null)
                 return repo.GetCollection().Take(n).ToList();
             else
-            {
-                if (user.ProjectUsers.Any(pu => pu.Project.Tickets.Count == 0))
-                    return user.ProjectUsers.Select(pu => pu.Project).Take(n).ToList();
-
-                return user.ProjectUsers.Select
-                    (pu => pu.Project).OrderByDescending
-                    (p => p.Tickets.Max(t => t.Updated)).Take(n).ToList();
-
-                //return user.ProjectUsers.Select
-                //    (pu => pu.Project).OrderByDescending
-                //    (p => p.Tickets.OrderByDescending(t => t.Updated).First()).Take(n).ToList();
-            }
+                return user.ProjectUsers.Select(pu => pu.Project).Take(n).ToList();
         }
 
         public List<Ticket> GetUserTicketsOnProject(ApplicationUser user, List<Ticket> tickets)

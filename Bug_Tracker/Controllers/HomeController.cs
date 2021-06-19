@@ -32,7 +32,7 @@ namespace Bug_Tracker.Controllers
             if (User.IsInRole("admin"))
             {
                 var recentTickets = ticketService.GetNLatestUpdated(5, null);
-                var recentProjects = projectService.GetNLatestUpdated(5, null);
+                var recentProjects = projectService.GetNProjects(5, null);
 
                 var dashboardViewModel = new DashboardViewModels
                 {
@@ -45,7 +45,7 @@ namespace Bug_Tracker.Controllers
             else if (User.IsInRole("manager"))
             {
                 var user = UserService.GetUser(User.Identity.Name);
-                var recentProjects = projectService.GetNLatestUpdated(5, user);
+                var recentProjects = projectService.GetNProjects(5, user);
 
                 var dashboardViewModel = new DashboardViewModels
                 {

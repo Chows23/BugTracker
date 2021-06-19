@@ -56,6 +56,8 @@ namespace Bug_Tracker.Controllers
                 searchString = currentFilter;
             }
 
+            searchString = searchString == null ? searchString : searchString.ToLower();
+
             ViewBag.CurrentFilter = searchString;
 
             var tickets = ticketService.GetFilteredTickets(searchString, user);
@@ -90,8 +92,10 @@ namespace Bug_Tracker.Controllers
             }
             else
             {
-                searchString = currentFilter.ToLower();
+                searchString = currentFilter;
             }
+
+            searchString = searchString == null ? searchString : searchString.ToLower();
 
             ViewBag.CurrentFilter = searchString;
 

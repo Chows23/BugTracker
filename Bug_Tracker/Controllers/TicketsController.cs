@@ -89,7 +89,7 @@ namespace Bug_Tracker.Controllers
             }
             else
             {
-                searchString = currentFilter;
+                searchString = currentFilter.ToLower();
             }
 
             ViewBag.CurrentFilter = searchString;

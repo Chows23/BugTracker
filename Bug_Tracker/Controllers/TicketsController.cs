@@ -23,7 +23,7 @@ namespace Bug_Tracker.Controllers
         private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
 
         // GET: Tickets      
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
@@ -60,13 +60,16 @@ namespace Bug_Tracker.Controllers
             var tickets = ticketService.GetFilteredTickets(searchString, user);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
 
-            int pageSize = 10;
+            if (pageSize == null)
+                pageSize = 10;
+
+            ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
-            return View(tickets.ToPagedList(pageNumber, pageSize));
+            return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
         [Authorize(Roles = "admin, manager")]
-        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_asc" : "name_desc";
@@ -94,9 +97,12 @@ namespace Bug_Tracker.Controllers
             var tickets = ticketService.GetFilteredTickets(searchString, null);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
 
-            int pageSize = 10;
+            if (pageSize == null)
+                pageSize = 10;
+
+            ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
-            return View(tickets.ToPagedList(pageNumber, pageSize));
+            return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
         // GET: Tickets/Details/5
@@ -251,7 +257,7 @@ namespace Bug_Tracker.Controllers
         {
             string path;
             var user = UserService.GetUser(User.Identity.Name);
-            
+
             if (file != null && file.ContentLength > 0)
             {
                 var fileName = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss").Replace(":", "-") + "_" + Path.GetFileName(file.FileName);
@@ -261,7 +267,7 @@ namespace Bug_Tracker.Controllers
                 var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, fileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
             }
-            
+
             return RedirectToAction("Details", new { id = ticketId });
         }
 
@@ -285,7 +291,7 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
 
             if (ModelState.IsValid && ticket.AssignedToUserId != userId)
-            {              
+            {
                 var ticketHistory = new TicketHistory
                 {
                     Property = "AssignedToUser",

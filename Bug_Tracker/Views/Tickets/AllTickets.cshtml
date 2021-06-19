@@ -12,11 +12,19 @@
 
 @using (Html.BeginForm("AllTickets", "Tickets", FormMethod.Get))
 {
-    <p>
+    <div>
         Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" class="btn btn-primary" />
-    </p>
+
+        <span class="pull-right">
+            Displaying @ViewBag.PageSize ticket(s)
+            @Html.TextBox("PageSize", "10", new { type = "number", min = "1" })
+            <input type="submit" value="Apply" class="btn btn-primary" />
+        </span>
+    </div>
 }
+
+<br />
 
 @if (Model.Count == 0)
 {

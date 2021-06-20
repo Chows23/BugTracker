@@ -10,29 +10,29 @@ namespace Bug_Tracker.DAL
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
-        public void Add(Ticket entity)
+        public virtual void Add(Ticket entity)
         {
             entity.TicketStatusId = db.TicketStatuses.FirstOrDefault(ts => ts.Name == "unresolved").Id;
             db.Tickets.Add(entity);
             db.SaveChanges();
         }
 
-        public IEnumerable<Ticket> GetCollection()
+        public virtual IEnumerable<Ticket> GetCollection()
         {
             return db.Tickets;
         }
 
-        public IEnumerable<Ticket> GetCollection(Func<Ticket, bool> condition)
+        public virtual IEnumerable<Ticket> GetCollection(Func<Ticket, bool> condition)
         {
             return db.Tickets.Where(condition).ToList();
         }
 
-        public IEnumerable<Ticket> GetCollection(Func<Ticket, DateTime> condition)
+        public virtual IEnumerable<Ticket> GetCollection(Func<Ticket, DateTime> condition)
         {
             return db.Tickets.OrderByDescending(condition);
         }
 
-        public Ticket GetEntity(int id)
+        public virtual Ticket GetEntity(int id)
         {
             return db.Tickets.Find(id);
         }
@@ -47,7 +47,7 @@ namespace Bug_Tracker.DAL
             throw new NotImplementedException();
         }
 
-        public void Update(Ticket entity, ApplicationUser user)
+        public virtual void Update(Ticket entity, ApplicationUser user)
         {
             entity.AssignedToUserId = user.Id;
             db.SaveChanges();

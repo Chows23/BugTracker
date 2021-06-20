@@ -20,6 +20,9 @@ namespace Bug_Tracker.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        private TicketService ticketService = new TicketService();
+        private ProjectUserService projectUserService = new ProjectUserService();
+
         public ManageController()
         {
         }
@@ -101,7 +104,22 @@ namespace Bug_Tracker.Controllers
                 UserService.RemoveUserFromRole(userId, roleName);
             }
 
-            db.SaveChanges();
+            var tickets = user.Tickets.ToList();
+            var projects = user.ProjectUsers.ToList();
+
+            foreach (var ticket in tickets)
+            {
+                ticketService.RemoveTicketUser(ticket);
+                user.Tickets.Remove(ticket);
+                db.SaveChanges();
+            }
+
+            foreach (var project in projects)
+            {
+                projectUserService.RemoveProjectUser(project);
+                user.ProjectUsers.Remove(project);
+            }
+
             return RedirectToAction("ChangeUserRole");
         }
 

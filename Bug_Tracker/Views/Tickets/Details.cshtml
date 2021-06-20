@@ -61,6 +61,7 @@
                     <th>Owner</th>
                     <th>Type</th>
                     <th>Status</th>
+                    <th>Priority</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +70,7 @@
                     <td>@Model.OwnerUser.UserName</td>
                     <td>@Model.TicketType.Name</td>
                     <td>@Model.TicketStatus.Name</td>
+                    <td>@Model.TicketPriority.Name</td>
                 </tr>
             </tbody>
         </table>
@@ -85,7 +87,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var history in Model.TicketHistories)
+                @foreach (var history in Model.TicketHistories.OrderByDescending(th => th.Changed))
                 {
                     <tr>
                         <td>@history.Property</td>
@@ -121,7 +123,7 @@
         @if (Model.TicketComments.Count > 0)
         {
             <ul style="padding-left: 0px">
-                @foreach (var comment in Model.TicketComments)
+                @foreach (var comment in Model.TicketComments.OrderByDescending(c => c.Created))
                 {
                     <li class="list-group-item">@comment.Comment</li>
                 }
@@ -133,7 +135,7 @@
         @if (Model.TicketAttachments.Count > 0)
         {
             <ul style="padding-left: 0px;">
-                @foreach (var attachment in Model.TicketAttachments)
+                @foreach (var attachment in Model.TicketAttachments.OrderByDescending(a => a.Created))
                 {
                     <li class="list-group-item">
                         @if (attachment.FilePath.Substring(attachment.FilePath.IndexOf(".")) == ".jpg" ||

@@ -1,0 +1,18 @@
+if removing user from role, unassign them from everything
+
+notification page - option to remove from list of their notifs
+
+go through each authorize and set which roles are authorized
+
+add 4th color to dev chart
+add nothing to display for empty chart
+add project titling above nothing to display
+
+your projects - if no tickets display nothing to display
+projects index - show no tickets assigned
+
+projects index for devs/submitters, not all tickets are showing
+
+center table on change role page
+
+remove db from ticket history and use virtual tickets for names

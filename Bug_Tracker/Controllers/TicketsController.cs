@@ -178,7 +178,7 @@ namespace Bug_Tracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ProjectId,OwnerUserId,OwnerUser,Created,Title,Description,TicketTypeId,TicketPriorityId,TicketStatusId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,ProjectId,OwnerUserId,OwnerUser,AssignedToUserId,AssignedToUser,Created,Title,Description,TicketTypeId,TicketPriorityId,TicketStatusId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -191,9 +191,12 @@ namespace Bug_Tracker.Controllers
                     db.Entry(ticket).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-
-                var newUserNotif = ticketNotificationService.Create(ticket, ticket.AssignedToUser);
-                ticketNotificationService.Add(newUserNotif);
+                if (ticket.AssignedToUserId != null)
+                {
+                    var user = UserService.GetUserById(ticket.AssignedToUserId);
+                    var newUserNotif = ticketNotificationService.Create(ticket, user);
+                    ticketNotificationService.Add(newUserNotif);
+                }
 
                 return RedirectToAction("Details", new { id = ticket.Id });
             }
@@ -254,8 +257,11 @@ namespace Bug_Tracker.Controllers
                 user.TicketComments.Add(ticketComment);
                 ticketCommentService.Create(ticketComment, ticket);
 
-                var newUserNotif = ticketNotificationService.Create(ticket, user);
-                ticketNotificationService.Add(newUserNotif);
+                if (ticket.AssignedToUserId != null)
+                {
+                    var newUserNotif = ticketNotificationService.Create(ticket, user);
+                    ticketNotificationService.Add(newUserNotif);
+                }
             }
             else
                 TempData["Error"] = "Your comment needs content.";
@@ -280,8 +286,11 @@ namespace Bug_Tracker.Controllers
                 var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, fileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
 
-                var newUserNotif = ticketNotificationService.Create(ticket, user);
-                ticketNotificationService.Add(newUserNotif);
+                if (ticket.AssignedToUserId != null)
+                {
+                    var newUserNotif = ticketNotificationService.Create(ticket, user);
+                    ticketNotificationService.Add(newUserNotif);
+                }
             }
 
             return RedirectToAction("Details", new { id = ticketId });

@@ -23,7 +23,7 @@ namespace Bug_Tracker.DAL
 
         public TicketNotification GetEntity(int id)
         {
-            throw new NotImplementedException();
+            return db.TicketNotifications.Find(id);
         }
 
         public TicketNotification GetEntity(Func<TicketNotification, bool> condition)

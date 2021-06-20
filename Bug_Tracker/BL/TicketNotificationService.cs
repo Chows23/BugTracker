@@ -9,6 +9,7 @@ namespace Bug_Tracker.BL
 {
     public class TicketNotificationService
     {
+        ApplicationDbContext db = new ApplicationDbContext();
         public TicketNotificationRepo repo;
         public TicketNotificationService()
         {
@@ -35,5 +36,16 @@ namespace Bug_Tracker.BL
 
             return notif;
         }
+
+        public TicketNotification GetTicketNotification(int ticketNotifId)
+        {
+            return repo.GetEntity(ticketNotifId);
+        }
+
+        //public void RemoveNotifFromUser(ApplicationUser user, TicketNotification notif)
+        //{
+        //    user.TicketNotifications.Remove(notif);
+        //    db.SaveChanges();
+        //}
     }
 }

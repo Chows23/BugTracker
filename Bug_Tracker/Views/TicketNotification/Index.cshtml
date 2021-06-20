@@ -9,5 +9,6 @@
 {
     <div class="well">
         Notification for @notif.Ticket.Title
+        <span class="pull-right">@Html.ActionLink("Remove", "RemoveNotificationFromUser", new { notifId = notif.Id }, new { @class = "btn btn-danger" })</span>
     </div>
 }

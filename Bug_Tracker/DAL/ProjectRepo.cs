@@ -11,13 +11,13 @@ namespace Bug_Tracker.DAL
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public void Add(Project entity)
+        public virtual void Add(Project entity)
         {
             db.Projects.Add(entity);
             db.SaveChanges();
         }
 
-        public IEnumerable<Project> GetCollection()
+        public virtual IEnumerable<Project> GetCollection()
         {
             return db.Projects;
         }
@@ -27,7 +27,7 @@ namespace Bug_Tracker.DAL
             return db.Projects.Where(condition);
         }
 
-        public IEnumerable<Project> GetAll()
+        public virtual IEnumerable<Project> GetAll()
         {
             return db.Projects;
         }
@@ -37,7 +37,7 @@ namespace Bug_Tracker.DAL
             return db.Projects.OrderByDescending(condition);
         }
 
-        public Project GetEntity(int id)
+        public virtual Project GetEntity(int id)
         {
             return db.Projects.Find(id);
         }
@@ -47,7 +47,7 @@ namespace Bug_Tracker.DAL
             return db.Projects.FirstOrDefault(condition);
         }
 
-        public void Update(Project entity)
+        public virtual void Update(Project entity)
         {
             db.Entry(entity).State = EntityState.Modified;
             db.SaveChanges();

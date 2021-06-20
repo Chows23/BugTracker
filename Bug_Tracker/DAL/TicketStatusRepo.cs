@@ -10,12 +10,12 @@ namespace Bug_Tracker.DAL
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public void Add(TicketStatus entity)
+        public virtual void Add(TicketStatus entity)
         {
             db.TicketStatuses.Add(entity);
             db.SaveChanges();
         }
-        public List<TicketStatus> GetCollection()
+        public virtual List<TicketStatus> GetCollection()
         {
             return db.TicketStatuses.ToList();
         }

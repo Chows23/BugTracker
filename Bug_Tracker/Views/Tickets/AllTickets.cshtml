@@ -5,55 +5,58 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AllTickets";
 }
 
 <h2>Tickets</h2>
 
-@using (Html.BeginForm("Index", "Tickets", FormMethod.Get))
+@using (Html.BeginForm("AllTickets", "Tickets", FormMethod.Get))
 {
-    <p>
+    <div>
         Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" class="btn btn-primary" />
-    </p>
+
+        <span class="pull-right">
+            Displaying @ViewBag.PageSize ticket(s)
+            @Html.TextBox("PageSize", "10", new { type = "number", min = "1" })
+            <input type="submit" value="Apply" class="btn btn-primary" />
+        </span>
+    </div>
 }
 
-@if (Model.Count == 0)
-{
-    <h3>Nothing to display.</h3>
-}
+<br />
 
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Title", "AllTickets", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Description
+            @Html.ActionLink("Description", "AllTickets", new { sortOrder = ViewBag.DescSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Project Name
+            @Html.ActionLink("Project Name", "AllTickets", new { sortOrder = ViewBag.ProjSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Priority
+            @Html.ActionLink("Priority", "AllTickets", new { sortOrder = ViewBag.PriorSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Status
+            @Html.ActionLink("Status", "AllTickets", new { sortOrder = ViewBag.StatSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Type
+            @Html.ActionLink("Type", "AllTickets", new { sortOrder = ViewBag.TypeSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Create Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Create Date", "AllTickets", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Last Updated
+            @Html.ActionLink("Last Updated", "AllTickets", new { sortOrder = ViewBag.UpdateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Assigned To
+            @Html.ActionLink("Assigned To", "AllTickets", new { sortOrder = ViewBag.AssignSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Owner
+            @Html.ActionLink("Owned By", "AllTickets", new { sortOrder = ViewBag.OwnSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
     </tr>
 
@@ -94,8 +97,14 @@
     }
 
 </table>
+
+@if (Model.Count == 0)
+{
+    <h3>Nothing to display.</h3>
+}
+
 <br />
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
 @Html.PagedListPager(Model, page => Url.Action("AllTickets",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, pageSize = ViewBag.PageSize }))

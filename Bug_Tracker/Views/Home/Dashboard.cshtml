@@ -18,7 +18,7 @@
     @if (Model.Projects.Count >= 1)
     {
         <div class="dashboard-item dashboard-item-panel">
-            <h3>Recent Projects</h3>
+            <h3>Current Projects</h3>
             @foreach (var project in Model.Projects)
             {
                 <div class="panel panel-info">
@@ -39,6 +39,7 @@
                     </div>
                 </div>
             }
+            @Html.ActionLink("See All Projects", "AllProjects", "Projects", null, new { @class = "btn btn-primary" })
         </div>
     }
 

@@ -11,16 +11,19 @@
 
 @using (Html.BeginForm("Index", "Tickets", FormMethod.Get))
 {
-    <p>
-        Search tickets: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-inline" })
+    <div>
+        Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" class="btn btn-primary" />
-    </p>
+
+        <span class="pull-right">
+            Displaying @ViewBag.PageSize ticket(s)
+            @Html.TextBox("PageSize", "10", new { type = "number", min = "1" })
+            <input type="submit" value="Apply" class="btn btn-primary" />
+        </span>
+    </div>
 }
 
-@if (Model.Count == 0)
-{
-    <h3>Nothing to display.</h3>
-}
+<br />
 
 <table class="table">
     <tr>
@@ -93,8 +96,14 @@
     }
 
 </table>
+
+@if (Model.Count == 0)
+{
+    <h3>Nothing to display.</h3>
+}
+
 <br />
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, pageSize = ViewBag.PageSize }))

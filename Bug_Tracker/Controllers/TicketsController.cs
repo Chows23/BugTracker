@@ -21,9 +21,10 @@ namespace Bug_Tracker.Controllers
         private TicketCommentService ticketCommentService = new TicketCommentService();
         private TicketHistoryService ticketHistoryService = new TicketHistoryService();
         private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
+        private ProjectUserService projectUserService = new ProjectUserService();
 
         // GET: Tickets      
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
@@ -55,18 +56,23 @@ namespace Bug_Tracker.Controllers
                 searchString = currentFilter;
             }
 
+            searchString = searchString == null ? searchString : searchString.ToLower();
+
             ViewBag.CurrentFilter = searchString;
 
             var tickets = ticketService.GetFilteredTickets(searchString, user);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
 
-            int pageSize = 10;
+            if (pageSize == null)
+                pageSize = 10;
+
+            ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
-            return View(tickets.ToPagedList(pageNumber, pageSize));
+            return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
         [Authorize(Roles = "admin, manager")]
-        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_asc" : "name_desc";
@@ -89,14 +95,19 @@ namespace Bug_Tracker.Controllers
                 searchString = currentFilter;
             }
 
+            searchString = searchString == null ? searchString : searchString.ToLower();
+
             ViewBag.CurrentFilter = searchString;
 
             var tickets = ticketService.GetFilteredTickets(searchString, null);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
 
-            int pageSize = 10;
+            if (pageSize == null)
+                pageSize = 10;
+
+            ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
-            return View(tickets.ToPagedList(pageNumber, pageSize));
+            return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
         // GET: Tickets/Details/5
@@ -251,7 +262,7 @@ namespace Bug_Tracker.Controllers
         {
             string path;
             var user = UserService.GetUser(User.Identity.Name);
-            
+
             if (file != null && file.ContentLength > 0)
             {
                 var fileName = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss").Replace(":", "-") + "_" + Path.GetFileName(file.FileName);
@@ -261,7 +272,7 @@ namespace Bug_Tracker.Controllers
                 var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, fileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
             }
-            
+
             return RedirectToAction("Details", new { id = ticketId });
         }
 
@@ -285,7 +296,7 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
 
             if (ModelState.IsValid && ticket.AssignedToUserId != userId)
-            {              
+            {
                 var ticketHistory = new TicketHistory
                 {
                     Property = "AssignedToUser",
@@ -293,6 +304,13 @@ namespace Bug_Tracker.Controllers
                     NewValue = user.UserName,
                     TicketId = ticket.Id
                 };
+
+                if (!projectUserService.CheckIfUserOnProject(ticket.ProjectId, user.Id))
+                {
+                    var newProjectUser = projectUserService.ProjectUser(user.Id, ticket.ProjectId);
+                    projectUserService.Create(newProjectUser);
+                }
+
                 ticketService.ChangeDeveloper(ticket, user);
                 ticketHistoryService.Create(ticketHistory);
             }

@@ -32,7 +32,7 @@ namespace Bug_Tracker.BL
 
         public IEnumerable<Project> AllProjects()
         {
-            return repo.GetAll();
+            return repo.GetCollection();
         }
 
         public void Update(Project project)
@@ -48,12 +48,12 @@ namespace Bug_Tracker.BL
                 return user.ProjectUsers.Select(pu => pu.Project).Take(n).ToList();
         }
 
-        public List<Ticket> GetUserTicketsOnProject(ApplicationUser user, List<Ticket> tickets)
+        public List<Ticket> GetUserTicketsOnProject(string userId, List<Ticket> tickets)
         {
-            if (UserService.UserInRole(user.Id, "submitter"))
-                return tickets.Where(t => t.OwnerUserId == user.Id).ToList();
-            else if (UserService.UserInRole(user.Id, "developer"))
-                return tickets.Where(t => t.AssignedToUserId == user.Id).ToList();
+            if (UserService.UserInRole(userId, "submitter"))
+                return tickets.Where(t => t.OwnerUserId == userId).ToList();
+            else if (UserService.UserInRole(userId, "developer"))
+                return tickets.Where(t => t.AssignedToUserId == userId).ToList();
             else
                 return tickets;
         }

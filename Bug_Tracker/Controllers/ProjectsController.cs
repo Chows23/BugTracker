@@ -28,9 +28,7 @@ namespace Bug_Tracker.Controllers
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
 
-            var projects = user.ProjectUsers.Select(p => p.Project);
-            foreach (var project in projects)
-                project.Tickets = projectService.GetUserTicketsOnProject(user, project.Tickets.ToList());
+            var projects = user.ProjectUsers.Select(p => p.Project).ToList();
 
             return View(projects);
         }
@@ -113,7 +111,7 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
             ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
-            var tickets = projectService.GetUserTicketsOnProject(UserService.GetUser(User.Identity.Name), project.Tickets.ToList());
+            var tickets = projectService.GetUserTicketsOnProject(user.Id, project.Tickets.ToList());
             project.Tickets = tickets;
 
             return View(project);

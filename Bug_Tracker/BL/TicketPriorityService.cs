@@ -9,7 +9,17 @@ namespace Bug_Tracker.BL
 {
     public class TicketPriorityService
     {
-        private TicketPriorityRepo repo = new TicketPriorityRepo();
+        private TicketPriorityRepo repo;
+        public TicketPriorityService()
+        {
+            repo = new TicketPriorityRepo();
+        }
+        public TicketPriorityService(TicketPriorityRepo repo)
+        {
+            this.repo = repo;
+        }
+
+
         public void Create(TicketPriority ticketPriority)
         {
             repo.Add(ticketPriority);

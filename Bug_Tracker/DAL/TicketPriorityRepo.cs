@@ -10,7 +10,7 @@ namespace Bug_Tracker.DAL
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public void Add(TicketPriority entity)
+        public virtual void Add(TicketPriority entity)
         {
             db.TicketPriorities.Add(entity);
             db.SaveChanges();

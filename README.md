@@ -7,7 +7,7 @@ A web application for tracking project bugs and requested feature additions.
 - [Setup](#setup)
 - [Usage](#usage)
 
-![Bug Tracker Dashboard](Bug_Tracker/Data/attachments/dashboard.png)
+![Bug Tracker Dashboard](https://github.com/Chows23/BugTracker/blob/main/Bug_Tracker/Data/attachments/dashboard.PNG)
 
 ## Setup
 

@@ -56,9 +56,9 @@
 </div>
 
 <h3>Tickets</h3>
-@if (ViewBag.OnProject != null)
+@if (Model.Tickets == null)
 {
-    <div>@Model.Tickets.Count Ticket(s) for this project</div>
+    <div>@ViewBag.TicketCount Ticket(s) for this project</div>
 }
 else
 {

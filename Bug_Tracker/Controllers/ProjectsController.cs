@@ -105,14 +105,17 @@ namespace Bug_Tracker.Controllers
                 }
                 else if (UserService.UserInRole(user.Id, "manager"))
                 {
-                    ViewBag.OnProject = false;
+                    ViewBag.TicketCount = project.Tickets.Count;
+                    project.Tickets = null;
                 }
             }
-
+            else
+            {               
+                var tickets = projectService.GetUserTicketsOnProject(user.Id, project.Tickets.ToList());
+                project.Tickets = tickets;
+            }
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
             ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
-            var tickets = projectService.GetUserTicketsOnProject(user.Id, project.Tickets.ToList());
-            project.Tickets = tickets;
 
             return View(project);
         }

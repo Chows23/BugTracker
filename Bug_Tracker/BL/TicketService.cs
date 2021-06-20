@@ -9,7 +9,16 @@ namespace Bug_Tracker.BL
 {
     public class TicketService
     {
-        public TicketRepo repo = new TicketRepo();
+        public TicketRepo repo;
+        public TicketService()
+        {
+            repo = new TicketRepo();
+        }
+        public TicketService(TicketRepo repo)
+        {
+            this.repo = repo;
+        }
+
 
         public void Create(Ticket ticket)
         {

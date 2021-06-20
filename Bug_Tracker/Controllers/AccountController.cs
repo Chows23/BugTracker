@@ -52,6 +52,11 @@ namespace Bug_Tracker.Controllers
             }
         }
 
+        public ActionResult Restricted()
+        {
+            return View();
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]

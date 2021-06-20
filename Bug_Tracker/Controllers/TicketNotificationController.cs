@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Bug_Tracker.BL;
+using Bug_Tracker.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,10 +10,19 @@ namespace Bug_Tracker.Controllers
 {
     public class TicketNotificationController : Controller
     {
-        // GET: TicketNotification
+
+        [Authorize(Roles = "Developer")]
         public ActionResult Index()
         {
-            return View();
+            ApplicationUser user;
+            if (User.Identity.IsAuthenticated)
+                user = UserService.GetUser(User.Identity.Name);
+            else
+                return new HttpUnauthorizedResult();
+
+            var notifs = user.TicketNotifications.ToList();
+
+            return View(notifs);
         }
     }
 }

@@ -1,0 +1,13 @@
+﻿@model List<Bug_Tracker.Models.TicketNotification>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Your Notifications</h2>
+
+@foreach (var notif in Model)
+{
+    <div class="well">
+        Notification for @notif.Ticket.Title
+    </div>
+}

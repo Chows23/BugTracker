@@ -36,7 +36,7 @@
                         <li>@Html.ActionLink("All Tickets", "AllTickets", "Tickets")</li>
                         <li>@Html.ActionLink("Change Roles", "ChangeUserRole", "Manage")</li>
                     }
-                    @if (!User.IsInRole("admin") && User.Identity.IsAuthenticated)
+                    @if (User.IsInRole("manager") || User.IsInRole("developer") || User.IsInRole("submitter"))
                     {
                         <li>@Html.ActionLink("Your Projects", "Index", "Projects")</li>
                         <li>@Html.ActionLink("Your Tickets", "Index", "Tickets")</li>

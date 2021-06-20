@@ -11,7 +11,7 @@ namespace Bug_Tracker.Controllers
     public class TicketNotificationController : Controller
     {
 
-        [Authorize(Roles = "Developer")]
+        [Authorize(Roles = "developer")]
         public ActionResult Index()
         {
             ApplicationUser user;

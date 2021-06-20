@@ -20,9 +20,31 @@ namespace Bug_Tracker.BL
         }
 
 
-        public void Create(TicketNotification ticketNotification)
+        public void Add(TicketNotification ticketNotification)
         {
             repo.Add(ticketNotification);
+        }
+
+        public TicketNotification Create(Ticket ticket)
+        {
+            var notif = new TicketNotification()
+            {
+                TicketId = ticket.Id,
+                UserId = ticket.AssignedToUserId,
+            };
+
+            return notif;
+        }
+
+        public TicketNotification Create(Ticket ticket, ApplicationUser user)
+        {
+            var notif = new TicketNotification()
+            {
+                TicketId = ticket.Id,
+                UserId = user.Id,
+            };
+
+            return notif;
         }
     }
 }

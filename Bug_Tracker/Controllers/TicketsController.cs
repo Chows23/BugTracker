@@ -22,6 +22,7 @@ namespace Bug_Tracker.Controllers
         private TicketHistoryService ticketHistoryService = new TicketHistoryService();
         private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
         private ProjectUserService projectUserService = new ProjectUserService();
+        private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
         // GET: Tickets      
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
@@ -310,6 +311,15 @@ namespace Bug_Tracker.Controllers
                     var newProjectUser = projectUserService.ProjectUser(user.Id, ticket.ProjectId);
                     projectUserService.Create(newProjectUser);
                 }
+
+                if (ticket.AssignedToUser != null)
+                {
+                    var oldUserNotif = ticketNotificationService.Create(ticket);
+                    ticketNotificationService.Add(oldUserNotif);
+                }
+
+                var newUserNotif = ticketNotificationService.Create(ticket, user);
+                ticketNotificationService.Add(newUserNotif);
 
                 ticketService.ChangeDeveloper(ticket, user);
                 ticketHistoryService.Create(ticketHistory);

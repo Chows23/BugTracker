@@ -79,7 +79,7 @@ namespace Bug_Tracker.Controllers
                 return View(dashboardViewModel);
             }
             else
-                return RedirectToAction("Index");
+                return RedirectToAction("Restricted", "Account");
         }
 
         public JsonResult GetPieChartJSON()

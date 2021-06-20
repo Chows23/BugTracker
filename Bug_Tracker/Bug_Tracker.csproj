@@ -304,6 +304,7 @@
     <Content Include="Views\TicketHistories\Edit.cshtml" />
     <Content Include="Views\TicketHistories\Index.cshtml" />
     <Content Include="Views\Tickets\AllTickets.cshtml" />
+    <Content Include="Views\Account\Restricted.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

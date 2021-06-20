@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Bug_Tracker.DAL;
 using Bug_Tracker.Models;
+using PagedList;
 
 namespace Bug_Tracker.BL
 {
@@ -56,6 +57,18 @@ namespace Bug_Tracker.BL
                 return tickets.Where(t => t.AssignedToUserId == userId).ToList();
             else
                 return tickets;
+        }
+
+        public ProjectDetailsViewModel ProjectDetailsViewModel(int id, string name, List<ProjectUser> projectUsers, PagedList.IPagedList<Bug_Tracker.Models.Ticket> tickets)
+        {
+            var viewModel = new ProjectDetailsViewModel
+            {
+                Id = id,
+                Name = name,
+                ProjectUsers = projectUsers,
+                Tickets = tickets
+            };
+            return viewModel;
         }
     }
 }

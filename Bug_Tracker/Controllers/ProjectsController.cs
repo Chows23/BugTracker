@@ -99,7 +99,7 @@ namespace Bug_Tracker.Controllers
             var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
             ProjectDetailsViewModel projectDetailsViewModel = new ProjectDetailsViewModel();
 
-            if (projectUser == null)
+            if (projectUser == null && !UserService.UserInRole(user.Id, "admin"))
             {
                 if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
                 {
@@ -108,13 +108,7 @@ namespace Bug_Tracker.Controllers
                 else if (UserService.UserInRole(user.Id, "manager"))
                 {
                     ViewBag.TicketCount = project.Tickets.Count;
-                    projectDetailsViewModel = new ProjectDetailsViewModel
-                    {
-                        Id = project.Id,
-                        Name = project.Name,
-                        ProjectUsers = project.ProjectUsers.ToList(),
-                        Tickets = null
-                    };
+                    projectDetailsViewModel = projectService.ProjectDetailsViewModel(project.Id, project.Name, project.ProjectUsers.ToList(), null);
                 }
             }
             else
@@ -126,13 +120,7 @@ namespace Bug_Tracker.Controllers
                 int pageNumber = (page ?? 1);
 
                 var tickets = projectService.GetUserTicketsOnProject(user.Id, project.Tickets.ToList());
-                projectDetailsViewModel = new ProjectDetailsViewModel
-                {
-                    Id = project.Id,
-                    Name = project.Name,
-                    ProjectUsers = project.ProjectUsers.ToList(),
-                    Tickets = tickets.ToPagedList(pageNumber, (int)pageSize)
-                };
+                projectDetailsViewModel = projectService.ProjectDetailsViewModel(project.Id, project.Name, project.ProjectUsers.ToList(), tickets.ToPagedList(pageNumber, (int)pageSize));
             }
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
             ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");

@@ -9,7 +9,17 @@ namespace Bug_Tracker.BL
 {
     public class TicketStatusService
     {
-        private TicketStatusRepo repo = new TicketStatusRepo();
+        private TicketStatusRepo repo;
+        public TicketStatusService()
+        {
+            repo = new TicketStatusRepo();
+        }
+        public TicketStatusService(TicketStatusRepo repo)
+        {
+            this.repo = repo;
+        }
+
+
         public void Create(TicketStatus ticketStatus)
         {
             repo.Add(ticketStatus);

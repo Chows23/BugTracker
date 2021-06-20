@@ -10,7 +10,7 @@ namespace Bug_Tracker.DAL
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
-        public void Add(TicketAttachment entity)
+        public virtual void Add(TicketAttachment entity)
         {
             db.TicketAttachments.Add(entity);
             db.SaveChanges();

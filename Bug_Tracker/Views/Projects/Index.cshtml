@@ -26,7 +26,7 @@
         </div>
         <div class="panel-body">
             <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
-                @foreach (var ticket in project.Tickets.ToList())
+                @foreach (var ticket in project.Tickets)
                 {
                     if ((UserService.UserInRole(User.Identity.GetUserId(), "developer") && ticket.AssignedToUserId == User.Identity.GetUserId()) ||
                         (UserService.UserInRole(User.Identity.GetUserId(), "submitter") && ticket.OwnerUserId == User.Identity.GetUserId()) ||

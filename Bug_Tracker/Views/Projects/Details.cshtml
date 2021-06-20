@@ -56,40 +56,47 @@
 </div>
 
 <h3>Tickets</h3>
-@foreach (var ticket in Model.Tickets)
+@if (ViewBag.OnProject != null)
 {
-    <div class="panel panel-@ticket.StatusClassName">
-        <div class="panel-heading">
-            @if (ticket.TicketPriority.Name == "High" && ticket.TicketStatus.Name != "Resolved")
-            {
-                <span style="font-size: 1.5em; font-weight: 800; color: red">!</span>
-            }
-            @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
-            <span class="pull-right">Created: @ticket.Created.ToShortDateString()</span>
-        </div>
-        <div class="panel-body">
-            <div>@ticket.Description</div>
-        </div>
+    <div>@Model.Tickets.Count Ticket(s) for this project</div>
+}
+else
+{
+    foreach (var ticket in Model.Tickets)
+    {
+        <div class="panel panel-@ticket.StatusClassName">
+            <div class="panel-heading">
+                @if (ticket.TicketPriority.Name == "High" && ticket.TicketStatus.Name != "Resolved")
+                {
+                    <span style="font-size: 1.5em; font-weight: 800; color: red">!</span>
+                }
+                @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
+                <span class="pull-right">Created: @ticket.Created.ToShortDateString()</span>
+            </div>
+            <div class="panel-body">
+                <div>@ticket.Description</div>
+            </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Assigned To</th>
-                    <th>Owner</th>
-                    <th>Type</th>
-                    <th>Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@(ticket.AssignedToUser != null ? ticket.AssignedToUser.UserName : "Unassigned")</td>
-                    <td>@ticket.OwnerUser.UserName</td>
-                    <td>@ticket.TicketType.Name</td>
-                    <td>@ticket.Updated.ToShortDateString()</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Assigned To</th>
+                        <th>Owner</th>
+                        <th>Type</th>
+                        <th>Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@(ticket.AssignedToUser != null ? ticket.AssignedToUser.UserName : "Unassigned")</td>
+                        <td>@ticket.OwnerUser.UserName</td>
+                        <td>@ticket.TicketType.Name</td>
+                        <td>@ticket.Updated.ToShortDateString()</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
 }
 
 @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager") || UserService.UserInRole(User.Identity.GetUserId(), "developer"))

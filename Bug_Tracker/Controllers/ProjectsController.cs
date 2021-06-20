@@ -149,9 +149,6 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult AddUser(int? id, string addUserId)
         {
-            // temporary
-            ApplicationDbContext db = new ApplicationDbContext();
-
             if (id == null || addUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -167,7 +164,6 @@ namespace Bug_Tracker.Controllers
                 {
                     var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
                     projectUserService.Create(newProjectUser);
-                    db.SaveChanges();
                 }
             }
 

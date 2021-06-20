@@ -8,6 +8,7 @@ using Bug_Tracker.BL;
 using Bug_Tracker.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PagedList;
 
 namespace Bug_Tracker.Controllers
 {
@@ -84,7 +85,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [Authorize]
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? page, int? pageSize)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -96,6 +97,7 @@ namespace Bug_Tracker.Controllers
 
             var user = UserService.GetUser(User.Identity.Name);
             var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
+            ProjectDetailsViewModel projectDetailsViewModel = new ProjectDetailsViewModel();
 
             if (projectUser == null)
             {
@@ -106,18 +108,36 @@ namespace Bug_Tracker.Controllers
                 else if (UserService.UserInRole(user.Id, "manager"))
                 {
                     ViewBag.TicketCount = project.Tickets.Count;
-                    project.Tickets = null;
+                    projectDetailsViewModel = new ProjectDetailsViewModel
+                    {
+                        Id = project.Id,
+                        Name = project.Name,
+                        ProjectUsers = project.ProjectUsers.ToList(),
+                        Tickets = null
+                    };
                 }
             }
             else
             {               
+                if (pageSize == null)
+                    pageSize = 3;
+
+                ViewBag.PageSize = pageSize;
+                int pageNumber = (page ?? 1);
+
                 var tickets = projectService.GetUserTicketsOnProject(user.Id, project.Tickets.ToList());
-                project.Tickets = tickets;
+                projectDetailsViewModel = new ProjectDetailsViewModel
+                {
+                    Id = project.Id,
+                    Name = project.Name,
+                    ProjectUsers = project.ProjectUsers.ToList(),
+                    Tickets = tickets.ToPagedList(pageNumber, (int)pageSize)
+                };
             }
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
             ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
 
-            return View(project);
+            return View(projectDetailsViewModel);
         }
 
         [HttpPost]

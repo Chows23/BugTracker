@@ -10,20 +10,20 @@ namespace Bug_Tracker.DAL
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public void Add(ProjectUser entity)
+        public virtual void Add(ProjectUser entity)
         {
             db.ProjectUsers.Add(entity);
             db.SaveChanges();
         }
 
-        public IEnumerable<ProjectUser> GetCollection(Func<ProjectUser, bool> condition)
+        public virtual IEnumerable<ProjectUser> GetCollection(Func<ProjectUser, bool> condition)
         {
             if (condition == null)
                 return db.ProjectUsers;
             return db.ProjectUsers.Where(condition);
         }
 
-        public ProjectUser GetEntity(int id)
+        public virtual ProjectUser GetEntity(int id)
         {
             return db.ProjectUsers.Find(id);
         }
@@ -38,7 +38,7 @@ namespace Bug_Tracker.DAL
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             var projectUser = db.ProjectUsers.Find(id);
             db.ProjectUsers.Remove(projectUser);

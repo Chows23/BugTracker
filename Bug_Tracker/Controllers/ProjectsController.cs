@@ -57,7 +57,6 @@ namespace Bug_Tracker.Controllers
 
             if (ModelState.IsValid)
             {
-                //projectService.Create(project);
 
                 if (UserService.UserInRole(user.Id, "admin") && managerId != null)
                 {

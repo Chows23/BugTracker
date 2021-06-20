@@ -10,7 +10,16 @@ namespace Bug_Tracker.BL
     public class TicketHistoryService
     {
         ApplicationDbContext db = new ApplicationDbContext();
-        public TicketHistoryRepo repo = new TicketHistoryRepo();
+        public TicketHistoryRepo repo;
+        public TicketHistoryService()
+        {
+            repo = new TicketHistoryRepo();
+        }
+        public TicketHistoryService(TicketHistoryRepo repo)
+        {
+            this.repo = repo;
+        }
+
 
         public void Create(TicketHistory ticketHistory)
         {

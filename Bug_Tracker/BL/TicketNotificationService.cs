@@ -36,7 +36,7 @@ namespace Bug_Tracker.BL
                 UserId = user.Id,
             };
 
-            gmailService.Send("katbdesrosiers@gmail.com", "Katherine", "Test Notification Email", "This is a test.");
+            gmailService.Send(user.Email, user.UserName, "Bug Tracker - New Notification", "You have a new notification!");
 
             return notif;
         }

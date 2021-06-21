@@ -8,6 +8,7 @@ namespace Bug_Tracker.Migrations
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using System.IO;
     using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Bug_Tracker.Models.ApplicationDbContext>
@@ -432,7 +433,7 @@ namespace Bug_Tracker.Migrations
                 {
                     Description = "This is a sample photo attachment.",
                     FilePath = "sample-photo-5.jpeg",
-                    FileUrl = @"..\Data\attachments\sample-photo-5.jpeg",
+                    FileUrl = Path.GetFullPath(@"..\Data\attachments\sample-photo-5.jpeg"),
                     TicketId = 5,
                     UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
                 };

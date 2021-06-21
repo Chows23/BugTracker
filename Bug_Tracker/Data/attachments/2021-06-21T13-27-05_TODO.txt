@@ -1,0 +1,2 @@
+go through each authorize and set which roles are authorized
+code cleanup

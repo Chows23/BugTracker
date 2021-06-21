@@ -33,7 +33,9 @@
                             }
                             else
                             {
-                                <span class="text-success">All tickets complete!</span>
+                                <span class="text-success">
+                                    All tickets complete with @project.Tickets.Where(t => t.TicketStatus.Name == "Abandoned").Count() abandoned.
+                                </span>
                             }
                         </div>
                     </div>
@@ -125,8 +127,8 @@
         <div>
             <h3>Ticket Data</h3>
             <div style="display: flex">
-                <div id="chartdiv" style="width: 550px; height: 350px;"></div>
-                <div id="chartdiv2" style="width: 550px; height: 350px;"></div>
+                <div id="chartdiv" style="width: 550px; height: 350px;">No data.</div>
+                <div id="chartdiv2" style="width: 550px; height: 350px;">No data.</div>
             </div>
         </div>
 
@@ -199,7 +201,7 @@
                             title: "Tickets by Developer",
                             position: "top",
                             fontsize: "16px",
-                            colors: ['#0066ff', '#3399ff', '#99ccff',],
+                            colors: ['#0066ff', '#3399ff', '#99ccff', "#003d99"],
                             is3D: true,
                             width: 700,
                             height: 400,

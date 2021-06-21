@@ -49,7 +49,10 @@ namespace Bug_Tracker.DAL
 
         public virtual void Update(Ticket entity, ApplicationUser user)
         {
-            entity.AssignedToUserId = user.Id;
+            if (user == null)
+                entity.AssignedToUserId = null;
+            else
+                entity.AssignedToUserId = user.Id;
             db.SaveChanges();
         }
     }

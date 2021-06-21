@@ -320,13 +320,13 @@
     <Content Include="Views\TicketHistories\Index.cshtml" />
     <Content Include="Views\Tickets\AllTickets.cshtml" />
     <Content Include="Views\Account\Restricted.cshtml" />
+    <Content Include="Views\TicketNotification\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\TicketAttachment\" />
     <Folder Include="Views\TicketComment\" />
     <Folder Include="Views\TicketHistory\" />
-    <Folder Include="Views\TicketNotification\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

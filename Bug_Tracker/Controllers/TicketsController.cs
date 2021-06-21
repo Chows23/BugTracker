@@ -22,6 +22,7 @@ namespace Bug_Tracker.Controllers
         private TicketHistoryService ticketHistoryService = new TicketHistoryService();
         private TicketAttachmentService ticketAttachmentService = new TicketAttachmentService();
         private ProjectUserService projectUserService = new ProjectUserService();
+        private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
         // GET: Tickets      
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
@@ -68,6 +69,8 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
+
+            ViewBag.Notifications = user.TicketNotifications.Count;
             return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
@@ -122,6 +125,10 @@ namespace Bug_Tracker.Controllers
             {
                 return HttpNotFound();
             }
+
+            var user = UserService.GetUser(User.Identity.Name);
+            ViewBag.Notifications = user.TicketNotifications.Count;
+
             ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
             return View(ticket);
         }
@@ -177,7 +184,7 @@ namespace Bug_Tracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ProjectId,OwnerUserId,OwnerUser,Created,Title,Description,TicketTypeId,TicketPriorityId,TicketStatusId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,ProjectId,OwnerUserId,OwnerUser,AssignedToUserId,AssignedToUser,Created,Title,Description,TicketTypeId,TicketPriorityId,TicketStatusId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -189,6 +196,12 @@ namespace Bug_Tracker.Controllers
                     ticketHistoryService.CompareTickets(oldTicket, ticket);
                     db.Entry(ticket).State = EntityState.Modified;
                     db.SaveChanges();
+                }
+                if (ticket.AssignedToUserId != null)
+                {
+                    var user = UserService.GetUserById(ticket.AssignedToUserId);
+                    var newUserNotif = ticketNotificationService.Create(ticket, user);
+                    ticketNotificationService.Add(newUserNotif);
                 }
 
                 return RedirectToAction("Details", new { id = ticket.Id });
@@ -249,6 +262,12 @@ namespace Bug_Tracker.Controllers
             {
                 user.TicketComments.Add(ticketComment);
                 ticketCommentService.Create(ticketComment, ticket);
+
+                if (ticket.AssignedToUserId != null)
+                {
+                    var newUserNotif = ticketNotificationService.Create(ticket, user);
+                    ticketNotificationService.Add(newUserNotif);
+                }
             }
             else
                 TempData["Error"] = "Your comment needs content.";
@@ -262,6 +281,7 @@ namespace Bug_Tracker.Controllers
         {
             string path;
             var user = UserService.GetUser(User.Identity.Name);
+            var ticket = ticketService.GetTicket(ticketId);
 
             if (file != null && file.ContentLength > 0)
             {
@@ -271,6 +291,12 @@ namespace Bug_Tracker.Controllers
 
                 var newTicketAttachment = ticketAttachmentService.TicketAttachment(ticketId, fileName, attachmentDescription, user.Id, path);
                 ticketAttachmentService.Create(newTicketAttachment);
+
+                if (ticket.AssignedToUserId != null)
+                {
+                    var newUserNotif = ticketNotificationService.Create(ticket, user);
+                    ticketNotificationService.Add(newUserNotif);
+                }
             }
 
             return RedirectToAction("Details", new { id = ticketId });
@@ -310,6 +336,9 @@ namespace Bug_Tracker.Controllers
                     var newProjectUser = projectUserService.ProjectUser(user.Id, ticket.ProjectId);
                     projectUserService.Create(newProjectUser);
                 }
+
+                var newUserNotif = ticketNotificationService.Create(ticket, user);
+                ticketNotificationService.Add(newUserNotif);
 
                 ticketService.ChangeDeveloper(ticket, user);
                 ticketHistoryService.Create(ticketHistory);

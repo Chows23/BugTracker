@@ -27,7 +27,7 @@ namespace BugTrackerTests
         public void Create_TicketNotification_Will_Call_Add_TicketNotification_On_Repo()
         {
             TicketNotification ticketNotification = new TicketNotification { Id = 1, TicketId = 100, UserId = "UserId_1" };
-            ticketNotificationService.Create(ticketNotification);
+            ticketNotificationService.Add(ticketNotification);
             mockedRepo.Verify(r => r.Add(ticketNotification));
         }
     }

@@ -33,7 +33,9 @@
                             }
                             else
                             {
-                                <span class="text-success">All tickets complete!</span>
+                                <span class="text-success">
+                                    All tickets complete with @project.Tickets.Where(t => t.TicketStatus.Name == "Abandoned").Count() abandoned.
+                                </span>
                             }
                         </div>
                     </div>

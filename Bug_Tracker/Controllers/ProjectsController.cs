@@ -8,6 +8,7 @@ using Bug_Tracker.BL;
 using Bug_Tracker.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PagedList;
 
 namespace Bug_Tracker.Controllers
 {
@@ -15,7 +16,8 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
-        
+        private TicketService ticketService = new TicketService();
+
         [Authorize]
         public ActionResult Index()
         {
@@ -28,11 +30,8 @@ namespace Bug_Tracker.Controllers
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
 
-            var projects = user.ProjectUsers.Select(p => p.Project);
-            foreach (var project in projects)
-                project.Tickets = projectService.GetUserTicketsOnProject(user, project.Tickets.ToList());
-
             ViewBag.Notifications = user.TicketNotifications.Count;
+            var projects = projectUserService.GetUsersProjects(user.Id).Select(pu => pu.Project).ToList();
             return View(projects);
         }
 
@@ -78,7 +77,7 @@ namespace Bug_Tracker.Controllers
                     user.ProjectUsers.Add(newProjectUser);
                     projectUserService.Create(newProjectUser);
                 }
-                
+
                 return RedirectToAction("Details", "Projects", new { id = project.Id });
             }
             ViewBag.ManagerId = new SelectList(UserService.GetUserByRole("manager"), "Id", "UserName");
@@ -87,7 +86,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [Authorize]
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? page, int? pageSize)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -98,20 +97,36 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
 
             var user = UserService.GetUser(User.Identity.Name);
+            var projectUser = projectUserService.GetExistingProjectUser(project.Id, user.Id);
+            ProjectDetailsViewModel projectDetailsViewModel = new ProjectDetailsViewModel();
 
-            if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer") || UserService.UserInRole(user.Id, "manager"))
+            if (projectUser == null && !UserService.UserInRole(user.Id, "admin"))
             {
-                var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
-                if (projectUser == null)
+                if (UserService.UserInRole(user.Id, "submitter") || UserService.UserInRole(user.Id, "developer"))
+                {
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+                else if (UserService.UserInRole(user.Id, "manager"))
+                {
+                    ViewBag.TicketCount = project.Tickets.Count;
+                    projectDetailsViewModel = projectService.ProjectDetailsViewModel(project.Id, project.Name, project.ProjectUsers.ToList(), null);
+                }
             }
-         
+            else
+            {               
+                if (pageSize == null)
+                    pageSize = 3;
+
+                ViewBag.PageSize = pageSize;
+                int pageNumber = (page ?? 1);
+
+                var tickets = projectService.GetUserTicketsOnProject(user.Id, project.Tickets.ToList());
+                projectDetailsViewModel = projectService.ProjectDetailsViewModel(project.Id, project.Name, project.ProjectUsers.ToList(), tickets.ToPagedList(pageNumber, (int)pageSize));
+            }
             ViewBag.AddUserId = new SelectList(UserService.GetAddToProjectUsers(project.Id), "Id", "UserName");
             ViewBag.RemoveUserId = new SelectList(UserService.GetRemoveFromProjectUsers(project.Id), "Id", "UserName");
-            var tickets = projectService.GetUserTicketsOnProject(UserService.GetUser(User.Identity.Name), project.Tickets.ToList());
-            project.Tickets = tickets;
 
-            return View(project);
+            return View(projectDetailsViewModel);
         }
 
         [HttpPost]
@@ -135,9 +150,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult AddUser(int? id, string addUserId)
         {
-            // temporary
-            ApplicationDbContext db = new ApplicationDbContext();
-
+            
             if (id == null || addUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -151,10 +164,9 @@ namespace Bug_Tracker.Controllers
             {
                 if (!projectUserService.CheckIfUserOnProject((int)id, addUserId))
                 {
-                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);                   
+                    var newProjectUser = projectUserService.ProjectUser(addUserId, project.Id);
                     projectUserService.Create(newProjectUser);
-                    db.SaveChanges();
-                }                          
+                }
             }
 
             return RedirectToAction("Details", new { id = project.Id });
@@ -180,6 +192,7 @@ namespace Bug_Tracker.Controllers
                 {
                     var projectUserToRemove = projectUserService.GetExistingProjectUser((int)id, removeUserId);
                     projectUserService.RemoveProjectUser(projectUserToRemove);
+                    ticketService.UnassignUserTickets(project.Id, user.Id);
                 }
             }
 

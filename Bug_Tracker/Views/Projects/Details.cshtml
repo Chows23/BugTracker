@@ -1,7 +1,10 @@
-﻿@model Bug_Tracker.Models.Project
+﻿@model Bug_Tracker.Models.ProjectDetailsViewModel
 @using Bug_Tracker.Models;
 @using Bug_Tracker.BL;
 @using Microsoft.AspNet.Identity;
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
 @{
     ViewBag.Title = "Details";
 }
@@ -55,146 +58,166 @@
     </div>
 </div>
 
-<h3>Tickets</h3>
-@foreach (var ticket in Model.Tickets)
-{
-    <div class="panel panel-@ticket.StatusClassName">
-        <div class="panel-heading">
-            @if (ticket.TicketPriority.Name == "High" && ticket.TicketStatus.Name != "Resolved")
-            {
-                <span style="font-size: 1.5em; font-weight: 800; color: red">!</span>
-            }
-            @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
-            <span class="pull-right">Created: @ticket.Created.ToShortDateString()</span>
-        </div>
-        <div class="panel-body">
-            <div>@ticket.Description</div>
-        </div>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Assigned To</th>
-                    <th>Owner</th>
-                    <th>Type</th>
-                    <th>Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@(ticket.AssignedToUser != null ? ticket.AssignedToUser.UserName : "Unassigned")</td>
-                    <td>@ticket.OwnerUser.UserName</td>
-                    <td>@ticket.TicketType.Name</td>
-                    <td>@ticket.Updated.ToShortDateString()</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-}
-
-@if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager") || UserService.UserInRole(User.Identity.GetUserId(), "developer"))
-{
-    <hr />
-
-    <h3>
-        Users
-        @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
+<div style="display: flex; justify-content: space-evenly">
+    <div style="width: @(UserService.UserInRole(User.Identity.GetUserId(), "submitter") ? "100%" : "47%")">
+        <h3>Tickets</h3>
+        @if (Model.Tickets == null)
         {
-            <span>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-user-modal">
-                    Add
-                </button>
-            </span>
-            <span>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-user-modal">
-                    Remove
-                </button>
-            </span>
+            <div>@ViewBag.TicketCount Ticket(s) for this project</div>
         }
-    </h3>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">@Html.DisplayName("Username")</th>
-                <th scope="col">@Html.DisplayName("Email")</th>
-                <th scope="col">@Html.DisplayName("Role")</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var projectUser in Model.ProjectUsers)
+        else
+        {
+            foreach (var ticket in Model.Tickets)
             {
-                <tr>
-                    <td>@projectUser.User.UserName</td>
-                    <td>@projectUser.User.Email</td>
-                    <td>@(UserService.GetAllRolesOfUser(projectUser.UserId).ToList()[0])</td>
-                </tr>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @if (ticket.TicketPriority.Name == "High" && ticket.TicketStatus.Name != "Resolved")
+                        {
+                            <span style="font-size: 1.5em; font-weight: 800; color: red">!</span>
+                        }
+                        @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
+                        <span class="label label-@ticket.StatusClassName">@ticket.TicketStatus.Name</span>
+                        <span class="pull-right">Created: @ticket.Created.ToShortDateString()</span>
+                    </div>
+                    <div class="panel-body">
+                        <div>@ticket.Description</div>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Assigned To</th>
+                                <th>Owner</th>
+                                <th>Type</th>
+                                <th>Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@(ticket.AssignedToUser != null ? ticket.AssignedToUser.UserName : "Unassigned")</td>
+                                <td>@ticket.OwnerUser.UserName</td>
+                                <td>@ticket.TicketType.Name</td>
+                                <td>@ticket.Updated.ToShortDateString()</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             }
-        </tbody>
-    </table>
+            <div>
+                Page @(Model.Tickets.PageCount < Model.Tickets.PageNumber ? 0 : Model.Tickets.PageNumber) of @Model.Tickets.PageCount
 
-    <div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Add a User</h4>
-                </div>
-                @using (Html.BeginForm("AddUser", "Projects", new { id = Model.Id }))
+                @Html.PagedListPager(Model.Tickets, page => Url.Action("Details",
+                     new { page, id = Model.Id }))
+            </div>
+        }
+    </div>
+    <div style="width: @(UserService.UserInRole(User.Identity.GetUserId(), "submitter") ? "0%" : "47%")">
+        @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager") || UserService.UserInRole(User.Identity.GetUserId(), "developer"))
+        {
+            <h3>
+                Users
+                @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
                 {
-                    @Html.AntiForgeryToken()
-                    <div class="modal-body">
-                        @if (!Html.ViewData.ModelState.IsValid)
+                    <span>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-user-modal">
+                            Add
+                        </button>
+                    </span>
+                    <span>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-user-modal">
+                            Remove
+                        </button>
+                    </span>
+                }
+            </h3>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">@Html.DisplayName("Username")</th>
+                        <th scope="col">@Html.DisplayName("Email")</th>
+                        <th scope="col">@Html.DisplayName("Role")</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var projectUser in Model.ProjectUsers)
+                    {
+                        <tr>
+                            <td>@projectUser.User.UserName</td>
+                            <td>@projectUser.User.Email</td>
+                            <td>@(UserService.GetAllRolesOfUser(projectUser.UserId).ToList()[0])</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Add a User</h4>
+                        </div>
+                        @using (Html.BeginForm("AddUser", "Projects", new { id = Model.Id }))
                         {
-                            <div class="alert alert-danger">
-                                @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                            @Html.AntiForgeryToken()
+                            <div class="modal-body">
+                                @if (!Html.ViewData.ModelState.IsValid)
+                                {
+                                    <div class="alert alert-danger">
+                                        @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                                    </div>
+                                }
+
+                                <div class="form-group">
+                                    @Html.DropDownList("AddUserId", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Update" />
                             </div>
                         }
-
-                        <div class="form-group">
-                            @Html.DropDownList("AddUserId", null, new { @class = "form-control" })
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" value="Update" />
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="remove-user-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Remove a User</h4>
                 </div>
-                @using (Html.BeginForm("RemoveUser", "Projects", new { id = Model.Id }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="modal-body">
-                        @if (!Html.ViewData.ModelState.IsValid)
+            </div>
+
+            <div class="modal fade" id="remove-user-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Remove a User</h4>
+                        </div>
+                        @using (Html.BeginForm("RemoveUser", "Projects", new { id = Model.Id }))
                         {
-                            <div class="alert alert-danger">
-                                @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                            @Html.AntiForgeryToken()
+                            <div class="modal-body">
+                                @if (!Html.ViewData.ModelState.IsValid)
+                                {
+                                    <div class="alert alert-danger">
+                                        @Html.ValidationSummary(false, "Errors", new { @class = "text-danger" })
+                                    </div>
+                                }
+
+                                <div class="form-group">
+                                    @Html.DropDownList("RemoveUserId", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Update" />
                             </div>
                         }
-
-                        <div class="form-group">
-                            @Html.DropDownList("RemoveUserId", null, new { @class = "form-control" })
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" value="Update" />
-                    </div>
-                }
+                </div>
             </div>
-        </div>
+        }
     </div>
+</div>
 
-}
+
+
+
 

@@ -27,11 +27,6 @@ namespace Bug_Tracker.DAL
             return db.Projects.Where(condition);
         }
 
-        public virtual IEnumerable<Project> GetAll()
-        {
-            return db.Projects;
-        }
-
         public IEnumerable<Project> GetCollection(Func<Project, DateTime> condition)
         {
             return db.Projects.OrderByDescending(condition);

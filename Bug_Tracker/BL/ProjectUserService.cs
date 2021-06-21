@@ -64,5 +64,10 @@ namespace Bug_Tracker.BL
         {
             repo.Delete(projectUser.Id);
         }
+
+        public List<ProjectUser> GetUsersProjects(string userId)
+        {
+            return repo.GetCollection(pu => pu.UserId == userId).ToList();
+        }
     }
 }

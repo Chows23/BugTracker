@@ -16,6 +16,7 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
+        ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize]
         public ActionResult Index()
@@ -29,8 +30,7 @@ namespace Bug_Tracker.Controllers
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
 
-            var projects = user.ProjectUsers.Select(p => p.Project).ToList();
-
+            var projects = projectUserService.GetUsersProjects(user.Id).Select(pu => pu.Project).ToList();
             return View(projects);
         }
 
@@ -149,6 +149,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult AddUser(int? id, string addUserId)
         {
+            
             if (id == null || addUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 

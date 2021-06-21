@@ -125,6 +125,10 @@ namespace Bug_Tracker.Controllers
             {
                 return HttpNotFound();
             }
+
+            var user = UserService.GetUser(User.Identity.Name);
+            ViewBag.Notifications = user.TicketNotifications.Count;
+
             ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
             return View(ticket);
         }

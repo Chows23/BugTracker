@@ -176,6 +176,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BL\GmailService.cs" />
     <Compile Include="BL\ProjectService.cs" />
     <Compile Include="BL\ProjectUserService.cs" />
     <Compile Include="BL\TicketPriorityService.cs" />
@@ -241,6 +242,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\dashboard.css" />
+    <Content Include="Data\attachments\dashboard.PNG" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -312,7 +314,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Data\attachments\" />
     <Folder Include="Views\TicketAttachment\" />
     <Folder Include="Views\TicketComment\" />
     <Folder Include="Views\TicketHistory\" />

@@ -177,7 +177,6 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult RemoveUser(int? id, string removeUserId)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
             if (id == null || removeUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 

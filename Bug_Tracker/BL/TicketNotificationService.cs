@@ -50,5 +50,10 @@ namespace Bug_Tracker.BL
         {
             repo.Delete(notif);
         }
+
+        public List<TicketNotification> GetUserNotifications(string id)
+        {
+            return repo.GetCollection(tn => tn.UserId == id).ToList();
+        }
     }
 }

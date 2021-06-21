@@ -18,7 +18,7 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<TicketNotification> GetCollection(Func<TicketNotification, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.TicketNotifications.Where(condition);
         }
 
         public TicketNotification GetEntity(int id)

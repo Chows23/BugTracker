@@ -22,7 +22,8 @@ namespace Bug_Tracker.Controllers
             else
                 return new HttpUnauthorizedResult();
 
-            var notifs = user.TicketNotifications.ToList();
+            var notifs = ticketNotificationService.GetUserNotifications(user.Id);
+            notifs.Reverse();
 
             return View(notifs);
         }
@@ -33,7 +34,6 @@ namespace Bug_Tracker.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var notification = ticketNotificationService.GetTicketNotification((int)notifId);
-            var user = UserService.GetUser(User.Identity.Name);
 
             ticketNotificationService.RemoveNotif(notification);
 

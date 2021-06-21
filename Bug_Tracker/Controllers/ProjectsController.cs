@@ -16,6 +16,7 @@ namespace Bug_Tracker.Controllers
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
+        private TicketService ticketService = new TicketService();
 
         [Authorize]
         public ActionResult Index()
@@ -176,6 +177,7 @@ namespace Bug_Tracker.Controllers
         [Authorize(Roles = "admin, manager")]
         public ActionResult RemoveUser(int? id, string removeUserId)
         {
+            ApplicationDbContext db = new ApplicationDbContext();
             if (id == null || removeUserId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -191,6 +193,7 @@ namespace Bug_Tracker.Controllers
                 {
                     var projectUserToRemove = projectUserService.GetExistingProjectUser((int)id, removeUserId);
                     projectUserService.RemoveProjectUser(projectUserToRemove);
+                    ticketService.UnassignUserTickets(project.Id, user.Id);
                 }
             }
 

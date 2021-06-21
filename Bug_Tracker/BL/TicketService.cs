@@ -162,5 +162,16 @@ namespace Bug_Tracker.BL
         {
             repo.Update(ticket, null);
         }
+
+        public void UnassignUserTickets(int projectId, string userId)
+        {
+            var tickets = repo.GetCollection(t => t.ProjectId == projectId && t.AssignedToUserId == userId);
+            foreach (var ticket in tickets)
+            {
+                RemoveTicketUser(ticket);
+                //user.Tickets.Remove(ticket);
+                //db.SaveChanges();
+            }
+        }
     }
 }

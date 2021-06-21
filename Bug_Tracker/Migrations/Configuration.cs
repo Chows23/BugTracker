@@ -352,6 +352,107 @@ namespace Bug_Tracker.Migrations
                 db.SaveChanges();
             }
 
+            // Ticket Attachments
+
+            if (db.TicketAttachments.Count() == 0)
+            {
+                TicketAttachment ticketAttachment1 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-1.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-1.txt",
+                    TicketId = 1,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment2 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-2.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-2.txt",
+                    TicketId = 2,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment3 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-3.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-3.txt",
+                    TicketId = 3,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment4 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-4.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-4.txt",
+                    TicketId = 4,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment5 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-5.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-5.txt",
+                    TicketId = 5,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment6 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-1.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-1.jpeg",
+                    TicketId = 1,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment7 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-2.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-2.jpeg",
+                    TicketId = 2,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment8 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-3.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-3.jpeg",
+                    TicketId = 3,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment9 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-4.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-4.jpeg",
+                    TicketId = 4,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment10 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-5.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-5.jpeg",
+                    TicketId = 5,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+
+                db.TicketAttachments.AddRange(new List<TicketAttachment>
+                {
+                    ticketAttachment1,
+                    ticketAttachment2,
+                    ticketAttachment3,
+                    ticketAttachment4,
+                    ticketAttachment5,
+                    ticketAttachment6,
+                    ticketAttachment7,
+                    ticketAttachment8,
+                    ticketAttachment9,
+                    ticketAttachment10,
+                });
+                db.SaveChanges();
+            }
+
             // ProjectUsers
 
             if (db.ProjectUsers.Count() == 0)

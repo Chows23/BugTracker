@@ -242,7 +242,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\dashboard.css" />
-    <Content Include="Data\attachments\2021-06-21T13-27-05_TODO.txt" />
     <Content Include="Data\attachments\dashboard.PNG" />
     <Content Include="Data\attachments\sample-1.txt" />
     <Content Include="Data\attachments\sample-2.txt" />

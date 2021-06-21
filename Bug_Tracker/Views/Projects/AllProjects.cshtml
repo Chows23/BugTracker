@@ -20,7 +20,12 @@
         </div>
         <div class="panel-body">
             <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
-                @{
+                @if (project.Tickets.Count == 0)
+                {
+                    <div>No tickets to display.</div>
+                }
+                else
+                {
                     var projectUser = project.ProjectUsers.FirstOrDefault(pu => pu.UserId == User.Identity.GetUserId());
                     if (UserService.UserInRole(User.Identity.GetUserId(), "manager") && projectUser == null)
                     {

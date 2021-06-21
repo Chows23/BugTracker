@@ -55,11 +55,11 @@ namespace Bug_Tracker.Models
                 switch (TicketStatus.Name)
                 {
                     case "Abandoned":
-                        return "danger";
+                        return "default";
                     case "Resolved":
                         return "success";
                     default:
-                        return "warning";
+                        return "danger";
                 }
             }
         }

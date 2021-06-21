@@ -95,7 +95,7 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
 
             var user = UserService.GetUser(User.Identity.Name);
-            var projectUser = user.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == id);
+            var projectUser = projectUserService.GetExistingProjectUser(project.Id, user.Id);
             ProjectDetailsViewModel projectDetailsViewModel = new ProjectDetailsViewModel();
 
             if (projectUser == null && !UserService.UserInRole(user.Id, "admin"))

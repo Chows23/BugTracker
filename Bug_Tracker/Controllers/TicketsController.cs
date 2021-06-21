@@ -69,6 +69,8 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
+
+            ViewBag.Notifications = user.TicketNotifications.Count;
             return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 

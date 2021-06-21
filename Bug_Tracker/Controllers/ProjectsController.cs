@@ -31,7 +31,8 @@ namespace Bug_Tracker.Controllers
             var projects = user.ProjectUsers.Select(p => p.Project);
             foreach (var project in projects)
                 project.Tickets = projectService.GetUserTicketsOnProject(user, project.Tickets.ToList());
-            
+
+            ViewBag.Notifications = user.TicketNotifications.Count;
             return View(projects);
         }
 

@@ -9,8 +9,10 @@ namespace Bug_Tracker.BL
 {
     public class TicketNotificationService
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        private GmailService gmailService = new GmailService();
+
         public TicketNotificationRepo repo;
+
         public TicketNotificationService()
         {
             repo = new TicketNotificationRepo();
@@ -33,6 +35,8 @@ namespace Bug_Tracker.BL
                 TicketId = ticket.Id,
                 UserId = user.Id,
             };
+
+            gmailService.Send("katbdesrosiers@gmail.com", "Katherine", "Test Notification Email", "This is a test.");
 
             return notif;
         }

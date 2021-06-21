@@ -18,12 +18,12 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<TicketNotification> GetCollection(Func<TicketNotification, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.TicketNotifications.Where(condition);
         }
 
         public TicketNotification GetEntity(int id)
         {
-            throw new NotImplementedException();
+            return db.TicketNotifications.Find(id);
         }
 
         public TicketNotification GetEntity(Func<TicketNotification, bool> condition)
@@ -34,6 +34,12 @@ namespace Bug_Tracker.DAL
         public void Update(TicketNotification entity)
         {
             throw new NotImplementedException();
+        }
+
+        public void Delete(TicketNotification entity)
+        {
+            db.TicketNotifications.Remove(entity);
+            db.SaveChanges();
         }
     }
 }

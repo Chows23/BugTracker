@@ -1,0 +1,16 @@
+﻿@model List<Bug_Tracker.Models.TicketNotification>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Your Notifications</h2>
+
+@foreach (var notif in Model)
+{
+    <div class="well">
+        Changes were made on @Html.ActionLink(notif.Ticket.Title, "Details", "Tickets", new { id = notif.TicketId }, null)
+        <span class="pull-right">
+            @Html.ActionLink("Remove", "RemoveNotificationFromUser", new { notifId = notif.Id }, new { @class = "btn btn-danger" })
+        </span>
+    </div>
+}

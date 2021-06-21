@@ -2,6 +2,8 @@ namespace Bug_Tracker.Migrations
 {
     using Bug_Tracker.BL;
     using Bug_Tracker.Models;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -10,21 +12,33 @@ namespace Bug_Tracker.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<Bug_Tracker.Models.ApplicationDbContext>
     {
+        Random rand;
+        UserManager<ApplicationUser> userManager;
+
+        // Roles
+        const string ROLE_ADMIN = "admin";
+        const string ROLE_MANAGER = "manager";
+        const string ROLE_DEVELOPER = "developer";
+        const string ROLE_SUBMITTER = "submitter";
+
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            this.rand = new Random();
         }
 
         protected override void Seed(Bug_Tracker.Models.ApplicationDbContext db)
         {
+            this.userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
             // Roles
 
             if (db.Roles.Count() == 0)
             {
-                UserService.AddRole("admin");
-                UserService.AddRole("manager");
-                UserService.AddRole("developer");
-                UserService.AddRole("submitter");
+                UserService.AddRole(ROLE_ADMIN);
+                UserService.AddRole(ROLE_MANAGER);
+                UserService.AddRole(ROLE_DEVELOPER);
+                UserService.AddRole(ROLE_SUBMITTER);
             }
 
             // Users
@@ -338,6 +352,107 @@ namespace Bug_Tracker.Migrations
                 db.SaveChanges();
             }
 
+            // Ticket Attachments
+
+            if (db.TicketAttachments.Count() == 0)
+            {
+                TicketAttachment ticketAttachment1 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-1.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-1.txt",
+                    TicketId = 1,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment2 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-2.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-2.txt",
+                    TicketId = 2,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment3 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-3.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-3.txt",
+                    TicketId = 3,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment4 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-4.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-4.txt",
+                    TicketId = 4,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment5 = new TicketAttachment
+                {
+                    Description = "This is a sample attachment.",
+                    FilePath = "sample-5.txt",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-5.txt",
+                    TicketId = 5,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment6 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-1.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-1.jpeg",
+                    TicketId = 1,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment7 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-2.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-2.jpeg",
+                    TicketId = 2,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment8 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-3.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-3.jpeg",
+                    TicketId = 3,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment9 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-4.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-4.jpeg",
+                    TicketId = 4,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+                TicketAttachment ticketAttachment10 = new TicketAttachment
+                {
+                    Description = "This is a sample photo attachment.",
+                    FilePath = "sample-photo-5.jpeg",
+                    FileUrl = @"C:\Users\kathe\Desktop\BugTracker\BugTracker\Bug_Tracker\Data\attachments\sample-photo-5.jpeg",
+                    TicketId = 5,
+                    UserId = db.Users.FirstOrDefault(u => u.Email == "katherine@gmail.com").Id,
+                };
+
+                db.TicketAttachments.AddRange(new List<TicketAttachment>
+                {
+                    ticketAttachment1,
+                    ticketAttachment2,
+                    ticketAttachment3,
+                    ticketAttachment4,
+                    ticketAttachment5,
+                    ticketAttachment6,
+                    ticketAttachment7,
+                    ticketAttachment8,
+                    ticketAttachment9,
+                    ticketAttachment10,
+                });
+                db.SaveChanges();
+            }
+
             // ProjectUsers
 
             if (db.ProjectUsers.Count() == 0)
@@ -479,6 +594,162 @@ namespace Bug_Tracker.Migrations
                     projectUser22,
                 });
 
+                db.SaveChanges();
+
+
+            }
+
+            // TicketComments
+
+            int numOfComments = 200;
+            if (db.TicketComments.Count() < numOfComments)
+            {
+                List<ApplicationUser> users = db.Users.ToList();
+                List<Ticket> tickets = db.Tickets.ToList();
+
+                List<TicketComment> comments = new List<TicketComment>();
+
+                for (int i = 0; i < numOfComments; i++)
+                {
+                    ApplicationUser user = users[rand.Next(users.Count)];
+                    Ticket ticket = new Ticket();
+                    if (userManager.IsInRole(user.Id, ROLE_ADMIN))
+                    {
+                        ticket = tickets[rand.Next(tickets.Count)];
+                    }
+                    else if (userManager.IsInRole(user.Id, ROLE_MANAGER))
+                    {
+                        Project project = user.ProjectUsers
+                            .Skip(rand.Next(user.ProjectUsers.Count))
+                            .FirstOrDefault().Project;
+                        ticket = project.Tickets.ToList()[rand.Next(project.Tickets.Count)];
+                    }
+                    else if (userManager.IsInRole(user.Id, ROLE_DEVELOPER))
+                    {
+                        ticket = tickets.Where(t => t.AssignedToUserId == user.Id)
+                            .Skip(rand.Next(tickets.Where(t => t.AssignedToUserId == user.Id).Count()))
+                            .FirstOrDefault();
+                    }
+                    else if (userManager.IsInRole(user.Id, ROLE_SUBMITTER))
+                    {
+                        ticket = tickets.Where(t => t.OwnerUserId == user.Id)
+                            .Skip(rand.Next(tickets.Where(t => t.OwnerUserId == user.Id).Count()))
+                            .FirstOrDefault();
+                    }
+                    if (ticket != null && ticket.OwnerUserId != null)
+                        comments.Add(new TicketComment
+                        {
+                            User = user,
+                            Ticket = ticket,
+                            Comment = Faker.Lorem.Paragraph(),
+                            Created = ticket.Created.AddDays(rand.Next(5))
+                        });
+                }
+                db.TicketComments.AddRange(comments);
+                db.SaveChanges();
+            }
+
+            // TicketHistory
+
+            if (db.TicketHistories.Count() < db.Tickets.Count())
+            {
+                List<Ticket> tickets = db.Tickets.ToList();
+                List<TicketHistory> histories = new List<TicketHistory>();
+                foreach (Ticket ticket in tickets)
+                {
+                    if (Faker.Boolean.Random())
+                    {
+                        histories.Add(new TicketHistory
+                        {
+                            Property = "Title",
+                            OldValue = Faker.Company.CatchPhrase(),
+                            NewValue = ticket.Title,
+                            Changed = ticket.Updated,
+                            TicketId = ticket.Id,
+                            UserId = ticket.AssignedToUserId
+                        });
+                    }
+                    if (Faker.Boolean.Random())
+                    {
+                        histories.Add(new TicketHistory
+                        {
+                            Property = "Description",
+                            OldValue = Faker.Lorem.Paragraph(),
+                            NewValue = ticket.Description,
+                            Changed = ticket.Updated,
+                            TicketId = ticket.Id,
+                            UserId = ticket.AssignedToUserId
+                        });
+                    }
+                    if (Faker.Boolean.Random())
+                    {
+                        List<TicketType> types = db.TicketTypes.Where(t => t.Id != ticket.TicketTypeId).ToList();
+                        histories.Add(new TicketHistory
+                        {
+                            Property = "TicketType",
+                            OldValue = types[rand.Next(types.Count)].Name,
+                            NewValue = ticket.TicketType.Name,
+                            Changed = ticket.Updated,
+                            TicketId = ticket.Id,
+                            UserId = ticket.AssignedToUserId
+                        });
+                    }
+                    if (Faker.Boolean.Random())
+                    {
+                        List<TicketPriority> priorities = db.TicketPriorities.Where(p => p.Id != ticket.TicketPriorityId).ToList();
+                        histories.Add(new TicketHistory
+                        {
+                            Property = "TicketPriority",
+                            OldValue = priorities[rand.Next(priorities.Count)].Name,
+                            NewValue = ticket.TicketPriority.Name,
+                            Changed = ticket.Updated,
+                            TicketId = ticket.Id,
+                            UserId = ticket.AssignedToUserId
+                        });
+                    }
+                    if (Faker.Boolean.Random())
+                    {
+                        List<TicketStatus> statuses = db.TicketStatuses.Where(p => p.Id != ticket.TicketStatusId).ToList();
+
+                        histories.Add(new TicketHistory
+                        {
+                            Property = "TicketStatus",
+                            OldValue = statuses[rand.Next(statuses.Count)].Name,
+                            NewValue = ticket.TicketStatus.Name,
+                            Changed = ticket.Updated,
+                            TicketId = ticket.Id,
+                            UserId = ticket.AssignedToUserId
+                        });
+                    }
+                }
+                db.TicketHistories.AddRange(histories);
+                db.SaveChanges();
+            }
+
+            // TicketNotifications
+
+            if (db.TicketNotifications.Count() < db.Tickets.Count())
+            {
+                List<Ticket> tickets = db.Tickets.ToList();
+                List<TicketNotification> notifications = new List<TicketNotification>();
+                foreach (Ticket ticket in tickets)
+                {
+                    notifications.Add(new TicketNotification
+                    {
+                        TicketId = ticket.Id,
+                        UserId = ticket.AssignedToUserId
+                    });
+                }
+                List<TicketHistory> histories = db.TicketHistories.ToList();
+                foreach (TicketHistory history in histories)
+                {
+                    notifications.Add(new TicketNotification
+                    {
+                        TicketId = history.TicketId,
+                        UserId = history.Ticket.AssignedToUserId
+                    });
+                }
+                db.TicketNotifications.AddRange(notifications);
                 db.SaveChanges();
             }
         }

@@ -64,6 +64,7 @@ namespace Bug_Tracker.Controllers
                     Tickets = recentTickets,
                 };
 
+                ViewBag.Notifications = user.TicketNotifications.Count;
                 return View(dashboardViewModel);
             }
             else if (User.IsInRole("submitter"))

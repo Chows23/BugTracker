@@ -157,5 +157,10 @@ namespace Bug_Tracker.BL
         {
             repo.Update(ticket, user);
         }
+
+        public void RemoveTicketUser(Ticket ticket)
+        {
+            repo.Update(ticket, null);
+        }
     }
 }

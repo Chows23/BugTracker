@@ -130,17 +130,17 @@ namespace BugTrackerTests
 
 
         [TestMethod]
-        public void GetNLatestUpdated_Should_Call_GetCollection_On_Repo_If_User_Null()
+        public void GetNProjects_Should_Call_GetCollection_On_Repo_If_User_Null()
         {
-            List<Project> projects = projectService.GetNLatestUpdated(3, null);
+            List<Project> projects = projectService.GetNProjects(2, null);
             mockedRepo.Verify(r => r.GetCollection());
         }
 
 
         [TestMethod]
-        public void GetNLatestUpdated_With_User_Null_Should_Return_First_N_Projects()
+        public void GetNProjects_With_User_Null_Should_Return_First_N_Projects()
         {
-            List<Project> projects = projectService.GetNLatestUpdated(3, null);
+            List<Project> projects = projectService.GetNProjects(3, null);
 
             mockedRepo.Verify(r => r.GetCollection());
             Assert.AreEqual(projects.Count, 3);
@@ -151,24 +151,14 @@ namespace BugTrackerTests
 
 
         [TestMethod]
-        public void GetNLatestUpdated_Should_Return_First_N_Projects_Of_User_IF_User_Has_Project_With_0_Tikets()
+        public void GetNProjects_Should_Return_First_N_Projects_Of_User()
         {
-            List<Project> projects = projectService.GetNLatestUpdated(3, user2);
+            List<Project> projects = projectService.GetNProjects(3, user2);
 
             Assert.AreEqual(projects.Count, 3);
             Assert.IsTrue(projects.Exists(p => p.Id == 6));
             Assert.IsTrue(projects.Exists(p => p.Id == 7));
             Assert.IsTrue(projects.Exists(p => p.Id == 8));
         }
-
-
-        [TestMethod]
-        public void GetNLatestUpdated_Should_Return_Latest_N_Projects_Of_User_IF_All_Projects_Of_User_Has_Tikets()
-        {
-            List<Project> projects = projectService.GetNLatestUpdated(2, user1);
-            Assert.AreEqual(projects.Count, 2);
-            Assert.IsTrue(projects[0].Id == 1);
-        }
-
     }
 }

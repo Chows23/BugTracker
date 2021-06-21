@@ -29,6 +29,7 @@ namespace Bug_Tracker.Controllers
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
 
+            ViewBag.Notifications = user.TicketNotifications.Count;
             var projects = projectUserService.GetUsersProjects(user.Id).Select(pu => pu.Project).ToList();
             return View(projects);
         }

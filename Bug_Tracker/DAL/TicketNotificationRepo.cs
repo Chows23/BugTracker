@@ -35,5 +35,11 @@ namespace Bug_Tracker.DAL
         {
             throw new NotImplementedException();
         }
+
+        public void Delete(TicketNotification entity)
+        {
+            db.TicketNotifications.Remove(entity);
+            db.SaveChanges();
+        }
     }
 }

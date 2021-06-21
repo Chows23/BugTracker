@@ -35,7 +35,7 @@ namespace Bug_Tracker.Controllers
             var notification = ticketNotificationService.GetTicketNotification((int)notifId);
             var user = UserService.GetUser(User.Identity.Name);
 
-            //ticketNotificationService.RemoveNotifFromUser(user, notification);
+            ticketNotificationService.RemoveNotif(notification);
 
             return RedirectToAction("Index");
         }

@@ -42,10 +42,9 @@ namespace Bug_Tracker.BL
             return repo.GetEntity(ticketNotifId);
         }
 
-        //public void RemoveNotifFromUser(ApplicationUser user, TicketNotification notif)
-        //{
-        //    user.TicketNotifications.Remove(notif);
-        //    db.SaveChanges();
-        //}
+        public void RemoveNotif(TicketNotification notif)
+        {
+            repo.Delete(notif);
+        }
     }
 }

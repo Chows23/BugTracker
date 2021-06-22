@@ -174,7 +174,10 @@ namespace Bug_Tracker.BL
 
         public List<Ticket> GetUserTickets(string userId)
         {
-            return repo.GetCollection(t => t.AssignedToUserId == userId).ToList();
+            if (userId == null)
+                return repo.GetCollection(t => t.AssignedToUserId == null).ToList();
+            else
+                return repo.GetCollection(t => t.AssignedToUserId == userId).ToList();
         }
 
         public List<Ticket> GetOwnerTickets(string userId)

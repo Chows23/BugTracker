@@ -3,23 +3,33 @@
 
 <h2>Profile</h2>
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-info-modal">
+    Edit
+</button>
+
 <dl class="dl-horizontal">
     <dt>Username:</dt>
-    <dd>@Model.UserName<span style="color: cornflowerblue; cursor: pointer; margin-left: 10px;" data-toggle="modal" data-target="#change-username-modal"><i class="fas fa-edit"></i>EDIT</span></dd>
+    <dd>@Model.UserName</dd>
     <dt>Email:</dt>
     <dd>@Model.Email</dd>
 </dl>
+@Html.ActionLink("Change Password", "ChangePassword")
 
-<div class="modal fade" id="change-username-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="edit-info-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Change Username</h4>
+                <h4 class="modal-title">Edit</h4>
             </div>
-            @using (Html.BeginForm("ChangeUsername", "Manage", new { userId = Model.Id }))
+            @using (Html.BeginForm("EditInfo", "Manage"))
             {
                 @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.UserName)
+                @Html.HiddenFor(model => model.PasswordHash)
+                @Html.HiddenFor(model => model.SecurityStamp)
+
                 <div class="modal-body">
                     @if (!Html.ViewData.ModelState.IsValid)
                     {
@@ -29,13 +39,13 @@
                     }
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.UserName)
-                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.Email)
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", type = "email" } })
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Change" />
+                    <input type="submit" class="btn btn-primary" value="Update" />
                 </div>
             }
         </div>

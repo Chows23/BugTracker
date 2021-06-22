@@ -9,6 +9,7 @@ using Microsoft.Owin.Security;
 using Bug_Tracker.Models;
 using System.Net;
 using Bug_Tracker.BL;
+using System.Data.Entity;
 
 namespace Bug_Tracker.Controllers
 {
@@ -123,35 +124,11 @@ namespace Bug_Tracker.Controllers
             return RedirectToAction("ChangeUserRole");
         }
 
-        //
-        // GET: /Manage/Index
-        //public async Task<ActionResult> Index(ManageMessageId? message)
-        //{
-        //    ViewBag.StatusMessage =
-        //        message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-        //        : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-        //        : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-        //        : message == ManageMessageId.Error ? "An error has occurred."
-        //        : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-        //        : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-        //        : "";
-
-        //    var userId = User.Identity.GetUserId();
-        //    var model = new IndexViewModel
-        //    {
-        //        HasPassword = HasPassword(),
-        //        PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-        //        TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-        //        Logins = await UserManager.GetLoginsAsync(userId),
-        //        BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-        //    };
-        //    return View(model);
-        //}
         public ActionResult Index()
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
-                user = UserService.GetUser(User.Identity.Name);
+                user = db.Users.Find(User.Identity.GetUserId());
             else
                 return new HttpUnauthorizedResult();
             
@@ -159,18 +136,15 @@ namespace Bug_Tracker.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangeEmail(string email, string userId)
+        [ValidateAntiForgeryToken]
+        public ActionResult EditInfo([Bind(Include = "Id,UserName,Email,PasswordHash,SecurityStamp")] ApplicationUser user)
         {
-            if (userId == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            var user = UserService.GetUser(userId);
-
-            if (user == null)
-                return HttpNotFound();
-
-            user.Email = email;
-            db.SaveChanges();
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            
             return RedirectToAction("Index");
         }
 

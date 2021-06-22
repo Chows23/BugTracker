@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using Bug_Tracker.Models;
@@ -39,12 +40,13 @@ namespace Bug_Tracker.DAL
 
         public Ticket GetEntity(Func<Ticket, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.Tickets.FirstOrDefault(condition);
         }
 
         public void Update(Ticket ticket)
         {
-            throw new NotImplementedException();
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public virtual void Update(Ticket entity, ApplicationUser user)

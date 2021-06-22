@@ -65,8 +65,6 @@
     <Compile Include="UnitTest_TicketHistoryService.cs" />
     <Compile Include="UnitTest_TicketService.cs" />
     <Compile Include="UnitTest_TicketStatusService.cs" />
-    <Compile Include="UnitTest_TicketTypeService.cs" />
-    <Compile Include="UnitTest_TicketPriorityService.cs" />
     <Compile Include="UnitTest_TicketNotificationService.cs" />
     <Compile Include="UnitTest_TicketAttachmentService.cs" />
     <Compile Include="UnitTest_ProjectUserService.cs" />

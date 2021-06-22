@@ -17,6 +17,7 @@ namespace Bug_Tracker.Controllers
         private ProjectService projectService = new ProjectService();
         private TicketStatusService ticketStatusService = new TicketStatusService();
         private UserService userService = new UserService();
+        private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
         public ActionResult Index()
         {
@@ -64,7 +65,7 @@ namespace Bug_Tracker.Controllers
                     Tickets = recentTickets,
                 };
 
-                ViewBag.Notifications = user.TicketNotifications.Count;
+                ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
                 return View(dashboardViewModel);
             }
             else if (User.IsInRole("submitter"))

@@ -125,7 +125,12 @@
             <ul style="padding-left: 0px">
                 @foreach (var comment in Model.TicketComments.OrderByDescending(c => c.Created))
                 {
-                    <li class="list-group-item">@comment.Comment</li>
+                    <li class="list-group-item">
+                        <div>
+                            @comment.Comment
+                            <div class="pull-right text-muted" style="margin-top: 10px">@comment.Created.ToShortDateString()</div>
+                        </div>
+                    </li>
                 }
             </ul>
         }
@@ -145,12 +150,17 @@
                         {
                             var localURL = "/Data/attachments/" + attachment.FilePath;
 
-                            <a data-toggle="collapse" data-target="#collapse-@attachment.Id" style="margin-bottom: 10px; cursor: pointer;">
-                                @attachment.FilePath.Substring(attachment.FilePath.IndexOf("_") + 1)
-                            </a>
-                            <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style="font-size: 20px; margin-left: 10px;">
-                                <i class="fas fa-download"></i>
-                            </a>
+                            <div>
+                                <a data-toggle="collapse" data-target="#collapse-@attachment.Id" style="margin-bottom: 10px; cursor: pointer;">
+                                    <span style="font-size: 20px">@attachment.FilePath.Substring(attachment.FilePath.IndexOf("_") + 1)</span>
+                                </a>
+                                <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style="font-size: 20px; margin-left: 10px;">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <span class="pull-right text-muted">@attachment.Created.ToShortDateString()</span>
+                            </div>
+
+                            <div>@attachment.Description</div>
 
                             <div class="collapse" id="collapse-@attachment.Id">
                                 <img src=@localURL alt="shark" style="width:50%; height: 50%" />
@@ -158,13 +168,15 @@
                         }
                         else
                         {
-                            @attachment.FilePath.Substring(attachment.FilePath.IndexOf("_") + 1)
+                            <span style="font-size: 20px">@attachment.FilePath.Substring(attachment.FilePath.IndexOf("_") + 1)</span>
+                            <span class="pull-right text-muted">@attachment.Created.ToShortDateString()</span>
+
                             <a href="@Url.Action("DownloadFile", new { fileUrl = attachment.FileUrl, filePath = attachment.FilePath })" style="font-size: 20px; margin-left: 10px;">
                                 <i class="fas fa-download"></i>
                             </a>
-                        }
 
-                        <span class="pull-right">@attachment.Created.ToShortDateString()</span>
+                            <div>@attachment.Description</div>
+                        }
                     </li>
                 }
             </ul>

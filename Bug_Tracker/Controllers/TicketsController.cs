@@ -70,7 +70,7 @@ namespace Bug_Tracker.Controllers
             ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
 
-            ViewBag.Notifications = user.TicketNotifications.Count;
+            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
             return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
@@ -127,13 +127,14 @@ namespace Bug_Tracker.Controllers
             }
 
             var user = UserService.GetUser(User.Identity.Name);
-            ViewBag.Notifications = user.TicketNotifications.Count;
+            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
 
             ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
             return View(ticket);
         }
 
         // GET: Tickets/Create
+        [Authorize(Roles = "submitter")]
         public ActionResult Create(int id)
         {
 
@@ -146,6 +147,7 @@ namespace Bug_Tracker.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "submitter")]
         public ActionResult Create([Bind(Include = "Title,Description,ProjectId,TicketTypeId,TicketPriorityId,OwnerUserId")] Ticket ticket)
         {
             if (ModelState.IsValid)
@@ -180,8 +182,6 @@ namespace Bug_Tracker.Controllers
         }
 
         // POST: Tickets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,ProjectId,OwnerUserId,OwnerUser,AssignedToUserId,AssignedToUser,Created,Title,Description,TicketTypeId,TicketPriorityId,TicketStatusId")] Ticket ticket)
@@ -211,32 +211,6 @@ namespace Bug_Tracker.Controllers
             ViewBag.Type = new SelectList(db.TicketTypes, "Id", "Name");
             ViewBag.Status = new SelectList(db.TicketStatuses, "Id", "Name");
             return View(ticket);
-        }
-
-        // GET: Tickets/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ticket ticket = db.Tickets.Find(id);
-            if (ticket == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ticket);
-        }
-
-        // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Ticket ticket = db.Tickets.Find(id);
-            db.Tickets.Remove(ticket);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
@@ -310,6 +284,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, manager")]
         public ActionResult AssignDeveloper(int? id, string userId)
         {
             if (id == null || userId == null)

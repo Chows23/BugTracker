@@ -12,13 +12,14 @@ using PagedList;
 
 namespace Bug_Tracker.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
         private TicketService ticketService = new TicketService();
+        private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
-        [Authorize]
         public ActionResult Index()
         {
             ApplicationUser user;
@@ -30,7 +31,7 @@ namespace Bug_Tracker.Controllers
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
 
-            ViewBag.Notifications = user.TicketNotifications.Count;
+            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
             var projects = projectUserService.GetUsersProjects(user.Id).Select(pu => pu.Project).ToList();
             return View(projects);
         }
@@ -85,7 +86,6 @@ namespace Bug_Tracker.Controllers
             return View(project);
         }
 
-        [Authorize]
         public ActionResult Details(int? id, int? page, int? pageSize)
         {
             if (id == null)
@@ -140,7 +140,7 @@ namespace Bug_Tracker.Controllers
                 return RedirectToAction("Details", new { id = project.Id });
             }
             else
-                TempData["Error"] = "Your project is missing something";
+                TempData["Error"] = "Project name can not be blank.";
 
             return RedirectToAction("Details", new { id = project.Id });
         }

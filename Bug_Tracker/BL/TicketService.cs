@@ -43,10 +43,10 @@ namespace Bug_Tracker.BL
             }
             else if (UserService.UserInRole(user.Id, "submitter"))
             {
-                tickets = user.SubmittedTickets;
+                tickets = repo.GetCollection(t => t.OwnerUserId == user.Id);
             }
             else
-                tickets = user.Tickets;
+                tickets = repo.GetCollection(t => t.AssignedToUserId == user.Id);
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -142,15 +142,15 @@ namespace Bug_Tracker.BL
             if (user == null)
                 return repo.GetCollection(t => t.Updated).Take(n).ToList();
             else
-                return user.Tickets.OrderByDescending(t => t.Updated).Take(n).ToList();
+                return GetUserTickets(user.Id).OrderByDescending(t => t.Updated).Take(n).ToList();
         }
 
         public List<Ticket> GetNLatestCreated(int n, ApplicationUser user)
         {
             if (UserService.UserInRole(user.Id, "submitter"))
-                return user.SubmittedTickets.OrderByDescending(t => t.Created).Take(n).ToList();
+                return GetOwnerTickets(user.Id).OrderByDescending(t => t.Created).Take(n).ToList();
             else
-                return user.Tickets.OrderByDescending(t => t.Created).Take(n).ToList();
+                return repo.GetCollection().OrderByDescending(t => t.Created).Take(n).ToList();
         }
 
         public void ChangeDeveloper(Ticket ticket, ApplicationUser user)
@@ -170,6 +170,16 @@ namespace Bug_Tracker.BL
             {
                 RemoveTicketUser(ticket);
             }
+        }
+
+        public List<Ticket> GetUserTickets(string userId)
+        {
+            return repo.GetCollection(t => t.AssignedToUserId == userId).ToList();
+        }
+
+        public List<Ticket> GetOwnerTickets(string userId)
+        {
+            return repo.GetCollection(t => t.OwnerUserId == userId).ToList();
         }
     }
 }

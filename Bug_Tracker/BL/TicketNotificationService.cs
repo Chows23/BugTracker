@@ -62,5 +62,10 @@ namespace Bug_Tracker.BL
         {
             return repo.GetCollection(tn => tn.UserId == id).ToList();
         }
+
+        public int GetNotifCount(string userId)
+        {
+            return repo.GetCollection(tn => tn.UserId == userId).Count();
+        }
     }
 }

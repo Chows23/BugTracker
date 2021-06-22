@@ -126,11 +126,16 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
             }
 
-            var user = UserService.GetUser(User.Identity.Name);
-            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
 
-            ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
-            return View(ticket);
+            var user = UserService.GetUser(User.Identity.Name);
+            if (user.Tickets.Contains(ticket)) {
+
+                ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
+
+                ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
+                return View(ticket);
+            }
+            else return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
         }
 
         // GET: Tickets/Create

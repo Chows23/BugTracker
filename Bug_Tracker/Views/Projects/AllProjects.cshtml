@@ -16,24 +16,30 @@
 {
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3>@Html.ActionLink(project.Name, "Details", new { id = project.Id })</h3>
+            <h3 style="text-align: center">@Html.ActionLink(project.Name, "Details", new { id = project.Id })</h3>
         </div>
         <div class="panel-body">
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
-                @if (project.Tickets.Count == 0)
+            @{
+                var projectUser = project.ProjectUsers.FirstOrDefault(pu => pu.UserId == User.Identity.GetUserId());
+                if (UserService.UserInRole(User.Identity.GetUserId(), "manager") && projectUser == null)
                 {
-                    <div>No tickets to display.</div>
+                    <div style="text-align: center">You are not a manager on this project.</div>
                 }
-                else
+                else if (project.Tickets.Count != 0)
                 {
-                    var projectUser = project.ProjectUsers.FirstOrDefault(pu => pu.UserId == User.Identity.GetUserId());
-                    if (UserService.UserInRole(User.Identity.GetUserId(), "manager") && projectUser == null)
+                    <h4 style="margin-bottom: 20px;">Recently Updated Tickets</h4>
+                }
+            }
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+
+                @{
+                    if (project.Tickets.Count == 0)
                     {
-                        <div>You are not a manager on this project</div>
+                        <div> No tickets to display.</div>
                     }
-                    else
+                    else if (projectUser != null)
                     {
-                        foreach (var ticket in project.Tickets)
+                        foreach (var ticket in project.Tickets.OrderByDescending(t => t.Updated).Take(4))
                         {
                             <div class="panel panel-default" style="width: 47%">
                                 <div class="panel-heading">@Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)<span class="pull-right">@ticket.Created.ToShortDateString()</span></div>

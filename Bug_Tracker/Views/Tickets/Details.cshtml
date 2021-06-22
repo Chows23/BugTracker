@@ -4,7 +4,7 @@
 
 @{ ViewBag.Title = "Details"; }
 
-@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary", style = "margin-top: 10px" })
+@Html.ActionLink("Back to Tickets", "Index", null, new { @class = "btn btn-primary", style = "margin-top: 10px" })
 @if (UserService.UserInRole(User.Identity.GetUserId(), "admin") || UserService.UserInRole(User.Identity.GetUserId(), "manager"))
 {
     <span>
@@ -134,6 +134,10 @@
                 }
             </ul>
         }
+        else
+        {
+            <div>No comments.</div>
+        }
     </div>
     <div style="width: 50%;">
         <h4 class="text-muted">Attachments</h4>
@@ -180,6 +184,10 @@
                     </li>
                 }
             </ul>
+        }
+        else
+        {
+            <div>No attachments.</div>
         }
     </div>
 </div>

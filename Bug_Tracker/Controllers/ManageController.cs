@@ -9,6 +9,7 @@ using Microsoft.Owin.Security;
 using Bug_Tracker.Models;
 using System.Net;
 using Bug_Tracker.BL;
+using System.Data.Entity;
 
 namespace Bug_Tracker.Controllers
 {
@@ -127,29 +128,28 @@ namespace Bug_Tracker.Controllers
             return RedirectToAction("ChangeUserRole");
         }
 
-        //
-        // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public ActionResult Index()
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : "";
+            ApplicationUser user;
+            if (User.Identity.IsAuthenticated)
+                user = db.Users.Find(User.Identity.GetUserId());
+            else
+                return new HttpUnauthorizedResult();
+            
+            return View(user);
+        }
 
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditInfo([Bind(Include = "Id,UserName,Email,PasswordHash,SecurityStamp")] ApplicationUser user)
+        {
+            if (!string.IsNullOrEmpty(user.Email))
             {
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            
+            return RedirectToAction("Index");
         }
 
         //

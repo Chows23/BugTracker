@@ -140,7 +140,7 @@ namespace Bug_Tracker.Controllers
                 return RedirectToAction("Details", new { id = project.Id });
             }
             else
-                TempData["Error"] = "Your project is missing something";
+                TempData["Error"] = "Project name can not be blank.";
 
             return RedirectToAction("Details", new { id = project.Id });
         }

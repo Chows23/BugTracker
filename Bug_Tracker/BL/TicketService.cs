@@ -43,10 +43,10 @@ namespace Bug_Tracker.BL
             }
             else if (UserService.UserInRole(user.Id, "submitter"))
             {
-                tickets = user.SubmittedTickets;
+                tickets = repo.GetCollection(t => t.OwnerUserId == user.Id);
             }
             else
-                tickets = user.Tickets;
+                tickets = repo.GetCollection(t => t.AssignedToUserId == user.Id);
 
             if (!String.IsNullOrEmpty(searchString))
             {

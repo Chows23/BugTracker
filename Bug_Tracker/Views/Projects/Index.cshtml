@@ -26,21 +26,32 @@
         </div>
         <div class="panel-body">
             <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+
                 @if (project.Tickets.Count == 0)
                 {
-                    <div>No assigned tickets.</div>
+                    <div>No tickets on project.</div>
                 }
+
                 @foreach (var ticket in project.Tickets)
                 {
-                    if ((UserService.UserInRole(User.Identity.GetUserId(), "developer") && ticket.AssignedToUserId == User.Identity.GetUserId()) ||
-                        (UserService.UserInRole(User.Identity.GetUserId(), "submitter") && ticket.OwnerUserId == User.Identity.GetUserId()) ||
-                        (UserService.UserInRole(User.Identity.GetUserId(), "manager")))
-                        {
-                            <div class="panel panel-default" style="width: 47%">
-                                <div class="panel-heading">@Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)<span class="pull-right">@ticket.Created.ToShortDateString()</span></div>
-                                <div class="panel-body">@(ticket.Description.Length > 50 ? ticket.Description.Substring(0, 47) + "..." : ticket.Description)</div>
-                            </div>
-                        }
+                    <div class="panel panel-default" style="width: 47%">
+                        <div class="panel-heading">
+                            @if ((User.IsInRole("developer") && ticket.AssignedToUserId == User.Identity.GetUserId()) ||
+                                (User.IsInRole("submitter") && ticket.OwnerUserId == User.Identity.GetUserId()) ||
+                                User.IsInRole("manager"))
+                            {
+                                <span style="font-size: 20px">@Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)</span>
+                            }
+                            else
+                            {
+                                <span style="font-size: 20px">@ticket.Title</span>
+                            }
+                            <span class="pull-right">@ticket.Created.ToShortDateString()</span>
+                        </div>
+                        <div class="panel-body">
+                            @(ticket.Description.Length > 50 ? ticket.Description.Substring(0, 47) + "..." : ticket.Description)
+                        </div>
+                    </div>
                 }
             </div>
         </div>

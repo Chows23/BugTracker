@@ -60,7 +60,14 @@
 
 <div style="display: flex; justify-content: space-evenly">
     <div style="width: @(UserService.UserInRole(User.Identity.GetUserId(), "submitter") ? "100%" : "47%")">
-        <h3>Tickets</h3>
+        @if (User.IsInRole("developer") || User.IsInRole("submitter"))
+        {
+        <h3>Your Tickets</h3>
+        }
+        else
+        {
+            <h3>All Tickets</h3>
+        }
         @if (Model.Tickets == null)
         {
             <div>@ViewBag.TicketCount Ticket(s) for this project</div>

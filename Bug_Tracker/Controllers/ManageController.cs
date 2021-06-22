@@ -73,6 +73,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult ChangeUserRole(string userId, string roleId)
         {
             var role = db.Roles.Find(roleId);

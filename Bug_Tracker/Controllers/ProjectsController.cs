@@ -12,6 +12,7 @@ using PagedList;
 
 namespace Bug_Tracker.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private ProjectService projectService = new ProjectService();
@@ -19,7 +20,6 @@ namespace Bug_Tracker.Controllers
         private TicketService ticketService = new TicketService();
         private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
-        [Authorize]
         public ActionResult Index()
         {
             ApplicationUser user;
@@ -86,7 +86,6 @@ namespace Bug_Tracker.Controllers
             return View(project);
         }
 
-        [Authorize]
         public ActionResult Details(int? id, int? page, int? pageSize)
         {
             if (id == null)

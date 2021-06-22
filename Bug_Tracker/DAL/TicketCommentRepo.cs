@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using Bug_Tracker.Models;
@@ -18,22 +19,23 @@ namespace Bug_Tracker.DAL
 
         public IEnumerable<TicketComment> GetCollection(Func<TicketComment, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.TicketComments.Where(condition);
         }
 
         public TicketComment GetEntity(int id)
         {
-            throw new NotImplementedException();
+            return db.TicketComments.Find(id);
         }
 
         public TicketComment GetEntity(Func<TicketComment, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.TicketComments.FirstOrDefault(condition);
         }
 
         public void Update(TicketComment entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
         }
     }
 }

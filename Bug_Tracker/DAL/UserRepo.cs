@@ -1,6 +1,7 @@
 ﻿using Bug_Tracker.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -12,7 +13,8 @@ namespace Bug_Tracker.DAL
 
         public void Add(ApplicationUser entity)
         {
-            throw new NotImplementedException();
+            db.Users.Add(entity);
+            db.SaveChanges();
         }
 
         public IEnumerable<ApplicationUser> GetCollection(Func<ApplicationUser, bool> condition)
@@ -27,17 +29,18 @@ namespace Bug_Tracker.DAL
 
         public ApplicationUser GetEntity(int id)
         {
-            throw new NotImplementedException();
+            return db.Users.Find(id);
         }
 
         public ApplicationUser GetEntity(Func<ApplicationUser, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.Users.FirstOrDefault(condition);
         }
 
         public void Update(ApplicationUser entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
         }
     }
 }

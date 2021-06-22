@@ -23,6 +23,7 @@ namespace Bug_Tracker.Controllers
 
         private TicketService ticketService = new TicketService();
         private ProjectUserService projectUserService = new ProjectUserService();
+        private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
         public ManageController()
         {
@@ -107,6 +108,8 @@ namespace Bug_Tracker.Controllers
 
             var tickets = user.Tickets.ToList();
             var projects = user.ProjectUsers.ToList();
+
+            ticketNotificationService.RemoveAllUserNotifs(user.Id);
 
             foreach (var ticket in tickets)
             {

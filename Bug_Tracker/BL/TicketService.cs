@@ -169,8 +169,6 @@ namespace Bug_Tracker.BL
             foreach (var ticket in tickets)
             {
                 RemoveTicketUser(ticket);
-                //user.Tickets.Remove(ticket);
-                //db.SaveChanges();
             }
         }
     }

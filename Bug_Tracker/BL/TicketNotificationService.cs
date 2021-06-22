@@ -51,6 +51,13 @@ namespace Bug_Tracker.BL
             repo.Delete(notif);
         }
 
+        public void RemoveAllUserNotifs(string userId)
+        {
+            var notifs = repo.GetCollection(tn => tn.UserId == userId).ToList();
+            foreach (var notif in notifs)
+                repo.Delete(notif);
+        }
+
         public List<TicketNotification> GetUserNotifications(string id)
         {
             return repo.GetCollection(tn => tn.UserId == id).ToList();

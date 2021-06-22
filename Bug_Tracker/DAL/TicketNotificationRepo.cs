@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using Bug_Tracker.Models;
@@ -28,12 +29,13 @@ namespace Bug_Tracker.DAL
 
         public TicketNotification GetEntity(Func<TicketNotification, bool> condition)
         {
-            throw new NotImplementedException();
+            return db.TicketNotifications.FirstOrDefault(condition);
         }
 
         public void Update(TicketNotification entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(TicketNotification entity)

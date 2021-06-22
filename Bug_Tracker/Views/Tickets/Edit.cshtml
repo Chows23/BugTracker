@@ -51,19 +51,21 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.TicketStatusId, (SelectList)ViewBag.Status, new { @class = "form-control" })
-            </div>
-        </div>
-
         @if (User.IsInRole("developer") || User.IsInRole("submitter"))
         {
             <div class="form-group">
                 @Html.LabelFor(model => model.TicketStatus, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.TicketStatusId, (SelectList)ViewBag.Status, new { @class = "form-control", @disabled = true })
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.TicketStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.TicketStatusId, (SelectList)ViewBag.Status, new { @class = "form-control" })
                 </div>
             </div>
         }

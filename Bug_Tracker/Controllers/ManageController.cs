@@ -74,6 +74,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult ChangeUserRole(string userId, string roleId)
         {
             var role = db.Roles.Find(roleId);
@@ -106,7 +107,7 @@ namespace Bug_Tracker.Controllers
                 UserService.RemoveUserFromRole(userId, roleName);
             }
 
-            var tickets = user.Tickets.ToList();
+            var tickets = ticketService.GetUserTickets(userId);
             var projects = user.ProjectUsers.ToList();
 
             ticketNotificationService.RemoveAllUserNotifs(user.Id);

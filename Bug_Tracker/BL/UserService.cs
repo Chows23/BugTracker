@@ -11,6 +11,7 @@ namespace Bug_Tracker.BL
 {
     public class UserService
     {
+        private TicketService ticketService = new TicketService();
         private static ApplicationDbContext db = new ApplicationDbContext();
         private UserRepo repo = new UserRepo();
 
@@ -147,6 +148,16 @@ namespace Bug_Tracker.BL
                 Developer = u.UserName,
                 TicketCount = u.Tickets.Count,
             }).ToList();
+
+            var unassignedTickets = ticketService.GetUserTickets(null).Count;
+
+            var unassigned = new DashboardDevChart
+            {
+                Developer = "Unassigned",
+                TicketCount = unassignedTickets,
+            };
+
+            chartData.Add(unassigned);
 
             return chartData;
         }

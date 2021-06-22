@@ -171,5 +171,10 @@ namespace Bug_Tracker.BL
                 RemoveTicketUser(ticket);
             }
         }
+
+        public List<Ticket> GetUserTickets(string userId)
+        {
+            return repo.GetCollection(t => t.AssignedToUserId == userId).ToList();
+        }
     }
 }

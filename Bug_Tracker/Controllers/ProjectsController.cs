@@ -17,6 +17,7 @@ namespace Bug_Tracker.Controllers
         private ProjectService projectService = new ProjectService();
         private ProjectUserService projectUserService = new ProjectUserService();
         private TicketService ticketService = new TicketService();
+        private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
         [Authorize]
         public ActionResult Index()
@@ -30,7 +31,7 @@ namespace Bug_Tracker.Controllers
             if (UserService.UserInRole(user.Id, "admin"))
                 return RedirectToAction("AllProjects");
 
-            ViewBag.Notifications = user.TicketNotifications.Count;
+            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
             var projects = projectUserService.GetUsersProjects(user.Id).Select(pu => pu.Project).ToList();
             return View(projects);
         }

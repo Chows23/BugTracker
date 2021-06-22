@@ -105,7 +105,7 @@ namespace Bug_Tracker.Controllers
                 UserService.RemoveUserFromRole(userId, roleName);
             }
 
-            var tickets = user.Tickets.ToList();
+            var tickets = ticketService.GetUserTickets(userId);
             var projects = user.ProjectUsers.ToList();
 
             ticketNotificationService.RemoveAllUserNotifs(user.Id);

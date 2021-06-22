@@ -70,7 +70,7 @@ namespace Bug_Tracker.Controllers
             ViewBag.PageSize = pageSize;
             int pageNumber = (page ?? 1);
 
-            ViewBag.Notifications = user.TicketNotifications.Count;
+            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
             return View(tickets.ToPagedList(pageNumber, (int)pageSize));
         }
 
@@ -127,7 +127,7 @@ namespace Bug_Tracker.Controllers
             }
 
             var user = UserService.GetUser(User.Identity.Name);
-            ViewBag.Notifications = user.TicketNotifications.Count;
+            ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
 
             ViewBag.UserId = new SelectList(UserService.GetUserByRole("developer"), "Id", "UserName");
             return View(ticket);

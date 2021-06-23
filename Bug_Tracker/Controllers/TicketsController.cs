@@ -10,6 +10,7 @@ using Bug_Tracker.Models;
 using PagedList;
 using Bug_Tracker.BL;
 using System.IO;
+using Microsoft.Ajax.Utilities;
 
 namespace Bug_Tracker.Controllers
 {
@@ -25,7 +26,7 @@ namespace Bug_Tracker.Controllers
         private TicketNotificationService ticketNotificationService = new TicketNotificationService();
 
         // GET: Tickets      
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize, int? projectId, string ownerUserId, string assignedToUserId, string allTickets)
         {
             ApplicationUser user;
             if (User.Identity.IsAuthenticated)
@@ -48,6 +49,15 @@ namespace Bug_Tracker.Controllers
             ViewBag.AssignSortParm = sortOrder == "assign_asc" ? "assign_desc" : "assign_asc";
             ViewBag.OwnSortParm = sortOrder == "own_asc" ? "own_desc" : "own_asc";
 
+            if (!string.IsNullOrEmpty(allTickets))
+            {
+                currentFilter = null;
+                searchString = null;
+                projectId = null;
+                ownerUserId = null;
+                assignedToUserId = null;
+            }
+
             if (searchString != null)
             {
                 page = 1;
@@ -61,8 +71,12 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            var tickets = ticketService.GetFilteredTickets(searchString, user);
+            var tickets = ticketService.GetFilteredTickets(searchString, user, projectId, ownerUserId, assignedToUserId);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
+
+            ViewBag.AssignedToUserId = new SelectList(tickets.DistinctBy(t => t.AssignedToUserId).Select(t => t.AssignedToUser).ToList(), "Id", "UserName");
+            ViewBag.OwnerUserId = new SelectList(tickets.DistinctBy(t => t.OwnerUserId).Select(t => t.OwnerUser).ToList(), "Id", "UserName");
+            ViewBag.ProjectId = new SelectList(tickets.DistinctBy(t => t.ProjectId).Select(t => t.Project).ToList(), "Id", "Name");
 
             if (pageSize == null)
                 pageSize = 10;
@@ -75,7 +89,7 @@ namespace Bug_Tracker.Controllers
         }
 
         [Authorize(Roles = "admin, manager")]
-        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
+        public ActionResult AllTickets(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize, int? projectId, string ownerUserId, string assignedToUserId, string allTickets)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_asc" : "name_desc";
@@ -89,6 +103,15 @@ namespace Bug_Tracker.Controllers
             ViewBag.AssignSortParm = sortOrder == "assign_asc" ? "assign_desc" : "assign_asc";
             ViewBag.OwnSortParm = sortOrder == "own_asc" ? "own_desc" : "own_asc";
 
+            if (!string.IsNullOrEmpty(allTickets))
+            {
+                currentFilter = null;
+                searchString = null;
+                projectId = null;
+                ownerUserId = null;
+                assignedToUserId = null;
+            }
+
             if (searchString != null)
             {
                 page = 1;
@@ -102,8 +125,12 @@ namespace Bug_Tracker.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            var tickets = ticketService.GetFilteredTickets(searchString, null);
+            var tickets = ticketService.GetFilteredTickets(searchString, null, projectId, ownerUserId, assignedToUserId);
             tickets = ticketService.GetSortedTickets(tickets, sortOrder);
+
+            ViewBag.AssignedToUserId = new SelectList(tickets.DistinctBy(t => t.AssignedToUserId).Select(t => t.AssignedToUser).ToList(), "Id", "UserName");
+            ViewBag.OwnerUserId = new SelectList(tickets.DistinctBy(t => t.OwnerUserId).Select(t => t.OwnerUser).ToList(), "Id", "UserName");
+            ViewBag.ProjectId = new SelectList(tickets.DistinctBy(t => t.ProjectId).Select(t => t.Project).ToList(), "Id", "Name");
 
             if (pageSize == null)
                 pageSize = 10;
@@ -127,6 +154,7 @@ namespace Bug_Tracker.Controllers
             }
 
             var user = UserService.GetUser(User.Identity.Name);
+
             var projectUser = projectUserService.GetExistingProjectUser(ticket.ProjectId, user.Id);
             if (ticket.AssignedToUserId == user.Id 
                 || ticket.OwnerUserId == user.Id

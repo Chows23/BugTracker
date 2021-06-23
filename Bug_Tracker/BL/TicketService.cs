@@ -30,7 +30,7 @@ namespace Bug_Tracker.BL
             return repo.GetEntity(ticketId);
         }
 
-        public IEnumerable<Ticket> GetFilteredTickets(string searchString, ApplicationUser user)
+        public IEnumerable<Ticket> GetFilteredTickets(string searchString, ApplicationUser user, int? projectId, string ownerUserId, string assignedToUserId)
         {
             IEnumerable<Ticket> tickets;
 
@@ -59,6 +59,21 @@ namespace Bug_Tracker.BL
                                        || t.Created.ToString().ToLower().Contains(searchString)
                                        || t.Updated.ToString().ToLower().Contains(searchString)
                                        || t.OwnerUser.UserName.ToLower().Contains(searchString));
+            }
+
+            if (projectId != null)
+            {
+                tickets = tickets.Where(t => t.ProjectId == projectId);
+            }
+
+            if (!String.IsNullOrEmpty(ownerUserId))
+            {
+                tickets = tickets.Where(t => t.OwnerUserId.Equals(ownerUserId));
+            }
+
+            if (!String.IsNullOrEmpty(assignedToUserId))
+            {
+                tickets = tickets.Where(t => t.AssignedToUserId.Equals(assignedToUserId));
             }
 
             return tickets;

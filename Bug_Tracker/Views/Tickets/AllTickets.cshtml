@@ -13,7 +13,7 @@
 @using (Html.BeginForm("AllTickets", "Tickets", FormMethod.Get))
 {
     <div>
-        Find by title or description: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Search" class="btn btn-primary" />
 
         <span class="pull-right">

@@ -126,9 +126,13 @@ namespace Bug_Tracker.Controllers
                 return HttpNotFound();
             }
 
-
             var user = UserService.GetUser(User.Identity.Name);
-            if (user.Tickets.Contains(ticket)) {
+            var projectUser = projectUserService.GetExistingProjectUser(ticket.ProjectId, user.Id);
+            if (ticket.AssignedToUserId == user.Id 
+                || ticket.OwnerUserId == user.Id
+                || UserService.UserInRole(user.Id, "admin")
+                || (UserService.UserInRole(user.Id, "manager") && projectUser != null))
+            {
 
                 ViewBag.Notifications = ticketNotificationService.GetNotifCount(user.Id);
 

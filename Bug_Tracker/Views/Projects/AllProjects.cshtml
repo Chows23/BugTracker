@@ -37,7 +37,7 @@
                     {
                         <div> No tickets to display.</div>
                     }
-                    else if (projectUser != null)
+                    else if (projectUser != null || UserService.UserInRole(User.Identity.GetUserId(), "admin"))
                     {
                         foreach (var ticket in project.Tickets.OrderByDescending(t => t.Updated).Take(4))
                         {

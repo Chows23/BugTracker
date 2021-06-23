@@ -74,7 +74,6 @@ namespace BugTrackerTests
             mockedRepo.Setup(r => r.GetEntity(1)).Returns(project1);
             mockedRepo.Setup(r => r.GetEntity(2)).Returns(project2);
             mockedRepo.Setup(r => r.GetEntity(5)).Returns(project5);
-            mockedRepo.Setup(r => r.GetAll()).Returns(projects);
             mockedRepo.Setup(r => r.GetCollection()).Returns(projects);
 
             projectService = new ProjectService(mockedRepo.Object);
@@ -109,7 +108,6 @@ namespace BugTrackerTests
         {
             List<Project> projects = projectService.AllProjects().ToList();
 
-            mockedRepo.Verify(r => r.GetAll());
             Assert.IsTrue(projects.Exists(p => p.Id == 1));
             Assert.IsTrue(projects.Exists(p => p.Id == 2));
             Assert.IsTrue(projects.Exists(p => p.Id == 5));

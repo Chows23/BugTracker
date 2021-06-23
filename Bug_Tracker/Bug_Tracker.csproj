@@ -238,16 +238,6 @@
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\dashboard.css" />
     <Content Include="Data\attachments\dashboard.PNG" />
-    <Content Include="Data\attachments\sample-1.txt" />
-    <Content Include="Data\attachments\sample-2.txt" />
-    <Content Include="Data\attachments\sample-3.txt" />
-    <Content Include="Data\attachments\sample-4.txt" />
-    <Content Include="Data\attachments\sample-5.txt" />
-    <Content Include="Data\attachments\sample-photo-1.jpeg" />
-    <Content Include="Data\attachments\sample-photo-2.jpeg" />
-    <Content Include="Data\attachments\sample-photo-3.jpeg" />
-    <Content Include="Data\attachments\sample-photo-4.jpeg" />
-    <Content Include="Data\attachments\sample-photo-5.jpeg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

@@ -220,7 +220,7 @@ namespace Bug_Tracker.Controllers
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 
-                gmailService.Send("katbdesrosiers@gmail.com", "katherine", "reset password", $"Please reset your password by clicking {callbackUrl}");
+                gmailService.Send(model.Email, "katherine", "reset password", $"Please reset your password by clicking {callbackUrl}");
 
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
